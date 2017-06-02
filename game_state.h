@@ -9,7 +9,6 @@
 const uint8_t n1 = (uint8_t) -1;
 
 const uint8_t initial_draw_pile[84 + 8] = {
-    n1, n1, n1, n1, n1, n1, n1, n1, // Empty cards
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Card("Honey fungus", 1, 1),
     1, 1, 1, 1, 1, 1, 1, 1, // Card("Tree Ear", 1, 2),
     2, 2, 2, 2, 2, 2, // Card("Lawyer's Wig", 2, 1),
@@ -66,16 +65,16 @@ public:
 private:
     uint8_t draw_pile[sizeof(initial_draw_pile)];
     uint8_t draw_pointer;
-    uint8_t discard_pile[sizeof(cards) - 1];
+    uint8_t discard_pile[cards_size - 1];
     uint8_t forest[8];
     uint8_t forest_pointer;
     uint8_t decay_pile[4];
     uint8_t decay_pointer;
 
-    uint8_t display_p1[sizeof(cards)];
-    uint8_t display_p2[sizeof(cards)];
-    uint8_t hand_p1[sizeof(cards) - 2];
-    uint8_t hand_p2[sizeof(cards) - 2];
+    uint8_t display_p1[cards_size];
+    uint8_t display_p2[cards_size];
+    uint8_t hand_p1[cards_size - 2];
+    uint8_t hand_p2[cards_size - 2];
 
     inline void draw_initial_card(uint8_t* display, uint8_t* hand);
     inline void remove_forest_card(uint8_t index);

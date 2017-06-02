@@ -12,7 +12,7 @@ Card::~Card() {}
 string Card::str() const {
     stringstream ss;
 
-    ss << name << "(" << tastyness << ", " << price << ")";
+    ss << name << "(" << (unsigned) tastyness << ", " << (unsigned) price << ")";
 
     return ss.str();
 }

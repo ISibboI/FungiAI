@@ -6,9 +6,13 @@
 using namespace std;
 
 GameState* gs;
-mt19937 r;
+mt19937 r(526L);
 
 void set_up() {
+    cout << "sizeof(initial_draw_pile) = " << sizeof(initial_draw_pile) << endl;
+    cout << "sizeof(Card) = " << sizeof(Card) << endl;
+    cout << "sizeof(cards) = " << sizeof(cards) << endl;
+
     gs = new GameState(r);
 }
 

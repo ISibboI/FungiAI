@@ -1,7 +1,7 @@
 TARGET_FILE=fungi_ai
 PROD_OBJ=main.o
 TEST_OBJ=test.o
-BOTH_OBJ=cards.o game_state.o
+BOTH_OBJ=cards.o game_state.o debug.o
 
 ##########################################
 
@@ -15,7 +15,7 @@ LDFLAGS=-fopenmp
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
 ifeq ($(DEBUG), 1)
-DEBUGFLAGS=-fsanitize=address -fsanitize=undefined -g
+DEBUGFLAGS=-fsanitize=address -fsanitize=undefined -g -DDEBUG
 endif
 
 OBJ=$(PROD_OBJ) $(TEST_OBJ) $(BOTH_OBJ)

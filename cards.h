@@ -6,15 +6,17 @@
 class Card {
 public:
     const std::string name;
-    const int8_t tastyness;
-    const int8_t price;
+    const uint8_t tastyness;
+    const uint8_t price;
 
     Card(std::string name, int8_t tastyness, int8_t price);
     ~Card();
     std::string str() const;
 };
 
-const Card cards[24]= {
+const uint8_t cards_size = 24;
+
+const Card cards[cards_size]= {
    Card("Honey fungus", 1, 1),
    Card("Tree Ear", 1, 2),
    Card("Lawyer's Wig", 2, 1),

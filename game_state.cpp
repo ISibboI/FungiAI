@@ -1,4 +1,5 @@
 #include "game_state.h"
+#include "debug.h"
 
 #include <cstring>
 #include <algorithm>
@@ -7,18 +8,20 @@
 using namespace std;
 
 GameState::GameState(mt19937& r) {
-    memcpy(draw_pile, initial_draw_pile, sizeof(Card) * sizeof(initial_draw_pile));
-    shuffle(draw_pile, draw_pile + sizeof(draw_pile), r);
+    memcpy(draw_pile, initial_draw_pile, sizeof(initial_draw_pile) * sizeof(uint8_t));
+    shuffle(draw_pile, draw_pile + sizeof(draw_pile) * sizeof(uint8_t), r);
+    print_array("draw_pile", draw_pile, sizeof(draw_pile));
+
     draw_pointer = sizeof(draw_pile) - 8;
 
-    memcpy(forest, draw_pile + draw_pointer, 8);
+    memcpy(forest, draw_pile + draw_pointer, 8 * sizeof(uint8_t));
 
-    memset(discard_pile, 0, sizeof(discard_pile));
-    memset(decay_pile, 0, sizeof(decay_pile));
-    memset(display_p1, 0, sizeof(display_p1));
-    memset(display_p2, 0, sizeof(display_p2));
-    memset(hand_p1, 0, sizeof(hand_p1));
-    memset(hand_p2, 0, sizeof(hand_p2));
+    memset(discard_pile, 0, sizeof(discard_pile) * sizeof(uint8_t));
+    memset(decay_pile, 0, sizeof(decay_pile) * sizeof(uint8_t));
+    memset(display_p1, 0, sizeof(display_p1) * sizeof(uint8_t));
+    memset(display_p2, 0, sizeof(display_p2) * sizeof(uint8_t));
+    memset(hand_p1, 0, sizeof(hand_p1) * sizeof(uint8_t));
+    memset(hand_p2, 0, sizeof(hand_p2) * sizeof(uint8_t));
 
     display_p1[pan] = 1;
     display_p2[pan] = 1;
@@ -298,7 +301,7 @@ string GameState::str() {
 
     for (unsigned i = 0; i < sizeof(hand_p1) - 2; i++) {
         if (hand_p1[i] > 0) {
-            ss << cards[i].str() << ": " << hand_p1[i] << "; ";
+            ss << cards[i].str() << ": " << (unsigned) hand_p1[i] << "; ";
         }
     }
 
@@ -306,7 +309,7 @@ string GameState::str() {
 
     for (unsigned i = 0; i < sizeof(display_p1); i++) {
         if (display_p1[i] > 0) {
-            ss << cards[i].str() << ": " << display_p1[i] << "; ";
+            ss << cards[i].str() << ": " << (unsigned) display_p1[i] << "; ";
         }
     }
 
@@ -328,7 +331,7 @@ string GameState::str() {
 
     for (unsigned i = 0; i < sizeof(display_p2); i++) {
         if (display_p2[i] > 0) {
-            ss << cards[i].str() << ": " << display_p2[i] << "; ";
+            ss << cards[i].str() << ": " << (unsigned) display_p2[i] << "; ";
         }
     }
 
@@ -336,7 +339,7 @@ string GameState::str() {
 
     for (unsigned i = 0; i < sizeof(hand_p2) - 2; i++) {
         if (hand_p2[i] > 0) {
-            ss << cards[i].str() << ": " << hand_p2[i] << "; ";
+            ss << cards[i].str() << ": " << (unsigned) hand_p2[i] << "; ";
         }
     }
 
@@ -347,6 +350,8 @@ string GameState::str() {
             ss << cards[i].str() << ": " << discard_pile[i] << "; ";
         }
     }
+
+    ss << "\n";
 
     return ss.str();
 }
