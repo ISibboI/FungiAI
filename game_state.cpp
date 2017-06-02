@@ -32,6 +32,8 @@ GameState::GameState(mt19937& r) {
     forest_pointer = 8;
 }
 
+GameState::~GameState() {}
+
 bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, uint8_t* hand) {
     if (forest[index] == fly_agaric) {
         display[fly_agaric] = 2;

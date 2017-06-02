@@ -1,5 +1,7 @@
 TARGET_FILE=fungi_ai
-OBJ=main.o cards.o game_state.o
+PROD_OBJ=main.o
+TEST_OBJ=test.o
+BOTH_OBJ=cards.o game_state.o
 
 ##########################################
 
@@ -10,22 +12,30 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 CC=g++
 CFLAGS=-Wall -Werror -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp
 LDFLAGS=-fopenmp
-DEBUGFLAGS=-fsanitize=address -fsanitize=undefined
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
+
+ifeq ($(DEBUG), 1)
+DEBUGFLAGS=-fsanitize=address -fsanitize=undefined -g
+endif
+
+OBJ=$(PROD_OBJ) $(TEST_OBJ) $(BOTH_OBJ)
+PROD_OBJ += $(BOTH_OBJ)
+TEST_OBJ += $(BOTH_OBJ)
 
 all: $(TARGET_FILE)
 
-$(TARGET_FILE): $(OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET_FILE) $(OBJ) $(LDFLAGS)
+$(TARGET_FILE): $(PROD_OBJ)
+	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(TARGET_FILE) $(PROD_OBJ) $(LDFLAGS)
 
-debug: $(OBJ)
-	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(TARGET_FILE) $(OBJ) $(LDFLAGS)
+test: $(TEST_OBJ)
+	$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $(TARGET_FILE)_test $(TEST_OBJ) $(LDFLAGS)
+	./$(TARGET_FILE)_test
 
 %.o: %.cpp %.h $(DEPDIR)/%.d
 %.o: %.cpp %.h
 %.o: %.cpp $(DEPDIR)/%.d
 %.o: %.cpp
-	$(CC) $(DEPFLAGS) $(CFLAGS) -c $<
+	$(CC) $(DEPFLAGS) $(CFLAGS) $(DEBUGFLAGS) -c $<
 	$(POSTCOMPILE)
 
 $(DEPDIR)/%.d: ;
@@ -35,4 +45,4 @@ include $(wildcard $(DEPDIR)/*.d)
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ) $(DEPDIR) $(TARGET_FILE)
+	rm -rf $(OBJ) $(DEPDIR) $(TARGET_FILE) $(TARGET_FILE)_test
