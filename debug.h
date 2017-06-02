@@ -2,14 +2,19 @@
 #define DEBUG_H
 
 #include <string>
+#include <iostream>
 
 #ifdef DEBUG
 
-#define print_sizeof(a) cout << "a" << sizeof(a) << endl;
+#define print_var(a) cout << #a << ": " << (unsigned) a << endl;
+#define print_sizeof(a) cout << #a << sizeof(a) << endl;
+#define print(a) cout << (a) << endl;
 
 #else
 
+#define print_var(a)
 #define print_sizeof(a)
+#define print(a)
 
 #endif // DEBUG
 

@@ -8,7 +8,7 @@
 
 const uint8_t n1 = (uint8_t) -1;
 
-const uint8_t initial_draw_pile[84 + 8] = {
+const uint8_t initial_draw_pile[84] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // Card("Honey fungus", 1, 1),
     1, 1, 1, 1, 1, 1, 1, 1, // Card("Tree Ear", 1, 2),
     2, 2, 2, 2, 2, 2, // Card("Lawyer's Wig", 2, 1),
@@ -49,7 +49,7 @@ public:
     bool action_sell(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand);
     bool action_pan(uint8_t* display, uint8_t* hand);
 
-    bool finalize_turn(uint8_t player);
+    bool finalize_turn(bool p1);
 
     void get_p1_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
         uint8_t*& forest, uint8_t*& decay_pile, uint8_t& decay_pointer,
@@ -74,7 +74,7 @@ public:
     uint8_t display_p2[cards_size];
     uint8_t hand_p1[cards_size - 2];
     uint8_t hand_p2[cards_size - 2];
-    
+
 private:
     inline void draw_initial_card(uint8_t* display, uint8_t* hand);
     inline void remove_forest_card(uint8_t index);

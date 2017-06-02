@@ -38,10 +38,14 @@ GameState::GameState(mt19937& r) {
 GameState::~GameState() {}
 
 bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, uint8_t* hand) {
+    print("Entering pick");
+
     if (forest[index] == fly_agaric) {
+        print("Special case: Picking a fly agaric");
+
         display[fly_agaric] = 2;
 
-        for (; hand[hand_size] > 8 + display[basket]; hand[hand_size]--) {
+        for (; hand[hand_size] > 4 + display[basket]; hand[hand_size]--) {
             uint8_t card = *(drop_ids++);
 
             if (hand[card] <= 0 || card == n1) {
@@ -59,16 +63,29 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
             return false;
         }
 
+        uint8_t costs = max(index - 2, 0);
+
+        if (costs > display[stick]) {
+            print("Cannot pick: Not enough sticks");
+            return false;
+        }
+
+        display[stick] -= costs;
+        remove_forest_card(index);
+
+        print("Picked successfully");
         return true;
     }
 
     if (hand[hand_size] >= 8 + display[basket] - (display[fly_agaric] > 0 ? 4 : 0)) {
+        print("Cannot pick: Not enough space in hand");
         return false;
     }
 
     uint8_t costs = max(index - 2, 0);
 
     if (costs > display[stick]) {
+        print("Cannot pick: Not enough sticks");
         return false;
     }
 
@@ -86,11 +103,12 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
         }
     }
 
+    print("Picked successfully");
     return true;
 }
 
 bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand) {
-    uint8_t current_hand_limit = 8 + display[basket];
+    uint8_t current_hand_limit = 8 + display[basket] - (display[fly_agaric] > 0 ? 4 : 0);
     uint8_t new_basket_count = 0;
     uint8_t decay_size = 4 - decay_pointer;
 
@@ -125,6 +143,8 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
 
         has_fly_agaric |= card == fly_agaric;
     }
+
+    decay_pointer = 4;
 
     if (has_fly_agaric) {
         display[fly_agaric] = 2;
@@ -239,12 +259,16 @@ bool GameState::action_pan(uint8_t* display, uint8_t* hand) {
     return true;
 }
 
-bool GameState::finalize_turn(uint8_t player) {
+bool GameState::finalize_turn(bool p1) {
+    print("Entering finalize turn");
+
     if (forest_pointer <= 1) {
+        print("Game end detected");
         return false;
     }
 
     if (decay_pointer == 0) {
+        print("Decay pile is full");
         for (int i = 0; i < 4; i++) {
             discard_pile[decay_pile[i]]++;
         }
@@ -252,13 +276,39 @@ bool GameState::finalize_turn(uint8_t player) {
 
     decay_pointer = (decay_pointer + 3) % 4;
 
+    print_var(forest[0]);
+
     decay_pile[decay_pointer] = forest[0];
     remove_forest_card(0);
+
+    print_array("decay_pile", decay_pile, 4);
+    print_var(draw_pointer);
+    print_array("draw_pile", draw_pile, draw_pointer + 1);
+    print_var(forest_pointer);
+    print_array("forest", forest, forest_pointer);
+    print("Refilling forest");
 
     for (; forest_pointer < 8 && draw_pointer > 0; forest_pointer++) {
         forest[forest_pointer] = draw_pile[--draw_pointer];
     }
 
+    print_array("decay_pile", decay_pile, 4);
+    print_var(draw_pointer);
+    print_array("draw_pile", draw_pile, draw_pointer + 1);
+    print_var(forest_pointer);
+    print_array("forest", forest, forest_pointer);
+
+    if (p1) {
+        if (display_p1[fly_agaric] > 0) {
+            display_p1[fly_agaric]--;
+        }
+    } else {
+        if (display_p2[fly_agaric] > 0) {
+            display_p2[fly_agaric]--;
+        }
+    }
+
+    print("Exiting finalize turn without ending game");
     return true;
 }
 
@@ -318,12 +368,18 @@ string GameState::str() {
     for (unsigned i = 0; i < sizeof(forest); i++) {
         if (forest[i] != n1) {
             ss << cards[forest[i]].str() << "; ";
+        } else {
+            ss << (unsigned) forest[i] << "; ";
         }
     }
 
+    #ifdef DEBUG
+    print_var(decay_pointer);
+    #endif
+
     ss << "\nDecay pile: ";
 
-    for (unsigned i = 3; i >= decay_pointer; i--) {
+    for (unsigned i = 3; i >= decay_pointer && i < 4; i--) {
         ss << cards[decay_pile[i]].str() << "; ";
     }
 
@@ -347,11 +403,9 @@ string GameState::str() {
 
     for (unsigned i = 0; i < sizeof(discard_pile); i++) {
         if (discard_pile[i] > 0) {
-            ss << cards[i].str() << ": " << discard_pile[i] << "; ";
+            ss << cards[i].str() << ": " << (unsigned) discard_pile[i] << "; ";
         }
     }
-
-    ss << "\n";
 
     return ss.str();
 }
@@ -377,9 +431,14 @@ inline void GameState::draw_initial_card(uint8_t* display, uint8_t* hand) {
 }
 
 inline void GameState::remove_forest_card(uint8_t index) {
-    for (int i = index; index < 7; i++) {
-        forest[index] = forest[index + 1];
+    print("Entering remove forest card");
+    forest_pointer--;
+
+    for (int i = index; i < forest_pointer; i++) {
+        forest[i] = forest[i + 1];
     }
 
     forest[7] = -1;
+
+    print("Exiting remove forest card");
 }
