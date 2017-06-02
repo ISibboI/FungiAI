@@ -62,7 +62,6 @@ public:
 
     std::string str();
 
-private:
     uint8_t draw_pile[sizeof(initial_draw_pile)];
     uint8_t draw_pointer;
     uint8_t discard_pile[cards_size - 1];
@@ -75,7 +74,8 @@ private:
     uint8_t display_p2[cards_size];
     uint8_t hand_p1[cards_size - 2];
     uint8_t hand_p2[cards_size - 2];
-
+    
+private:
     inline void draw_initial_card(uint8_t* display, uint8_t* hand);
     inline void remove_forest_card(uint8_t index);
 };

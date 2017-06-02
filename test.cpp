@@ -6,15 +6,14 @@
 
 using namespace std;
 
-GameState* gs;
 mt19937 r(526L);
+GameState gs(r);
 
 void set_up() {
-    gs = new GameState(r);
+    gs = GameState(r);
 }
 
 void tear_down() {
-    delete gs;
 }
 
 void test(void (&fun)()) {
@@ -24,7 +23,7 @@ void test(void (&fun)()) {
 }
 
 void test_set_up() {
-    cout << gs->str();
+    cout << gs.str();
 }
 
 int main() {

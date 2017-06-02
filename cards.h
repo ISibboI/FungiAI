@@ -46,6 +46,7 @@ const Card cards[cards_size]= {
 const uint8_t night_min_id = 9;
 const uint8_t night_max_id = 16;
 const uint8_t special_min_id = 20;
+const uint8_t shroom_max_id = 18;
 
 const uint8_t butter = 17;
 const uint8_t cidre = 18;
