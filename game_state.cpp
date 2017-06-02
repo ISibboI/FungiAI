@@ -145,30 +145,90 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
     return true;
 }
 
-bool GameState::action_cook(uint8_t id, uint8_t* display, uint8_t* hand) {
-    uint8_t count = hand[id];
+bool GameState::action_cook(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand) {
+    uint8_t max_count = hand[id];
 
     if (id < 8) {
-        count += (hand[id] + 9) * 2;
+        max_count += hand[id + 9] * 2;
     }
 
-    if (count < 3) {
+    if (count < 3 || count > max_count || display[pan] < 1) {
         return false;
     }
 
-    // TODO Perform action
+    uint8_t resources = count;
+
+    if (resources == 8 && hand[butter] >= 2) {
+        resources -= 8;
+        hand[butter] -= 2;
+        display[butter] += 2;
+    } else {
+        while (resources >= 5 && hand[cidre] > 0) {
+            resources -= 5;
+            hand[cidre]--;
+            display[cidre]++;
+        }
+
+        while (resources >= 4 && hand[butter] > 0) {
+            resources -= 4;
+            hand[butter]--;
+            display[butter]++;
+        }
+    }
+
+    if (count <= max_count - 2) {
+        hand[id] -= count;
+        display[id] += count;
+    } else {
+        if (id < 8 && hand[id + 9] > 0) {
+            hand[id + 9]--;
+            display[id + 9]++;
+            count -= 2;
+        }
+
+        hand[id] -= count;
+        display[id] += count;
+    }
 
     return true;
 }
 
-bool GameState::action_sell(uint8_t id, uint8_t* display, uint8_t* hand) {
-    // TODO
+bool GameState::action_sell(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand) {
+    uint8_t max_count = hand[id];
+
+    if (id < 8) {
+        max_count += hand[id + 9] * 2;
+    }
+
+    if (count < 3 || count > max_count || display[pan] < 1) {
+        return false;
+    }
+
+    uint8_t original_count = count;
+
+    if (count <= max_count - 2) {
+        hand[id] -= count;
+    } else {
+        if (id < 8 && hand[id + 9] > 0) {
+            hand[id + 9]--;
+            count -= 2;
+        }
+
+        hand[id] -= count;
+    }
+
+    display[stick] += original_count * cards[id].price;
 
     return true;
 }
 
 bool GameState::action_pan(uint8_t* display, uint8_t* hand) {
-    // TODO
+    if (hand[pan] == 0) {
+        return false;
+    }
+
+    hand[pan]--;
+    display[pan]++;
 
     return true;
 }
