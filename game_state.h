@@ -61,6 +61,8 @@ public:
         uint8_t*& display, uint8_t*& hand,
         uint8_t*& opponent_display, uint8_t*& opponent_hand);
 
+    std::string str();
+
 private:
     uint8_t draw_pile[sizeof(initial_draw_pile)];
     uint8_t draw_pointer;

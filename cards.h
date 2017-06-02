@@ -11,6 +11,7 @@ public:
 
     Card(std::string name, int8_t tastyness, int8_t price);
     ~Card();
+    std::string str() const;
 };
 
 const Card cards[24]= {

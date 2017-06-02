@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 
@@ -286,6 +287,66 @@ void GameState::get_p2_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
     hand = hand_p2;
     opponent_display = display_p1;
     opponent_hand = hand_p1;
+}
+
+string GameState::str() {
+    stringstream ss;
+
+    ss << "Hand p1: ";
+
+    for (unsigned i = 0; i < sizeof(hand_p1) - 2; i++) {
+        if (hand_p1[i] > 0) {
+            ss << cards[i].str() << ": " << hand_p1[i] << "; ";
+        }
+    }
+
+    ss << "\nDisplay p1: ";
+
+    for (unsigned i = 0; i < sizeof(display_p1); i++) {
+        if (display_p1[i] > 0) {
+            ss << cards[i].str() << ": " << display_p1[i] << "; ";
+        }
+    }
+
+    ss << "\nForest: ";
+
+    for (unsigned i = 0; i < sizeof(forest); i++) {
+        if (forest[i] != n1) {
+            ss << cards[forest[i]].str() << "; ";
+        }
+    }
+
+    ss << "\nDecay pile: ";
+
+    for (unsigned i = 3; i >= decay_pointer; i--) {
+        ss << cards[decay_pile[i]].str() << "; ";
+    }
+
+    ss << "\nDisplay p2: ";
+
+    for (unsigned i = 0; i < sizeof(display_p2); i++) {
+        if (display_p2[i] > 0) {
+            ss << cards[i].str() << ": " << display_p2[i] << "; ";
+        }
+    }
+
+    ss << "\nHand p2: ";
+
+    for (unsigned i = 0; i < sizeof(hand_p2) - 2; i++) {
+        if (hand_p2[i] > 0) {
+            ss << cards[i].str() << ": " << hand_p2[i] << "; ";
+        }
+    }
+
+    ss << "\nDiscard pile: ";
+
+    for (unsigned i = 0; i < sizeof(discard_pile); i++) {
+        if (discard_pile[i] > 0) {
+            ss << cards[i].str() << ": " << discard_pile[i] << "; ";
+        }
+    }
+
+    return ss.str();
 }
 
 inline void GameState::draw_initial_card(uint8_t* display, uint8_t* hand) {
