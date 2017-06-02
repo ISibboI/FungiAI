@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#define ensure(x) if (!x) {cout << "Test error! " << #x << endl;};
+
 mt19937 r(526L);
 GameState gs(r);
 

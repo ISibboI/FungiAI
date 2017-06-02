@@ -43,6 +43,20 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
     if (forest[index] == fly_agaric) {
         print("Special case: Picking a fly agaric");
 
+        uint8_t costs = max(index - 2, 0);
+
+        if (costs > display[stick]) {
+            print("Cannot pick: Not enough sticks");
+            return false;
+        }
+
+        display[stick] -= costs;
+        remove_forest_card(index);
+
+        if (display[fly_agaric] > 0) {
+            discard_pile[fly_agaric]++;
+        }
+
         display[fly_agaric] = 2;
 
         for (; hand[hand_size] > 4 + display[basket]; hand[hand_size]--) {
@@ -62,16 +76,6 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
         if (*drop_ids != n1) {
             return false;
         }
-
-        uint8_t costs = max(index - 2, 0);
-
-        if (costs > display[stick]) {
-            print("Cannot pick: Not enough sticks");
-            return false;
-        }
-
-        display[stick] -= costs;
-        remove_forest_card(index);
 
         print("Picked successfully");
         return true;
@@ -135,6 +139,7 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
 
         if (card != basket && card != fly_agaric) {
             hand[card]++;
+            hand[hand_size]++;
 
             if (card >= night_min_id && card <= night_min_id) {
                 hand[night_card_count]++;
@@ -301,10 +306,18 @@ bool GameState::finalize_turn(bool p1) {
     if (p1) {
         if (display_p1[fly_agaric] > 0) {
             display_p1[fly_agaric]--;
+
+            if (display_p1[fly_agaric] == 0) {
+                discard_pile[fly_agaric]++;
+            }
         }
     } else {
         if (display_p2[fly_agaric] > 0) {
             display_p2[fly_agaric]--;
+
+            if (display_p2[fly_agaric] == 0) {
+                discard_pile[fly_agaric]++;
+            }
         }
     }
 
@@ -355,6 +368,8 @@ string GameState::str() {
         }
     }
 
+    ss << "size: " << (unsigned) hand_p1[hand_size];
+
     ss << "\nDisplay p1: ";
 
     for (unsigned i = 0; i < sizeof(display_p1); i++) {
@@ -399,6 +414,8 @@ string GameState::str() {
         }
     }
 
+    ss << "size: " << (unsigned) hand_p2[hand_size];
+
     ss << "\nDiscard pile: ";
 
     for (unsigned i = 0; i < sizeof(discard_pile); i++) {
@@ -438,7 +455,7 @@ inline void GameState::remove_forest_card(uint8_t index) {
         forest[i] = forest[i + 1];
     }
 
-    forest[7] = -1;
+    forest[forest_pointer] = -1;
 
     print("Exiting remove forest card");
 }
