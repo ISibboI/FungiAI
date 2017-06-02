@@ -48,6 +48,7 @@ public:
     bool action_cook(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand);
     bool action_sell(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand);
     bool action_pan(uint8_t* display, uint8_t* hand);
+    bool action_pass(uint8_t* display, uint8_t* hand);
 
     bool finalize_turn(bool p1);
 

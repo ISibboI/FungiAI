@@ -42,12 +42,12 @@ action_descriptor get_random_turn(uint8_t& draw_pointer, uint8_t*& discard_pile,
     uint8_t*& opponent_display, uint8_t*& opponent_hand) {
 
     print("Entering get random turn");
-    uniform_int_distribution<uint8_t> d5(1, 5);
+    uniform_int_distribution<uint8_t> d6(1, 6);
     uniform_int_distribution<uint8_t> d8(0, 7);
     uniform_int_distribution<uint8_t> d19(0, 18);
     action_descriptor action;
     print("Completing action 1");
-    action.action = d5(r);
+    action.action = d6(r);
     action.drop_ids = 0;
 
     print("Completing action 2");
@@ -65,6 +65,7 @@ action_descriptor get_random_turn(uint8_t& draw_pointer, uint8_t*& discard_pile,
         action.count = hand[action.target];
         break;
     case 5:
+    case 6:
         break;
     default:
         throw runtime_error("Illegal action");

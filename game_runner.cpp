@@ -59,6 +59,7 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
 
     while (game_running) {
         bool successful_turn = false;
+        int unsuccessful_tries = 0;
 
         while (!successful_turn) {
             print("Getting player turn");
@@ -95,12 +96,22 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
             case 5:
                 successful_turn = game_state.action_pan(display, hand);
                 break;
+            case 6:
+                successful_turn = game_state.action_pass(display, hand);
+                break;
             default:
                 throw runtime_error("Unknown action: " + (unsigned) action.action);
             }
 
             if (!successful_turn) {
                 event_illegal_turn(action);
+                unsuccessful_tries++;
+            }
+
+            if (unsuccessful_tries > 100) {
+                print(string("Could not find a correct turn for player ") + (turn_p1 ? "1" : "2"));
+                print("Game state:\n" + game_state.str());
+                throw runtime_error("Too many incorrect turns");
             }
 
             if (action.drop_ids != 0) {

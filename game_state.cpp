@@ -50,6 +50,17 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
             return false;
         }
 
+        // Ensure the drop_ids have the right size
+        unsigned drop_size = max(0, hand[hand_size] - 4 - display[basket]);
+        unsigned drop_ids_size = 0;
+
+        for (; drop_ids[drop_ids_size] != n1; drop_ids_size++);
+
+        if (drop_size != drop_ids_size) {
+            print("Cannot pick: Drop ids have wrong size");
+            return false;
+        }
+
         display[stick] -= costs;
         remove_forest_card(index);
 
@@ -63,7 +74,7 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
             uint8_t card = *(drop_ids++);
 
             if (hand[card] <= 0 || card == n1) {
-                return false;
+                throw runtime_error("Drop ids have the wrong size. This should have been checked before");
             }
 
             hand[card]--;
@@ -74,7 +85,7 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
         }
 
         if (*drop_ids != n1) {
-            return false;
+            throw runtime_error("Drop ids have the wrong size. This should have been checked before");
         }
 
         print("Picked successfully");
@@ -115,6 +126,7 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
     uint8_t current_hand_limit = 8 + display[basket] - (display[fly_agaric] > 0 ? 4 : 0);
     uint8_t new_basket_count = 0;
     uint8_t decay_size = 4 - decay_pointer;
+    bool has_fly_agaric = false;
 
     for (int i = 3; i >= decay_pointer; i--) {
         uint8_t card = decay_pile[decay_pointer];
@@ -123,6 +135,8 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
         if (card == basket || card == fly_agaric) {
             decay_size--;
         }
+
+        has_fly_agaric |= card == fly_agaric;
     }
 
     uint8_t new_hand_limit = current_hand_limit + new_basket_count;
@@ -131,8 +145,18 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
         return false;
     }
 
+    // Ensure the drop_ids have the right size
+    unsigned drop_size = max(0, hand[hand_size] - 8 - display[basket] + (has_fly_agaric ? 4 : 0));
+    unsigned drop_ids_size = 0;
+
+    for (; drop_ids[drop_ids_size] != n1; drop_ids_size++);
+
+    if (drop_size != drop_ids_size) {
+        print("Cannot pick decay: Drop ids have wrong size");
+        return false;
+    }
+
     display[basket] += new_basket_count;
-    bool has_fly_agaric = false;
 
     for (int i = 3; i >= decay_pointer; i--) {
         uint8_t card = decay_pile[decay_pointer];
@@ -145,8 +169,6 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
                 hand[night_card_count]++;
             }
         }
-
-        has_fly_agaric |= card == fly_agaric;
     }
 
     decay_pointer = 4;
@@ -158,7 +180,7 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
             uint8_t card = *(drop_ids++);
 
             if (hand[card] <= 0 || card == n1) {
-                return false;
+                throw runtime_error("Drop ids have the wrong size. This should have been checked before");
             }
 
             hand[card]--;
@@ -169,7 +191,7 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
         }
 
         if (*drop_ids != n1) {
-            return false;
+            throw runtime_error("Drop ids have the wrong size. This should have been checked before");
         }
     }
 
@@ -209,15 +231,19 @@ bool GameState::action_cook(uint8_t id, uint8_t count, uint8_t* display, uint8_t
 
     if (count <= max_count - 2) {
         hand[id] -= count;
+        hand[hand_size] -= count;
         display[id] += count;
     } else {
         if (id < 8 && hand[id + 9] > 0) {
             hand[id + 9]--;
+            hand[hand_size]--;
+            hand[night_card_count]--;
             display[id + 9]++;
             count -= 2;
         }
 
         hand[id] -= count;
+        hand[hand_size]--;
         display[id] += count;
     }
 
@@ -239,13 +265,20 @@ bool GameState::action_sell(uint8_t id, uint8_t count, uint8_t* display, uint8_t
 
     if (count <= max_count - 2) {
         hand[id] -= count;
+        discard_pile[id] += count;
+        hand[hand_size] -= count;
     } else {
         if (id < 8 && hand[id + 9] > 0) {
             hand[id + 9]--;
+            discard_pile[id + 9]++;
+            hand[hand_size]--;
+            hand[night_card_count]--;
             count -= 2;
         }
 
         hand[id] -= count;
+        discard_pile[id] += count;
+        hand[hand_size] -= count;
     }
 
     display[stick] += original_count * cards[id].price;
@@ -259,7 +292,74 @@ bool GameState::action_pan(uint8_t* display, uint8_t* hand) {
     }
 
     hand[pan]--;
+    hand[hand_size]--;
     display[pan]++;
+
+    return true;
+}
+
+bool GameState::action_pass(uint8_t* display, uint8_t* hand) {
+    // action_pick
+    int current_capacity = 8 + display[basket] - (display[fly_agaric] > 0 ? 4 : 0) - hand[hand_size];
+
+    if (current_capacity > 0) {
+        return false;
+    }
+
+    if (current_capacity == 0) {
+        unsigned max_reach = min(8, 2 + display[stick]);
+
+        for (unsigned i = 0; i < max_reach && i < forest_pointer; i++) {
+            if (forest[i] == fly_agaric || forest[i] == basket) {
+                return false;
+            }
+        }
+    }
+
+    // action_decay
+    int decay_pile_size = 0;
+
+    for (int i = 3; i >= decay_pointer; i--) {
+        if (decay_pile[i] == basket) {
+            decay_pile_size -= 2;
+        } else if (decay_pile[i] != fly_agaric) {
+            decay_pile_size++;
+        }
+    }
+
+
+    if (decay_pile_size <= 0) {
+        return false;
+    }
+
+    // action_cook
+    for (unsigned i = 0; i < night_min_id - 1; i++) {
+        if (hand[i] + hand[i + 9] * 2 >= 3) {
+            return false;
+        }
+    }
+
+    if (hand[8] >= 3) {
+        return false;
+    }
+
+    // action_sell
+    for (unsigned i = 0; i < night_min_id; i++) {
+        if (hand[i] >= 2) {
+            return false;
+        }
+    }
+
+    for (unsigned i = night_min_id; i <= night_max_id; i++) {
+        if (hand[i] >= 1) {
+            return false;
+        }
+    }
+
+    // action_pan
+    if (hand[pan] > 0) {
+        return false;
+    }
 
     return true;
 }
@@ -369,6 +469,7 @@ string GameState::str() {
     }
 
     ss << "size: " << (unsigned) hand_p1[hand_size];
+    ss << "; night_card_count: " << (unsigned) hand_p1[night_card_count];
 
     ss << "\nDisplay p1: ";
 
@@ -415,6 +516,7 @@ string GameState::str() {
     }
 
     ss << "size: " << (unsigned) hand_p2[hand_size];
+    ss << "; night_card_count: " << (unsigned) hand_p2[night_card_count];
 
     ss << "\nDiscard pile: ";
 
