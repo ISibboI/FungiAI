@@ -124,10 +124,10 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
         print("New game state:\n" + game_state.str());
     }
 
-    uint8_t points_p1 = 0;
-    uint8_t points_p2 = 0;
-    uint8_t shrooms_p1 = 0;
-    uint8_t shrooms_p2 = 0;
+    int points_p1 = 0;
+    int points_p2 = 0;
+    int shrooms_p1 = 0;
+    int shrooms_p2 = 0;
 
     for (unsigned i = 0; i < shroom_max_id; i++) {
         shrooms_p1 += game_state.display_p1[i];
@@ -135,6 +135,12 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
         points_p1 += game_state.display_p1[i] * cards[i].tastyness;
         points_p2 += game_state.display_p2[i] * cards[i].tastyness;
     }
+
+    #ifdef DEBUG
+    cout << "Game finished!" << endl;
+    cout << "Points player 1 -- 2: " << points_p1 << " -- " << points_p2 << endl;
+    cout << "Mushroom count player 1 -- 2: " << shrooms_p1 << " -- " << shrooms_p2 << endl;
+    #endif // DEBUG
 
     if (points_p1 == points_p2) {
         if (shrooms_p1 == shrooms_p2) {

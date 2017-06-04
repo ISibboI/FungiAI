@@ -112,6 +112,7 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
         display[basket] += 2;
     } else {
         hand[card]++;
+        hand[hand_size]++;
 
         if (card >= night_min_id && card <= night_min_id) {
             hand[night_card_count]++;
@@ -176,9 +177,10 @@ bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand)
     if (has_fly_agaric) {
         display[fly_agaric] = 2;
 
-        for (; hand[hand_size] > 8 + display[basket]; hand[hand_size]--) {
+        for (; hand[hand_size] > 4 + display[basket]; hand[hand_size]--) {
             uint8_t card = *(drop_ids++);
 
+            // TODO check card count before
             if (hand[card] <= 0 || card == n1) {
                 throw runtime_error("Drop ids have the wrong size. This should have been checked before");
             }
@@ -209,22 +211,26 @@ bool GameState::action_cook(uint8_t id, uint8_t count, uint8_t* display, uint8_t
         return false;
     }
 
+    display[pan]--;
     uint8_t resources = count;
 
     if (resources == 8 && hand[butter] >= 2) {
         resources -= 8;
         hand[butter] -= 2;
+        hand[hand_size] -= 2;
         display[butter] += 2;
     } else {
         while (resources >= 5 && hand[cidre] > 0) {
             resources -= 5;
             hand[cidre]--;
+            hand[hand_size]--;
             display[cidre]++;
         }
 
         while (resources >= 4 && hand[butter] > 0) {
             resources -= 4;
             hand[butter]--;
+            hand[hand_size]--;
             display[butter]++;
         }
     }
@@ -257,7 +263,7 @@ bool GameState::action_sell(uint8_t id, uint8_t count, uint8_t* display, uint8_t
         max_count += hand[id + 9] * 2;
     }
 
-    if (count < 3 || count > max_count || display[pan] < 1) {
+    if (count < 2 || count > max_count) {
         return false;
     }
 
