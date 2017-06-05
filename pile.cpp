@@ -27,6 +27,15 @@ void Pile::add_card(uint8_t id) {
     pile[limit++] = id;
 }
 
+void Pile::add_cards(const uint8_t* ids, uint8_t length) {
+    if (limit + length < limit || limit + length > max_limit) {
+        throw runtime_error("Not enough space");
+    }
+    
+    memcpy(pile + limit, ids, length);
+    limit += length;
+}
+
 uint8_t Pile::remove_card(uint8_t index) {
     if (index >= size()) {
         throw runtime_error("Remove index out of bounds");
@@ -42,12 +51,33 @@ uint8_t Pile::remove_card(uint8_t index) {
     return result;
 }
 
-void Pile::clear() {
-    limit = 0;
+uint8_t Pile::remove_last_card() {
+    return remove_card(size() - 1);
 }
 
-bool Pile::is_full() {
-    return limit == max_limit;
+void Pile::remove_cards(uint8_t index, uint8_t length, uint8_t* destination) {
+    if (index + length < index || index + length > limit) {
+        throw runtime_error("Remove range out of bounds");
+    }
+    
+    memcpy(destination, pile + index, length);
+    limit -= length;
+    
+    for (unsigned i = index; i < limit; i++) {
+        pile[i] = pile[i + length];
+    }
+}
+
+void Pile::make_space(uint8_t length) {
+    if (limit + length < limit || limit + length > max_limit) {
+        throw runtime_error("Not enough space");
+    }
+    
+    limit += length;
+}
+
+void Pile::clear() {
+    limit = 0;
 }
 
 void Pile::get_cards(uint8_t*& offset, uint8_t*& limit) {
@@ -63,8 +93,20 @@ uint8_t* Pile::get_limit() {
     return pile + limit;
 }
 
+uint8_t Pile::operator[](uint8_t index) {
+    if (index >= size()) {
+        throw runtime_error("Index out of bounds");
+    }
+    
+    return pile[index];
+}
+
 uint8_t Pile::size() {
     return limit;
+}
+
+bool Pile::is_full() {
+    return limit == max_limit;
 }
 
 int8_t Pile::pick_all_size() {
@@ -95,12 +137,4 @@ string Pile::str() {
     }
     
     return ss.str();
-}
-
-uint8_t Pile::operator[](uint8_t index) {
-    if (index >= size()) {
-        throw runtime_error("Index out of bounds");
-    }
-    
-    return pile[index];
 }

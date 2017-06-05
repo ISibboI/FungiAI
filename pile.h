@@ -10,16 +10,23 @@ public:
     ~Pile();
 
     void add_card(uint8_t id);
+    void add_cards(const uint8_t* ids, uint8_t length);
     uint8_t remove_card(uint8_t index);
+    uint8_t remove_last_card();
+    void remove_cards(uint8_t index, uint8_t length, uint8_t* destination);
+    void make_space(uint8_t length);
     void clear();
-    bool is_full();
+    
     void get_cards(uint8_t*& offset, uint8_t*& limit);
     uint8_t* get_offset();
     uint8_t* get_limit();
-    uint8_t size();
-    int8_t pick_all_size();
-    virtual std::string str();
     uint8_t operator[](uint8_t index);
+    
+    uint8_t size();
+    bool is_full();
+    int8_t pick_all_size();
+    
+    virtual std::string str();
 
 protected:
     std::string name;

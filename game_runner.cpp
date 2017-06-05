@@ -39,15 +39,15 @@ string action_descriptor::str() {
 }
 
 void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_t&, uint8_t*&,
-    uint8_t*&, Pile*&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
-    action_descriptor (&p2)(uint8_t&, uint8_t*&,  uint8_t*&, Pile*&, uint8_t*&,
+    Pile*&, Pile*&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
+    action_descriptor (&p2)(uint8_t&, uint8_t*&,  Pile*&, Pile*&, uint8_t*&,
     uint8_t*&, uint8_t*&, uint8_t*&), void (&event_illegal_turn)(action_descriptor&)) {
 
     bool game_running = true;
     bool turn_p1 = true;
-    uint8_t draw_pointer;
+    uint8_t draw_pile_size;
     uint8_t* discard_pile;
-    uint8_t* forest;
+    Pile* forest;
     Pile* decay_pile;
     uint8_t* display;
     uint8_t* hand;
@@ -64,16 +64,16 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
             print("Getting player turn");
 
             if (turn_p1) {
-                game_state.get_p1_view(draw_pointer, discard_pile, forest,
+                game_state.get_p1_view(draw_pile_size, discard_pile, forest,
                     decay_pile, display, hand, opponent_display,
                     opponent_hand);
-                action = p1(draw_pointer, discard_pile, forest, decay_pile,
+                action = p1(draw_pile_size, discard_pile, forest, decay_pile,
                     display, hand, opponent_display, opponent_hand);
             } else {
-                game_state.get_p2_view(draw_pointer, discard_pile, forest,
+                game_state.get_p2_view(draw_pile_size, discard_pile, forest,
                     decay_pile, display, hand, opponent_display,
                     opponent_hand);
-                action = p2(draw_pointer, discard_pile, forest, decay_pile,
+                action = p2(draw_pile_size, discard_pile, forest, decay_pile,
                     display, hand, opponent_display, opponent_hand);
             }
 
