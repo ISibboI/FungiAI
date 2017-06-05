@@ -11,13 +11,14 @@ using namespace std;
 #define ensure(x) if (!x) {cout << "Test error! " << #x << endl;};
 
 mt19937 r(526L);
-GameState gs(r);
+GameState* gs;
 
 void set_up() {
-    gs = GameState(r);
+    gs = new GameState(r);
 }
 
 void tear_down() {
+    delete gs;
 }
 
 void test(void (&fun)()) {
@@ -27,7 +28,7 @@ void test(void (&fun)()) {
 }
 
 void test_set_up() {
-    cout << gs.str() << endl;
+    cout << gs->str() << endl;
 }
 
 void event_illegal_turn(action_descriptor& action) {
@@ -77,7 +78,7 @@ action_descriptor get_random_turn(uint8_t& draw_pointer, uint8_t*& discard_pile,
 
 void test_stupid_game() {
     int result;
-    run_game(gs, result, get_random_turn, get_random_turn, event_illegal_turn);
+    run_game(*gs, result, get_random_turn, get_random_turn, event_illegal_turn);
     cout << "Result is " << result << endl;
 }
 
