@@ -28,27 +28,115 @@ GameState::GameState(mt19937& r) : draw_pile("Draw pile", sizeof(initial_draw_pi
 
 GameState::~GameState() {}
 
+bool GameState::check_action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
+    if (index >= forest.size()) {
+        return false;
+    }
+
+    uint8_t card = forest[index];
+    uint8_t price = max(0, index - 1);
+    uint8_t remaining_capacity = hand->get_remaining_capacity(*display);
+    uint8_t drop_size = 0;
+    
+    if (card == fly_agaric && display->get_count(fly_agaric) == 0) {
+        drop_size = (uint8_t) max(0, remaining_capacity - 4);
+        
+        for (unsigned i = 0; i < special_min_id; i++) {
+            if (drop_ids->get_count(special_min_id) > hand->get_count(special_min_id)) {
+                return false;
+            }
+        }
+        
+        for (unsigned i = special_min_id; i < cards_size; i++) {
+            if (drop_ids->get_count(special_min_id) > 0) {
+                throw runtime_error("Can't drop cards that never go into the hand");
+            }
+        }
+    }
+    
+    return cards[card].size <= remaining_capacity && price <= display->get_count(stick) && drop_ids->size() == drop_size;
+}
+
+bool GameState::check_action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
+    // TODO create function to check dropping
+
+    return decay_pile.pick_all_size() <= hand->get_remaining_capacity(*display);
+}
+
+bool GameState::check_action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
+    return display->get_count(pan) > 0 && count >= 3 && hand->get_effective_shroom_count(id) >= count;
+}
+
+bool GameState::check_action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
+    return count >= 2 && hand->get_effective_shroom_count(id) >= count;
+}
+
+bool GameState::check_action_pan(StructuredPile* display, HandStructuredPile* hand) {
+    return hand->get_count(pan) > 0;
+}
+
+bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* hand) {
+    int8_t capacity = hand->get_remaining_capacity(*display);
+    uint8_t forest_limit = min(forest.size(), (uint8_t) (2 + display->get_count(stick)));
+
+    // Pick
+    for (unsigned i = 0; i < forest_limit; i++) {
+        if (cards[forest[i]].size <= capacity) {
+            return false;
+        }
+    }
+    
+    // Decay
+    if (decay_pile.pick_all_size() <= capacity) {
+        return false;
+    }
+
+    // Cook & Sell
+    for (unsigned i = 0; i < night_min_id; i++) {
+        if (hand->get_count(i) >= 2) {
+            return false;
+        }
+    }
+    
+    if (hand->get_night_card_count() > 0) {
+        return false;
+    }
+    
+    // Pan
+    if (check_action_pan(display, hand)) {
+        return false;
+    }
+    
+    return true;
+}
+
 bool GameState::action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
+    // TODO
     return false;
 }
 
 bool GameState::action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
+    // TODO
     return false;
 }
 
 bool GameState::action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
+    // TODO
     return false;
 }
 
 bool GameState::action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
+    // TODO
     return false;
 }
 
 bool GameState::action_pan(StructuredPile* display, HandStructuredPile* hand) {
+    // TODO
     return false;
 }
 
 bool GameState::action_pass(StructuredPile* display, HandStructuredPile* hand) {
+    // TODO
     return false;
 }
 

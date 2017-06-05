@@ -15,6 +15,9 @@ public:
     
     std::string str();
     
+    int8_t get_remaining_capacity(StructuredPile& display);
+    uint8_t get_effective_shroom_count(uint8_t id);
+    
 private:
     uint8_t night_card_sum;
 };

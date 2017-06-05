@@ -6,10 +6,11 @@
 class Card {
 public:
     const std::string name;
-    const uint8_t tastyness;
-    const uint8_t price;
+    const int8_t tastyness;
+    const int8_t price;
+    const int8_t size;
 
-    Card(std::string name, int8_t tastyness, int8_t price);
+    Card(std::string name, int8_t tastyness, int8_t price, int8_t size);
     ~Card();
     std::string str() const;
 };
@@ -17,30 +18,30 @@ public:
 const uint8_t cards_size = 24;
 
 const Card cards[cards_size]= {
-   Card("Honey fungus", 1, 1),
-   Card("Tree Ear", 1, 2),
-   Card("Lawyer's Wig", 2, 1),
-   Card("Shiitake", 2, 2),
-   Card("Hen of the Woods", 3, 1),
-   Card("Birch bolete", 3, 2),
-   Card("Porcini", 3, 3),
-   Card("Chanterelle", 4, 2),
-   Card("Morels", 6, 4),
-   Card("Night Honey fungus", 2, 2),
-   Card("Night Tree Ear", 2, 4),
-   Card("Night Lawyer's Wig", 4, 2),
-   Card("Night Shiitake", 4, 4),
-   Card("Night Hen of the Woods", 6, 2),
-   Card("Night Birch bolete", 6, 4),
-   Card("Night Porcini", 6, 6),
-   Card("Night Chanterelle", 8, 4),
-   Card("Butter", 3, 4),
-   Card("Cidre", 5, 5),
-   Card("Pan", -1, -1),
-   Card("Basket", -1, -1),
-   Card("Moon", -1, -1),
-   Card("Fly agaric", -1, -1),
-   Card("Stick", -1, -1)
+   Card("Honey fungus", 1, 1, 1),
+   Card("Tree Ear", 1, 2, 1),
+   Card("Lawyer's Wig", 2, 1, 1),
+   Card("Shiitake", 2, 2, 1),
+   Card("Hen of the Woods", 3, 1, 1),
+   Card("Birch bolete", 3, 2, 1),
+   Card("Porcini", 3, 3, 1),
+   Card("Chanterelle", 4, 2, 1),
+   Card("Morels", 6, 4, 1),
+   Card("Night Honey fungus", 2, 2, 1),
+   Card("Night Tree Ear", 2, 4, 1),
+   Card("Night Lawyer's Wig", 4, 2, 1),
+   Card("Night Shiitake", 4, 4, 1),
+   Card("Night Hen of the Woods", 6, 2, 1),
+   Card("Night Birch bolete", 6, 4, 1),
+   Card("Night Porcini", 6, 6, 1),
+   Card("Night Chanterelle", 8, 4, 1),
+   Card("Butter", 3, 4, 1),
+   Card("Cidre", 5, 5, 1),
+   Card("Pan", -1, -1, 1),
+   Card("Basket", -1, -1, -2),
+   Card("Moon", -1, -1, 0),
+   Card("Fly agaric", -1, -1, 0),
+   Card("Stick", -1, -1, 0)
 };
 
 const uint8_t night_min_id = 9;

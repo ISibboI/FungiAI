@@ -46,6 +46,13 @@ public:
     GameState(std::mt19937& r);
     ~GameState();
 
+    bool check_action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
+    bool check_action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
+    bool check_action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
+    bool check_action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
+    bool check_action_pan(StructuredPile* display, HandStructuredPile* hand);
+    bool check_action_pass(StructuredPile* display, HandStructuredPile* hand);
+
     bool action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
     bool action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
     bool action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
