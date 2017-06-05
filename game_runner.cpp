@@ -1,10 +1,15 @@
 #include "game_runner.h"
 #include "debug.h"
+#include "structured_pile.h"
 
 #include <stdexcept>
 #include <sstream>
 
 using namespace std;
+
+action_descriptor::action_descriptor() : drop_ids("Drop ids") {}
+
+action_descriptor::~action_descriptor() {}
 
 string action_descriptor::str() {
     stringstream ss;
@@ -12,47 +17,28 @@ string action_descriptor::str() {
     ss << "(action: " << (unsigned) action << ", ";
     ss << "target: " << (unsigned) target << ", ";
     ss << "count: " << (unsigned) count << ", ";
-    ss << "drop_ids: ";
-
-    if (drop_ids == 0) {
-        ss << "0";
-    } else {
-        ss << "[";
-        bool once = true;
-
-        for (uint8_t* id = drop_ids; *id != n1; id++) {
-            if (once) {
-                once = false;
-            } else {
-                ss << ", ";
-            }
-
-            ss << (unsigned) *id;
-        }
-
-        ss << "]";
-    }
+    ss << drop_ids.str();
 
     ss << ")";
 
     return ss.str();
 }
 
-void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_t&, uint8_t*&,
-    Pile*&, Pile*&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
-    action_descriptor (&p2)(uint8_t&, uint8_t*&,  Pile*&, Pile*&, uint8_t*&,
-    uint8_t*&, uint8_t*&, uint8_t*&), void (&event_illegal_turn)(action_descriptor&)) {
+void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_t&, StructuredPile*&,
+    Pile*&, Pile*&, StructuredPile*&, HandStructuredPile*&, StructuredPile*&, HandStructuredPile*&),
+    action_descriptor (&p2)(uint8_t&, StructuredPile*&,  Pile*&, Pile*&, StructuredPile*&,
+    HandStructuredPile*&, StructuredPile*&, HandStructuredPile*&), void (&event_illegal_turn)(action_descriptor&)) {
 
     bool game_running = true;
     bool turn_p1 = true;
     uint8_t draw_pile_size;
-    uint8_t* discard_pile;
+    StructuredPile* discard_pile;
     Pile* forest;
     Pile* decay_pile;
-    uint8_t* display;
-    uint8_t* hand;
-    uint8_t* opponent_display;
-    uint8_t* opponent_hand;
+    StructuredPile* display;
+    HandStructuredPile* hand;
+    StructuredPile* opponent_display;
+    HandStructuredPile* opponent_hand;
 
     action_descriptor action;
 
@@ -81,10 +67,10 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
 
             switch (action.action) {
             case 1:
-                successful_turn = game_state.action_pick(action.target, action.drop_ids, display, hand);
+                successful_turn = game_state.action_pick(action.target, &action.drop_ids, display, hand);
                 break;
             case 2:
-                successful_turn = game_state.action_decay(action.drop_ids, display, hand);
+                successful_turn = game_state.action_decay(&action.drop_ids, display, hand);
                 break;
             case 3:
                 successful_turn = game_state.action_cook(action.target, action.count, display, hand);
@@ -111,10 +97,6 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
                 print(string("Could not find a correct turn for player ") + (turn_p1 ? "1" : "2"));
                 print("Game state:\n" + game_state.str());
                 throw runtime_error("Too many incorrect turns");
-            }
-
-            if (action.drop_ids != 0) {
-                delete[] action.drop_ids;
             }
         }
 

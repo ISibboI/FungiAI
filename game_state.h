@@ -3,6 +3,8 @@
 
 #include "cards.h"
 #include "pile.h"
+#include "structured_pile.h"
+#include "hand_structured_pile.h"
 
 #include <algorithm>
 #include <random>
@@ -44,38 +46,38 @@ public:
     GameState(std::mt19937& r);
     ~GameState();
 
-    bool action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, uint8_t* hand);
-    bool action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand);
-    bool action_cook(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand);
-    bool action_sell(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand);
-    bool action_pan(uint8_t* display, uint8_t* hand);
-    bool action_pass(uint8_t* display, uint8_t* hand);
+    bool action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
+    bool action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
+    bool action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
+    bool action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
+    bool action_pan(StructuredPile* display, HandStructuredPile* hand);
+    bool action_pass(StructuredPile* display, HandStructuredPile* hand);
 
     bool finalize_turn(bool p1);
 
-    void get_p1_view(uint8_t& draw_pile_size, uint8_t*& discard_pile,
+    void get_p1_view(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
         Pile*& forest, Pile*& decay_pile,
-        uint8_t*& display, uint8_t*& hand,
-        uint8_t*& opponent_display, uint8_t*& opponent_hand);
-    void get_p2_view(uint8_t& draw_pile_size, uint8_t*& discard_pile,
+        StructuredPile*& display, HandStructuredPile*& hand,
+        StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand);
+    void get_p2_view(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
         Pile*& forest, Pile*& decay_pile,
-        uint8_t*& display, uint8_t*& hand,
-        uint8_t*& opponent_display, uint8_t*& opponent_hand);
+        StructuredPile*& display, HandStructuredPile*& hand,
+        StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand);
 
     std::string str();
 
     Pile draw_pile;
     Pile forest;
     Pile decay_pile;
-    uint8_t discard_pile[cards_size - 1];
+    StructuredPile discard_pile;
 
-    uint8_t display_p1[cards_size];
-    uint8_t display_p2[cards_size];
-    uint8_t hand_p1[cards_size - 2];
-    uint8_t hand_p2[cards_size - 2];
+    StructuredPile display_p1;
+    StructuredPile display_p2;
+    HandStructuredPile hand_p1;
+    HandStructuredPile hand_p2;
 
 private:
-    inline void draw_initial_card(uint8_t* display, uint8_t* hand);
+    inline void draw_initial_card(StructuredPile& display, HandStructuredPile& hand);
 };
 
 #endif // GAME_STATE_H

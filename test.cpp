@@ -37,10 +37,10 @@ void event_illegal_turn(action_descriptor& action) {
     #endif // DEBUG
 }
 
-action_descriptor get_random_turn(uint8_t& draw_pile_size, uint8_t*& discard_pile,
+action_descriptor get_random_turn(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
     Pile*& forest, Pile*& decay_pile,
-    uint8_t*& display, uint8_t*& hand,
-    uint8_t*& opponent_display, uint8_t*& opponent_hand) {
+    StructuredPile*& display, HandStructuredPile*& hand,
+    StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand) {
 
     print("Entering get random turn");
     uniform_int_distribution<uint8_t> d6(1, 6);
@@ -49,7 +49,6 @@ action_descriptor get_random_turn(uint8_t& draw_pile_size, uint8_t*& discard_pil
     action_descriptor action;
     print("Completing action 1");
     action.action = d6(r);
-    action.drop_ids = 0;
 
     print("Completing action 2");
 
@@ -57,13 +56,11 @@ action_descriptor get_random_turn(uint8_t& draw_pile_size, uint8_t*& discard_pil
     case 1:
         action.target = d8(r);
     case 2:
-        action.drop_ids = new uint8_t[1];
-        action.drop_ids[0] = n1;
         break;
     case 3:
     case 4:
         action.target = d19(r);
-        action.count = hand[action.target];
+        action.count = (*hand)[action.target];
         break;
     case 5:
     case 6:
