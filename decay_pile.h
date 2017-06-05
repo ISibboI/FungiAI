@@ -4,6 +4,7 @@
 #include "cards.h"
 
 #include <cstdint>
+#include <string>
 
 class DecayPile {
 public:
@@ -11,11 +12,14 @@ public:
     ~DecayPile();
     
     void add_card(uint8_t id);
-    void empty();
+    void clear();
     bool is_full();
     void get_cards(uint8_t*& offset, uint8_t*& limit);
+    uint8_t* get_offset();
+    uint8_t* get_limit();
     uint8_t size();
-    uint8_t net_size();
+    int8_t net_size();
+    std::string str();
 
 private:
     static const uint8_t SIZE = 4;
