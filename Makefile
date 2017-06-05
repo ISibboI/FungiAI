@@ -1,7 +1,7 @@
 TARGET_FILE=fungi_ai
 PROD_OBJ=main.o
 TEST_OBJ=test.o
-BOTH_OBJ=cards.o game_state.o debug.o game_runner.o
+BOTH_OBJ=cards.o game_state.o debug.o game_runner.o decay_pile.o
 
 ##########################################
 
