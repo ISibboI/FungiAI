@@ -39,8 +39,8 @@ string action_descriptor::str() {
 }
 
 void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_t&, uint8_t*&,
-    uint8_t*&, DecayPile*&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
-    action_descriptor (&p2)(uint8_t&, uint8_t*&,  uint8_t*&, DecayPile*&, uint8_t*&,
+    uint8_t*&, Pile*&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
+    action_descriptor (&p2)(uint8_t&, uint8_t*&,  uint8_t*&, Pile*&, uint8_t*&,
     uint8_t*&, uint8_t*&, uint8_t*&), void (&event_illegal_turn)(action_descriptor&)) {
 
     bool game_running = true;
@@ -48,7 +48,7 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
     uint8_t draw_pointer;
     uint8_t* discard_pile;
     uint8_t* forest;
-    DecayPile* decay_pile;
+    Pile* decay_pile;
     uint8_t* display;
     uint8_t* hand;
     uint8_t* opponent_display;

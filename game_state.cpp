@@ -7,7 +7,7 @@
 
 using namespace std;
 
-GameState::GameState(mt19937& r) {
+GameState::GameState(mt19937& r) : decay_pile("Decay pile", 4) {
     memcpy(draw_pile, initial_draw_pile, sizeof(initial_draw_pile) * sizeof(uint8_t));
     shuffle(draw_pile, draw_pile + sizeof(draw_pile) * sizeof(uint8_t), r);
     print_array("draw_pile", draw_pile, sizeof(draw_pile));
@@ -342,7 +342,7 @@ bool GameState::finalize_turn(bool p1) {
 }
 
 void GameState::get_p1_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
-    uint8_t*& forest, DecayPile*& decay_pile,
+    uint8_t*& forest, Pile*& decay_pile,
     uint8_t*& display, uint8_t*& hand,
     uint8_t*& opponent_display, uint8_t*& opponent_hand) {
 
@@ -357,7 +357,7 @@ void GameState::get_p1_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
 }
 
 void GameState::get_p2_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
-    uint8_t*& forest, DecayPile*& decay_pile,
+    uint8_t*& forest, Pile*& decay_pile,
     uint8_t*& display, uint8_t*& hand,
     uint8_t*& opponent_display, uint8_t*& opponent_hand) {
 

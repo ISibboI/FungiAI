@@ -7,11 +7,12 @@
 
 using namespace std;
 
-Pile::Pile(uint8_t max_limit) {
+Pile::Pile(string name, uint8_t max_limit) {
     pile = new uint8_t[max_limit];
     memset(pile, 0, max_limit * sizeof(uint8_t));
     limit = 0;
     this->max_limit = max_limit;
+    this->name = name;
 }
 
 Pile::~Pile() {
@@ -24,6 +25,21 @@ void Pile::add_card(uint8_t id) {
     }
     
     pile[limit++] = id;
+}
+
+uint8_t Pile::remove_card(uint8_t index) {
+    if (index >= size()) {
+        throw runtime_error("Remove index out of bounds");
+    }
+
+    uint8_t result = pile[index];
+    limit--;
+    
+    for (unsigned i = index; i < limit; i++) {
+        pile[i] = pile[i + 1];
+    }
+    
+    return result;
 }
 
 void Pile::clear() {
@@ -51,8 +67,24 @@ uint8_t Pile::size() {
     return limit;
 }
 
+int8_t Pile::pick_all_size() {
+    int8_t result = 0;
+    
+    for (unsigned i = 0; i < limit; i++) {
+        if (pile[i] == basket) {
+            result -= 2;
+        } else if (pile[i] < special_min_id) {
+            result++;
+        }
+    }
+    
+    return result;
+}
+
 string Pile::str() {
     stringstream ss;
+    
+    ss << name << ": ";
     
     for (unsigned i = 0; i < limit; i++) {
         ss << cards[pile[i]].str();
@@ -63,4 +95,12 @@ string Pile::str() {
     }
     
     return ss.str();
+}
+
+uint8_t Pile::operator[](uint8_t index) {
+    if (index >= size()) {
+        throw runtime_error("Index out of bounds");
+    }
+    
+    return pile[index];
 }

@@ -2,7 +2,7 @@
 #define GAME_STATE_H
 
 #include "cards.h"
-#include "decay_pile.h"
+#include "pile.h"
 
 #include <algorithm>
 #include <random>
@@ -54,11 +54,11 @@ public:
     bool finalize_turn(bool p1);
 
     void get_p1_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
-        uint8_t*& forest, DecayPile*& decay_pile,
+        uint8_t*& forest, Pile*& decay_pile,
         uint8_t*& display, uint8_t*& hand,
         uint8_t*& opponent_display, uint8_t*& opponent_hand);
     void get_p2_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
-        uint8_t*& forest, DecayPile*& decay_pile,
+        uint8_t*& forest, Pile*& decay_pile,
         uint8_t*& display, uint8_t*& hand,
         uint8_t*& opponent_display, uint8_t*& opponent_hand);
 
@@ -69,7 +69,7 @@ public:
     uint8_t discard_pile[cards_size - 1];
     uint8_t forest[8];
     uint8_t forest_pointer;
-    DecayPile decay_pile;
+    Pile decay_pile;
 
     uint8_t display_p1[cards_size];
     uint8_t display_p2[cards_size];
