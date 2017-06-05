@@ -26,7 +26,7 @@ public:
     bool is_full();
     int8_t pick_all_size();
     
-    virtual std::string str();
+    std::string str();
 
 protected:
     std::string name;
