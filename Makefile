@@ -1,7 +1,7 @@
 TARGET_FILE=fungi_ai
 PROD_OBJ=main.o
 TEST_OBJ=test.o
-BOTH_OBJ=cards.o game_state.o debug.o game_runner.o decay_pile.o
+BOTH_OBJ=cards.o game_state.o debug.o game_runner.o decay_pile.o pile.o
 
 ##########################################
 
@@ -10,7 +10,7 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 CC=g++
-CFLAGS=-Wall -Werror -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp
+CFLAGS=-Wall -Werror -Wno-unused-function -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp
 LDFLAGS=-fopenmp
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
