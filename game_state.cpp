@@ -17,7 +17,6 @@ GameState::GameState(mt19937& r) {
     memcpy(forest, draw_pile + draw_pointer, 8 * sizeof(uint8_t));
 
     memset(discard_pile, 0, sizeof(discard_pile) * sizeof(uint8_t));
-    memset(decay_pile, 0, sizeof(decay_pile) * sizeof(uint8_t));
     memset(display_p1, 0, sizeof(display_p1) * sizeof(uint8_t));
     memset(display_p2, 0, sizeof(display_p2) * sizeof(uint8_t));
     memset(hand_p1, 0, sizeof(hand_p1) * sizeof(uint8_t));
@@ -31,7 +30,6 @@ GameState::GameState(mt19937& r) {
         draw_initial_card(display_p2, hand_p2);
     }
 
-    decay_pointer = 4;
     forest_pointer = 8;
 }
 
@@ -124,80 +122,7 @@ bool GameState::action_pick(uint8_t index, uint8_t* drop_ids, uint8_t* display, 
 }
 
 bool GameState::action_decay(uint8_t* drop_ids, uint8_t* display, uint8_t* hand) {
-    uint8_t current_hand_limit = 8 + display[basket] - (display[fly_agaric] > 0 ? 4 : 0);
-    uint8_t new_basket_count = 0;
-    uint8_t decay_size = 4 - decay_pointer;
-    bool has_fly_agaric = false;
-
-    for (int i = 3; i >= decay_pointer; i--) {
-        uint8_t card = decay_pile[decay_pointer];
-        new_basket_count += 2 * (decay_pile[decay_pointer] == basket);
-
-        if (card == basket || card == fly_agaric) {
-            decay_size--;
-        }
-
-        has_fly_agaric |= card == fly_agaric;
-    }
-
-    uint8_t new_hand_limit = current_hand_limit + new_basket_count;
-
-    if (new_hand_limit < hand[hand_size] + decay_size) {
-        return false;
-    }
-
-    // Ensure the drop_ids have the right size
-    unsigned drop_size = max(0, hand[hand_size] - 8 - display[basket] + (has_fly_agaric ? 4 : 0));
-    unsigned drop_ids_size = 0;
-
-    for (; drop_ids[drop_ids_size] != n1; drop_ids_size++);
-
-    if (drop_size != drop_ids_size) {
-        print("Cannot pick decay: Drop ids have wrong size");
-        return false;
-    }
-
-    display[basket] += new_basket_count;
-
-    for (int i = 3; i >= decay_pointer; i--) {
-        uint8_t card = decay_pile[decay_pointer];
-
-        if (card != basket && card != fly_agaric) {
-            hand[card]++;
-            hand[hand_size]++;
-
-            if (card >= night_min_id && card <= night_min_id) {
-                hand[night_card_count]++;
-            }
-        }
-    }
-
-    decay_pointer = 4;
-
-    if (has_fly_agaric) {
-        display[fly_agaric] = 2;
-
-        for (; hand[hand_size] > 4 + display[basket]; hand[hand_size]--) {
-            uint8_t card = *(drop_ids++);
-
-            // TODO check card count before
-            if (hand[card] <= 0 || card == n1) {
-                throw runtime_error("Drop ids have the wrong size. This should have been checked before");
-            }
-
-            hand[card]--;
-
-            if (card >= night_min_id && card <= night_min_id) {
-                hand[night_card_count]--;
-            }
-        }
-
-        if (*drop_ids != n1) {
-            throw runtime_error("Drop ids have the wrong size. This should have been checked before");
-        }
-    }
-
-    return true;
+    return false;
 }
 
 bool GameState::action_cook(uint8_t id, uint8_t count, uint8_t* display, uint8_t* hand) {
@@ -323,20 +248,7 @@ bool GameState::action_pass(uint8_t* display, uint8_t* hand) {
     }
 
     // action_decay
-    int decay_pile_size = 0;
-
-    for (int i = 3; i >= decay_pointer; i--) {
-        if (decay_pile[i] == basket) {
-            decay_pile_size -= 2;
-        } else if (decay_pile[i] != fly_agaric) {
-            decay_pile_size++;
-        }
-    }
-
-
-    if (decay_pile_size <= 0) {
-        return false;
-    }
+    // TODO
 
     // action_cook
     for (unsigned i = 0; i < night_min_id - 1; i++) {
@@ -378,21 +290,19 @@ bool GameState::finalize_turn(bool p1) {
         return false;
     }
 
-    if (decay_pointer == 0) {
+    if (decay_pile.is_full()) {
         print("Decay pile is full");
-        for (int i = 0; i < 4; i++) {
-            discard_pile[decay_pile[i]]++;
-        }
+        // TODO Add decay pile to discard pile
+        
+        decay_pile.clear();
     }
-
-    decay_pointer = (decay_pointer + 3) % 4;
 
     print_var(forest[0]);
 
-    decay_pile[decay_pointer] = forest[0];
+    decay_pile.add_card(forest[0]);
     remove_forest_card(0);
 
-    print_array("decay_pile", decay_pile, 4);
+    print(decay_pile.str());
     print_var(draw_pointer);
     print_array("draw_pile", draw_pile, draw_pointer + 1);
     print_var(forest_pointer);
@@ -403,7 +313,7 @@ bool GameState::finalize_turn(bool p1) {
         forest[forest_pointer] = draw_pile[--draw_pointer];
     }
 
-    print_array("decay_pile", decay_pile, 4);
+    print(decay_pile.str());
     print_var(draw_pointer);
     print_array("draw_pile", draw_pile, draw_pointer + 1);
     print_var(forest_pointer);
@@ -432,15 +342,14 @@ bool GameState::finalize_turn(bool p1) {
 }
 
 void GameState::get_p1_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
-    uint8_t*& forest, uint8_t*& decay_pile, uint8_t& decay_pointer,
+    uint8_t*& forest, DecayPile*& decay_pile,
     uint8_t*& display, uint8_t*& hand,
     uint8_t*& opponent_display, uint8_t*& opponent_hand) {
 
     draw_pointer = this->draw_pointer;
     discard_pile = this->discard_pile;
     forest = this->forest;
-    decay_pile = this->decay_pile;
-    decay_pointer = this->decay_pointer;
+    decay_pile = &this->decay_pile;
     display = display_p1;
     hand = hand_p1;
     opponent_display = display_p2;
@@ -448,15 +357,14 @@ void GameState::get_p1_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
 }
 
 void GameState::get_p2_view(uint8_t& draw_pointer, uint8_t*& discard_pile,
-    uint8_t*& forest, uint8_t*& decay_pile, uint8_t& decay_pointer,
+    uint8_t*& forest, DecayPile*& decay_pile,
     uint8_t*& display, uint8_t*& hand,
     uint8_t*& opponent_display, uint8_t*& opponent_hand) {
 
     draw_pointer = this->draw_pointer;
     discard_pile = this->discard_pile;
     forest = this->forest;
-    decay_pile = this->decay_pile;
-    decay_pointer = this->decay_pointer;
+    decay_pile = &this->decay_pile;
     display = display_p2;
     hand = hand_p2;
     opponent_display = display_p1;
@@ -496,13 +404,13 @@ string GameState::str() {
     }
 
     #ifdef DEBUG
-    print_var(decay_pointer);
+    print_var(decay_pile.size());
     #endif
 
     ss << "\nDecay pile: ";
 
-    for (unsigned i = 3; i >= decay_pointer && i < 4; i--) {
-        ss << cards[decay_pile[i]].str() << "; ";
+    for (uint8_t* i = decay_pile.get_offset(); i < decay_pile.get_limit(); i++) {
+        ss << cards[*i].str() << "; ";
     }
 
     ss << "\nDisplay p2: ";

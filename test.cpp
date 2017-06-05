@@ -37,7 +37,7 @@ void event_illegal_turn(action_descriptor& action) {
 }
 
 action_descriptor get_random_turn(uint8_t& draw_pointer, uint8_t*& discard_pile,
-    uint8_t*& forest, uint8_t*& decay_pile, uint8_t& decay_pointer,
+    uint8_t*& forest, DecayPile*& decay_pile,
     uint8_t*& display, uint8_t*& hand,
     uint8_t*& opponent_display, uint8_t*& opponent_hand) {
 

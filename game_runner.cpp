@@ -39,8 +39,8 @@ string action_descriptor::str() {
 }
 
 void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_t&, uint8_t*&,
-    uint8_t*&, uint8_t*&, uint8_t&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
-    action_descriptor (&p2)(uint8_t&, uint8_t*&,  uint8_t*&, uint8_t*&, uint8_t&, uint8_t*&,
+    uint8_t*&, DecayPile*&, uint8_t*&, uint8_t*&, uint8_t*&, uint8_t*&),
+    action_descriptor (&p2)(uint8_t&, uint8_t*&,  uint8_t*&, DecayPile*&, uint8_t*&,
     uint8_t*&, uint8_t*&, uint8_t*&), void (&event_illegal_turn)(action_descriptor&)) {
 
     bool game_running = true;
@@ -48,8 +48,7 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
     uint8_t draw_pointer;
     uint8_t* discard_pile;
     uint8_t* forest;
-    uint8_t* decay_pile;
-    uint8_t decay_pointer;
+    DecayPile* decay_pile;
     uint8_t* display;
     uint8_t* hand;
     uint8_t* opponent_display;
@@ -66,16 +65,16 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
 
             if (turn_p1) {
                 game_state.get_p1_view(draw_pointer, discard_pile, forest,
-                    decay_pile, decay_pointer, display, hand, opponent_display,
+                    decay_pile, display, hand, opponent_display,
                     opponent_hand);
                 action = p1(draw_pointer, discard_pile, forest, decay_pile,
-                    decay_pointer, display, hand, opponent_display, opponent_hand);
+                    display, hand, opponent_display, opponent_hand);
             } else {
                 game_state.get_p2_view(draw_pointer, discard_pile, forest,
-                    decay_pile, decay_pointer, display, hand, opponent_display,
+                    decay_pile, display, hand, opponent_display,
                     opponent_hand);
                 action = p2(draw_pointer, discard_pile, forest, decay_pile,
-                    decay_pointer, display, hand, opponent_display, opponent_hand);
+                    display, hand, opponent_display, opponent_hand);
             }
 
             print("Executing action: " + action.str());
