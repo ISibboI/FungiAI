@@ -1,6 +1,7 @@
 #include "game_state.h"
 #include "debug.h"
 #include "game_runner.h"
+#include "action.h"
 
 #include <iostream>
 #include <random>
@@ -31,29 +32,28 @@ void test_set_up() {
     cout << gs->str() << endl;
 }
 
-void event_illegal_turn(action_descriptor& action) {
+void event_illegal_turn(Action* action) {
     #ifdef DEBUG
     // cout << "Illegal turn: " << (unsigned) action.action << endl;
     #endif // DEBUG
 }
 
-action_descriptor get_random_turn(PlayerView& player_view) {
-
+Action* get_random_turn(PlayerView& player_view) {
     uniform_int_distribution<uint8_t> d6(1, 6);
     uniform_int_distribution<uint8_t> d8(0, 7);
     uniform_int_distribution<uint8_t> d9(0, 8);
-    action_descriptor action;
-    action.action = d6(r);
+    Action* action = new Action(d6(r), player_view.display, player_view.hand);
 
-    switch (action.action) {
+    switch (action->id) {
     case 1:
-        action.target = d8(r);
+        action->target = d8(r);
     case 2:
+        action->drop_ids = new StructuredPile("Drop ids");
         break;
     case 3:
     case 4:
-        action.target = d9(r);
-        action.count = (*player_view.hand)[action.target];
+        action->target = d9(r);
+        action->count = (*action->hand)[action->target];
         break;
     case 5:
     case 6:

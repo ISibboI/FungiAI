@@ -33,9 +33,6 @@ bool GameState::check_general_pickup(StructuredPile* drop_ids, StructuredPile* d
     int8_t pick_all_size = picked_cards->pick_all_size();
     int8_t remaining_capacity = hand->get_remaining_capacity(*display);
 
-    print_svar(pick_all_size)
-    print_svar(remaining_capacity)
-
     if (pick_all_size > remaining_capacity) {
         return false;
     }
@@ -125,6 +122,25 @@ bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* h
     }
 
     return true;
+}
+
+bool GameState::check_action(Action* action) {
+    switch (action->id) {
+    case 1:
+        return check_action_pick(action->target, action->drop_ids, action->display, action->hand);
+    case 2:
+        return check_action_decay(action->drop_ids, action->display, action->hand);
+    case 3:
+        return check_action_cook(action->target, action->count, action->display, action->hand);
+    case 4:
+        return check_action_sell(action->target, action->count, action->display, action->hand);
+    case 5:
+        return check_action_pan(action->display, action->hand);
+    case 6:
+        return check_action_pass(action->display, action->hand);
+    default:
+        throw runtime_error("Unknown action id");
+    }
 }
 
 bool GameState::action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
@@ -264,6 +280,25 @@ bool GameState::action_pan(StructuredPile* display, HandStructuredPile* hand) {
 
 bool GameState::action_pass(StructuredPile* display, HandStructuredPile* hand) {
     return check_action_pass(display, hand);
+}
+
+bool GameState::action(Action* action) {
+    switch (action->id) {
+    case 1:
+        return action_pick(action->target, action->drop_ids, action->display, action->hand);
+    case 2:
+        return action_decay(action->drop_ids, action->display, action->hand);
+    case 3:
+        return action_cook(action->target, action->count, action->display, action->hand);
+    case 4:
+        return action_sell(action->target, action->count, action->display, action->hand);
+    case 5:
+        return action_pan(action->display, action->hand);
+    case 6:
+        return action_pass(action->display, action->hand);
+    default:
+        throw runtime_error("Unknown action id");
+    }
 }
 
 bool GameState::finalize_turn(bool p1) {

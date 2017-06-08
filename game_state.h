@@ -6,9 +6,11 @@
 #include "structured_pile.h"
 #include "hand_structured_pile.h"
 #include "player_view.h"
+#include "action.h"
 
 #include <algorithm>
 #include <random>
+// #include <vector>
 
 const uint8_t n1 = (uint8_t) -1;
 
@@ -54,6 +56,7 @@ public:
     bool check_action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
     bool check_action_pan(StructuredPile* display, HandStructuredPile* hand);
     bool check_action_pass(StructuredPile* display, HandStructuredPile* hand);
+    bool check_action(Action* action);
 
     bool action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
     bool action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
@@ -61,6 +64,9 @@ public:
     bool action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand);
     bool action_pan(StructuredPile* display, HandStructuredPile* hand);
     bool action_pass(StructuredPile* display, HandStructuredPile* hand);
+    bool action(Action* action);
+
+    // vector<Action*> generate_actions_pick(StructuredPile* display, HandStructuredPile* hand);
 
     bool finalize_turn(bool p1);
 

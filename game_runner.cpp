@@ -7,31 +7,13 @@
 
 using namespace std;
 
-action_descriptor::action_descriptor() : drop_ids("Drop ids") {}
-
-action_descriptor::~action_descriptor() {}
-
-string action_descriptor::str() {
-    stringstream ss;
-
-    ss << "(action: " << (unsigned) action << ", ";
-    ss << "target: " << (unsigned) target << ", ";
-    ss << "count: " << (unsigned) count << ", ";
-    ss << drop_ids.str();
-
-    ss << ")";
-
-    return ss.str();
-}
-
-void run_game(GameState& game_state, int& result, action_descriptor (&p1)(PlayerView&),
-    action_descriptor (&p2)(PlayerView&), void (&event_illegal_turn)(action_descriptor&)) {
+void run_game(GameState& game_state, int& result, Action* (&p1)(PlayerView&),
+    Action* (&p2)(PlayerView&), void (&event_illegal_turn)(Action*)) {
 
     bool game_running = true;
     bool turn_p1 = true;
     PlayerView* player_view = 0;
-
-    action_descriptor action;
+    Action* action = 0;
 
     while (game_running) {
         bool successful_turn = false;
@@ -48,37 +30,38 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(Player
                 action = p2(*player_view);
             }
 
-            print("Executing action: " + action.str());
+            print("Trying action: " + action->str());
 
-            switch (action.action) {
+            switch (action->id) {
             case 1:
-                successful_turn = game_state.action_pick(action.target, &action.drop_ids, player_view->display, player_view->hand);
+                successful_turn = game_state.action_pick(action->target, action->drop_ids, action->display, action->hand);
                 break;
             case 2:
-                successful_turn = game_state.action_decay(&action.drop_ids, player_view->display, player_view->hand);
+                successful_turn = game_state.action_decay(action->drop_ids, action->display, action->hand);
                 break;
             case 3:
-                successful_turn = game_state.action_cook(action.target, action.count, player_view->display, player_view->hand);
+                successful_turn = game_state.action_cook(action->target, action->count, action->display, action->hand);
                 break;
             case 4:
-                successful_turn = game_state.action_sell(action.target, action.count, player_view->display, player_view->hand);
+                successful_turn = game_state.action_sell(action->target, action->count, action->display, action->hand);
                 break;
             case 5:
-                successful_turn = game_state.action_pan(player_view->display, player_view->hand);
+                successful_turn = game_state.action_pan(action->display, action->hand);
                 break;
             case 6:
-                successful_turn = game_state.action_pass(player_view->display, player_view->hand);
+                successful_turn = game_state.action_pass(action->display, action->hand);
                 break;
             default:
-                throw runtime_error("Unknown action: " + (unsigned) action.action);
+                throw runtime_error("Unknown action: " + (unsigned) action->id);
             }
-
-            delete player_view;
 
             if (!successful_turn) {
                 event_illegal_turn(action);
                 unsuccessful_tries++;
             }
+
+            delete player_view;
+            delete action;
 
             if (unsuccessful_tries > 100) {
                 print(string("Could not find a correct turn for player ") + (turn_p1 ? "1" : "2"));
