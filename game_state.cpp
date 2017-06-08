@@ -135,8 +135,39 @@ bool GameState::action_decay(StructuredPile* drop_ids, StructuredPile* display, 
 }
 
 bool GameState::action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
-    // TODO
-    return false;
+    if (!check_action_cook(id, count, display, hand)) {
+        return false;
+    }
+
+    bool night_card_cooked = hand->remove_shrooms_maximizing_space(id, count);
+
+    if (count >= 10 && (*hand)[cidre] >= 2) {
+        hand->remove_cards(cidre, 2);
+        display->add_cards(cidre, 2);
+    } else if (count >= 9 && (*hand)[cidre] >= 1 && (*hand)[butter] >= 1) {
+        hand->remove_card(cidre);
+        hand->remove_card(butter);
+        display->add_card(cidre);
+        display->add_card(butter);
+    } else if (count >= 8 && (*hand)[butter] >= 2) {
+        hand->remove_cards(butter, 2);
+        display->add_cards(butter, 2);
+    } else if (count >= 5 && (*hand)[cidre] >= 1) {
+        hand->remove_card(cidre);
+        display->add_card(cidre);
+    } else if (count >= 4 && (*hand)[butter] >= 1) {
+        hand->remove_card(butter);
+        display->add_card(butter);
+    }
+
+    if (night_card_cooked) {
+        display->add_card(id + to_night_card);
+        count -= 2;
+    }
+
+    display->add_cards(id, count);
+
+    return true;
 }
 
 bool GameState::action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
