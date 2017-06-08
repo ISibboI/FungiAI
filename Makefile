@@ -11,8 +11,8 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 CC=g++
-CFLAGS=-Wall -Werror -Wno-unused-function -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp
-LDFLAGS=-fopenmp
+CFLAGS=-Wall -Werror -Wno-unused-function -Wno-ignored-attributes -Wno-deprecated-declarations -Wno-misleading-indentation -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp -IOpenNN/opennn
+LDFLAGS=-fopenmp OpenNN/build/opennn/libopennn.a OpenNN/build/tinyxml2/libtinyxml2.a -lubsan
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
 ifeq ($(DEBUG), 1)

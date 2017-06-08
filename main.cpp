@@ -1,10 +1,12 @@
-#include "game_state.h"
+#include "opennn.h"
 
 #include <iostream>
 
 using namespace std;
+using namespace OpenNN;
 
 int main() {
-    cout << sizeof(initial_draw_pile) << endl;
+    NeuralNetwork nn(3, 4);
+
     return 0;
 }

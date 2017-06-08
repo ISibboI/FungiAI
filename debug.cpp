@@ -1,9 +1,11 @@
-#ifdef DEBUG
 #include "debug.h"
 
 #include <iostream>
+#include <string>
 
 using namespace std;
+
+#ifdef DEBUG
 
 void print_array(const string& name, uint8_t* array, size_t size) {
     cout << name << " = [";
@@ -21,7 +23,6 @@ void print_array(const string& name, uint8_t* array, size_t size) {
 
 #else
 
-template<typename T>
 void print_array(const string& name, uint8_t* array, size_t size) {}
 
 #endif // DEBUG
