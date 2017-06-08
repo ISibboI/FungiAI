@@ -1,6 +1,8 @@
 #ifndef PILE_H
 #define PILE_H
 
+#include "structured_pile.h"
+
 #include <cstdint>
 #include <string>
 
@@ -16,16 +18,18 @@ public:
     void remove_cards(uint8_t index, uint8_t length, uint8_t* destination);
     void make_space(uint8_t length);
     void clear();
-    
+
     void get_cards(uint8_t*& offset, uint8_t*& limit);
     uint8_t* get_offset();
     uint8_t* get_limit();
     uint8_t operator[](uint8_t index);
-    
+
     uint8_t size();
     bool is_full();
     int8_t pick_all_size();
-    
+
+    StructuredPile* structurize();
+
     std::string str();
 
 protected:

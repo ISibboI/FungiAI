@@ -23,7 +23,7 @@ void Pile::add_card(uint8_t id) {
     if (is_full()) {
         throw runtime_error("Cannot add card to full pile!");
     }
-    
+
     pile[limit++] = id;
 }
 
@@ -31,7 +31,7 @@ void Pile::add_cards(const uint8_t* ids, uint8_t length) {
     if (limit + length < limit || limit + length > max_limit) {
         throw runtime_error("Not enough space");
     }
-    
+
     memcpy(pile + limit, ids, length);
     limit += length;
 }
@@ -43,11 +43,11 @@ uint8_t Pile::remove_card(uint8_t index) {
 
     uint8_t result = pile[index];
     limit--;
-    
+
     for (unsigned i = index; i < limit; i++) {
         pile[i] = pile[i + 1];
     }
-    
+
     return result;
 }
 
@@ -59,10 +59,10 @@ void Pile::remove_cards(uint8_t index, uint8_t length, uint8_t* destination) {
     if (index + length < index || index + length > limit) {
         throw runtime_error("Remove range out of bounds");
     }
-    
+
     memcpy(destination, pile + index, length);
     limit -= length;
-    
+
     for (unsigned i = index; i < limit; i++) {
         pile[i] = pile[i + length];
     }
@@ -72,7 +72,7 @@ void Pile::make_space(uint8_t length) {
     if (limit + length < limit || limit + length > max_limit) {
         throw runtime_error("Not enough space");
     }
-    
+
     limit += length;
 }
 
@@ -97,7 +97,7 @@ uint8_t Pile::operator[](uint8_t index) {
     if (index >= size()) {
         throw runtime_error("Index out of bounds");
     }
-    
+
     return pile[index];
 }
 
@@ -111,7 +111,7 @@ bool Pile::is_full() {
 
 int8_t Pile::pick_all_size() {
     int8_t result = 0;
-    
+
     for (unsigned i = 0; i < limit; i++) {
         if (pile[i] == basket) {
             result -= 2;
@@ -119,22 +119,32 @@ int8_t Pile::pick_all_size() {
             result++;
         }
     }
-    
+
+    return result;
+}
+
+StructuredPile* Pile::structurize() {
+    StructuredPile* result = new StructuredPile(name);
+
+    for (uint8_t* i = get_offset(); i < get_limit(); i++) {
+        result->add_card(*i);
+    }
+
     return result;
 }
 
 string Pile::str() {
     stringstream ss;
-    
+
     ss << name << ": ";
-    
+
     for (unsigned i = 0; i < limit; i++) {
         ss << cards[pile[i]].str();
-        
+
         if (i + 1 < limit) {
             ss << ", ";
         }
     }
-    
+
     return ss.str();
 }

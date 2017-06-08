@@ -9,7 +9,7 @@ using namespace std;
 
 GameState::GameState(mt19937& r) : draw_pile("Draw pile", sizeof(initial_draw_pile)), forest("Forest", 8), decay_pile("Decay pile", 4),
     discard_pile("Discard pile"), display_p1("Display p1"), display_p2("Display p2"), hand_p1("Hand p1"), hand_p2("Hand p2") {
-    
+
     draw_pile.add_cards(initial_draw_pile, sizeof(initial_draw_pile));
     shuffle(draw_pile.get_offset(), draw_pile.get_limit(), r);
     print_array("draw_pile", draw_pile.get_offset(), draw_pile.size());
@@ -28,6 +28,34 @@ GameState::GameState(mt19937& r) : draw_pile("Draw pile", sizeof(initial_draw_pi
 
 GameState::~GameState() {}
 
+bool GameState::check_general_pickup(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand, StructuredPile* picked_cards) {
+    uint8_t drop_size = 0;
+    int8_t pick_all_size = picked_cards->pick_all_size();
+    int8_t remaining_capacity = hand->get_remaining_capacity(*display);
+
+    if (pick_all_size > remaining_capacity) {
+        return false;
+    }
+
+    if ((*picked_cards)[fly_agaric] > 0 && display->get_count(fly_agaric) == 0) {
+        drop_size = (uint8_t) max(0, 4 - remaining_capacity + pick_all_size);
+
+        for (unsigned i = 0; i < special_min_id; i++) {
+            if (drop_ids->get_count(i) > hand->get_count(i) + (*picked_cards)[i]) {
+                return false;
+            }
+        }
+
+        for (unsigned i = special_min_id; i < cards_size; i++) {
+            if (drop_ids->get_count(i) > 0) {
+                throw runtime_error("Can't drop cards that never go into the hand");
+            }
+        }
+    }
+
+    return drop_ids->size() == drop_size;
+}
+
 bool GameState::check_action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
     if (index >= forest.size()) {
         return false;
@@ -35,32 +63,18 @@ bool GameState::check_action_pick(uint8_t index, StructuredPile* drop_ids, Struc
 
     uint8_t card = forest[index];
     uint8_t price = max(0, index - 1);
-    uint8_t remaining_capacity = hand->get_remaining_capacity(*display);
-    uint8_t drop_size = 0;
-    
-    if (card == fly_agaric && display->get_count(fly_agaric) == 0) {
-        drop_size = (uint8_t) max(0, remaining_capacity - 4);
-        
-        for (unsigned i = 0; i < special_min_id; i++) {
-            if (drop_ids->get_count(special_min_id) > hand->get_count(special_min_id)) {
-                return false;
-            }
-        }
-        
-        for (unsigned i = special_min_id; i < cards_size; i++) {
-            if (drop_ids->get_count(special_min_id) > 0) {
-                throw runtime_error("Can't drop cards that never go into the hand");
-            }
-        }
-    }
-    
-    return cards[card].size <= remaining_capacity && price <= display->get_count(stick) && drop_ids->size() == drop_size;
+    StructuredPile pick_pile("Pick pile");
+    pick_pile.add_card(card);
+
+    return price <= display->get_count(stick) && check_general_pickup(drop_ids, display, hand, &pick_pile);
 }
 
 bool GameState::check_action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
-    // TODO create function to check dropping
+    StructuredPile* structured_decay_pile = decay_pile.structurize();
+    bool result = check_general_pickup(drop_ids, display, hand, structured_decay_pile);
+    delete structured_decay_pile;
 
-    return decay_pile.pick_all_size() <= hand->get_remaining_capacity(*display);
+    return result;
 }
 
 bool GameState::check_action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
@@ -85,7 +99,7 @@ bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* h
             return false;
         }
     }
-    
+
     // Decay
     if (decay_pile.pick_all_size() <= capacity) {
         return false;
@@ -97,16 +111,16 @@ bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* h
             return false;
         }
     }
-    
+
     if (hand->get_night_card_count() > 0) {
         return false;
     }
-    
+
     // Pan
     if (check_action_pan(display, hand)) {
         return false;
     }
-    
+
     return true;
 }
 
@@ -150,11 +164,11 @@ bool GameState::finalize_turn(bool p1) {
 
     if (decay_pile.is_full()) {
         print("Decay pile is full");
-        
+
         while (decay_pile.size() > 0) {
             discard_pile.add_card(decay_pile.remove_last_card());
         }
-        
+
         decay_pile.clear();
     }
 
