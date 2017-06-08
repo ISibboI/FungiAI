@@ -150,8 +150,7 @@ bool GameState::action_pan(StructuredPile* display, HandStructuredPile* hand) {
 }
 
 bool GameState::action_pass(StructuredPile* display, HandStructuredPile* hand) {
-    // TODO
-    return false;
+    return check_action_pass(display, hand);
 }
 
 bool GameState::finalize_turn(bool p1) {
