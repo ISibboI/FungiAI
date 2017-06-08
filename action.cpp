@@ -16,6 +16,14 @@ Action::Action(uint8_t id, uint8_t target, StructuredPile* drop_ids,
     count = 0;
 }
 
+Action::Action(uint8_t id, StructuredPile* drop_ids,
+    StructuredPile* display, HandStructuredPile* hand) : id(id),
+    drop_ids(drop_ids), display(display), hand(hand) {
+
+    target = 0;
+    count = 0;
+}
+
 Action::Action(uint8_t id, uint8_t target, uint8_t count,
     StructuredPile* display, HandStructuredPile* hand) : id(id), target(target),
     count(count), display(display), hand(hand) {

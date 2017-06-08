@@ -12,6 +12,8 @@ public:
         StructuredPile* display, HandStructuredPile* hand);
     Action(uint8_t id, uint8_t target, StructuredPile* drop_ids,
         StructuredPile* display, HandStructuredPile* hand);
+    Action(uint8_t id, StructuredPile* drop_ids,
+        StructuredPile* display, HandStructuredPile* hand);
     Action(uint8_t id, uint8_t target, uint8_t count,
         StructuredPile* display, HandStructuredPile* hand);
     Action(uint8_t id, StructuredPile* display, HandStructuredPile* hand);

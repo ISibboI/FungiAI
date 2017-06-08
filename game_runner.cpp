@@ -31,29 +31,7 @@ void run_game(GameState& game_state, int& result, Action* (&p1)(PlayerView&),
             }
 
             print("Trying action: " + action->str());
-
-            switch (action->id) {
-            case 1:
-                successful_turn = game_state.action_pick(action->target, action->drop_ids, action->display, action->hand);
-                break;
-            case 2:
-                successful_turn = game_state.action_decay(action->drop_ids, action->display, action->hand);
-                break;
-            case 3:
-                successful_turn = game_state.action_cook(action->target, action->count, action->display, action->hand);
-                break;
-            case 4:
-                successful_turn = game_state.action_sell(action->target, action->count, action->display, action->hand);
-                break;
-            case 5:
-                successful_turn = game_state.action_pan(action->display, action->hand);
-                break;
-            case 6:
-                successful_turn = game_state.action_pass(action->display, action->hand);
-                break;
-            default:
-                throw runtime_error("Unknown action: " + (unsigned) action->id);
-            }
+            successful_turn = game_state.action(action);
 
             if (!successful_turn) {
                 event_illegal_turn(action);
