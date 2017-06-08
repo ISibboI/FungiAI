@@ -19,11 +19,27 @@ void HandStructuredPile::add_card(uint8_t id) {
     }
 }
 
+void HandStructuredPile::add_cards(uint8_t id, uint8_t count) {
+    StructuredPile::add_cards(id, count);
+
+    if (id >= night_min_id && id <= night_max_id) {
+        night_card_sum += count;
+    }
+}
+
 void HandStructuredPile::remove_card(uint8_t id) {
     StructuredPile::remove_card(id);
 
     if (id >= night_min_id && id <= night_max_id) {
         night_card_sum--;
+    }
+}
+
+void HandStructuredPile::remove_cards(uint8_t id, uint8_t count) {
+    StructuredPile::remove_cards(id, count);
+
+    if (id >= night_min_id && id <= night_max_id) {
+        night_card_sum -= count;
     }
 }
 

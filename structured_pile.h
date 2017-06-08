@@ -11,7 +11,11 @@ public:
     virtual ~StructuredPile();
 
     virtual void add_card(uint8_t id);
+    virtual void add_cards(uint8_t id, uint8_t count);
     virtual void remove_card(uint8_t id);
+    virtual void remove_cards(uint8_t id, uint8_t count);
+
+    bool remove_shrooms_maximizing_space(uint8_t id, uint8_t count);
 
     uint8_t get_count(uint8_t id);
     uint8_t operator[](uint8_t id);

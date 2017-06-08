@@ -47,7 +47,7 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
         int unsuccessful_tries = 0;
 
         while (!successful_turn) {
-            print("Getting player turn");
+            // print("Getting player turn");
 
             if (turn_p1) {
                 game_state.get_p1_view(draw_pile_size, discard_pile, forest,

@@ -23,6 +23,16 @@ void StructuredPile::add_card(uint8_t id) {
     pile[id]++;
 }
 
+void StructuredPile::add_cards(uint8_t id, uint8_t count) {
+    if (sum + count > LIMIT || sum + count < sum) {
+        throw runtime_error("Not enough space");
+    }
+
+    sum += count;
+    size_sum += cards[id].size * count;
+    pile[id] += count;
+}
+
 void StructuredPile::remove_card(uint8_t id) {
     if (pile[id] == 0) {
         throw runtime_error("Card does not exist");
@@ -31,6 +41,31 @@ void StructuredPile::remove_card(uint8_t id) {
     sum--;
     size_sum -= cards[id].size;
     pile[id]--;
+}
+
+void StructuredPile::remove_cards(uint8_t id, uint8_t count) {
+    if (pile[id] - count < 0 || pile[id] - count > pile[id]) {
+        throw runtime_error("Not enough cards");
+    }
+
+    sum -= count;
+    size_sum -= cards[id].size * count;
+    pile[id] -= count;
+}
+
+bool StructuredPile::remove_shrooms_maximizing_space(uint8_t id, uint8_t count) {
+    if (pile[id] >= count) {
+        remove_cards(id, count);
+        return false;
+    } else {
+        if (id <= lower_pair_shroom_max_id) {
+            remove_card(id + to_night_card);
+            remove_cards(id, count - 2);
+            return true;
+        } else {
+            throw runtime_error("Not enough cards");
+        }
+    }
 }
 
 uint8_t StructuredPile::get_count(uint8_t id) {

@@ -140,8 +140,22 @@ bool GameState::action_cook(uint8_t id, uint8_t count, StructuredPile* display, 
 }
 
 bool GameState::action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
-    // TODO
-    return false;
+    if (!check_action_sell(id, count, display, hand)) {
+        return false;
+    }
+
+    bool night_card_sold = hand->remove_shrooms_maximizing_space(id, count);
+
+    display->add_cards(stick, count * cards[id].price);
+
+    if (night_card_sold) {
+        discard_pile.add_card(id + to_night_card);
+        count -= 2;
+    }
+
+    discard_pile.add_cards(id, count);
+
+    return true;
 }
 
 bool GameState::action_pan(StructuredPile* display, HandStructuredPile* hand) {

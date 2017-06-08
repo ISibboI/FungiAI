@@ -33,7 +33,7 @@ void test_set_up() {
 
 void event_illegal_turn(action_descriptor& action) {
     #ifdef DEBUG
-    cout << "Illegal turn: " << (unsigned) action.action << endl;
+    // cout << "Illegal turn: " << (unsigned) action.action << endl;
     #endif // DEBUG
 }
 
@@ -42,15 +42,11 @@ action_descriptor get_random_turn(uint8_t& draw_pile_size, StructuredPile*& disc
     StructuredPile*& display, HandStructuredPile*& hand,
     StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand) {
 
-    print("Entering get random turn");
     uniform_int_distribution<uint8_t> d6(1, 6);
     uniform_int_distribution<uint8_t> d8(0, 7);
     uniform_int_distribution<uint8_t> d19(0, 18);
     action_descriptor action;
-    print("Completing action 1");
     action.action = d6(r);
-
-    print("Completing action 2");
 
     switch (action.action) {
     case 1:
@@ -69,7 +65,6 @@ action_descriptor get_random_turn(uint8_t& draw_pile_size, StructuredPile*& disc
         throw runtime_error("Illegal action");
     }
 
-    print("Exiting get random turn");
     return action;
 }
 
