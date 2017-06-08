@@ -33,6 +33,9 @@ bool GameState::check_general_pickup(StructuredPile* drop_ids, StructuredPile* d
     int8_t pick_all_size = picked_cards->pick_all_size();
     int8_t remaining_capacity = hand->get_remaining_capacity(*display);
 
+    print_svar(pick_all_size)
+    print_svar(remaining_capacity)
+
     if (pick_all_size > remaining_capacity) {
         return false;
     }
@@ -125,13 +128,72 @@ bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* h
 }
 
 bool GameState::action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
-    // TODO
-    return false;
+    if (!check_action_pick(index, drop_ids, display, hand)) {
+        return false;
+    }
+
+    uint8_t card = forest.remove_card(index);
+
+    if (card >= special_min_id) {
+        if (card == fly_agaric) {
+            if ((*display)[fly_agaric] > 0) {
+                discard_pile.add_card(fly_agaric);
+            }
+
+            display->set_cards(fly_agaric, 2);
+        } else {
+            if (card != basket) {
+                throw runtime_error("Card can only be basket here");
+            }
+
+            display->add_cards(basket, 2);
+        }
+    } else {
+        hand->add_card(card);
+    }
+
+    for (unsigned i = 0; i < special_min_id; i++) {
+        hand->remove_cards(i, (*drop_ids)[i]);
+    }
+
+    uint8_t price = (uint8_t) max(0, index - 1);
+    display->remove_cards(stick, price);
+
+    return true;
 }
 
 bool GameState::action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
-    // TODO
-    return false;
+    if (!check_action_decay(drop_ids, display, hand)) {
+        return false;
+    }
+
+    while (decay_pile.size() > 0) {
+        uint8_t card = decay_pile.remove_last_card();
+
+        if (card >= special_min_id) {
+            if (card == fly_agaric) {
+                if ((*display)[fly_agaric] > 0) {
+                    discard_pile.add_card(fly_agaric);
+                }
+
+                display->set_cards(fly_agaric, 2);
+            } else {
+                if (card != basket) {
+                    throw runtime_error("Card can only be basket here");
+                }
+
+                display->add_cards(basket, 2);
+            }
+        } else {
+            hand->add_card(card);
+        }
+    }
+
+    for (unsigned i = 0; i < special_min_id; i++) {
+        hand->remove_cards(i, (*drop_ids)[i]);
+    }
+
+    return true;
 }
 
 bool GameState::action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
@@ -222,8 +284,6 @@ bool GameState::finalize_turn(bool p1) {
         decay_pile.clear();
     }
 
-    print_var(forest[0]);
-
     decay_pile.add_card(forest.remove_card(0));
 
     while (forest.size() < 8 && draw_pile.size() > 0) {
@@ -252,34 +312,14 @@ bool GameState::finalize_turn(bool p1) {
     return true;
 }
 
-void GameState::get_p1_view(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
-    Pile*& forest, Pile*& decay_pile,
-    StructuredPile*& display, HandStructuredPile*& hand,
-    StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand) {
-
-    draw_pile_size = draw_pile.size();
-    discard_pile = &this->discard_pile;
-    forest = &this->forest;
-    decay_pile = &this->decay_pile;
-    display = &display_p1;
-    hand = &hand_p1;
-    opponent_display = &display_p2;
-    opponent_hand = &hand_p2;
+PlayerView* GameState::get_p1_view() {
+    return new PlayerView(draw_pile.size(), &discard_pile, &forest, &decay_pile,
+    &display_p1, &hand_p1, &display_p2, &hand_p2);
 }
 
-void GameState::get_p2_view(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
-    Pile*& forest, Pile*& decay_pile,
-    StructuredPile*& display, HandStructuredPile*& hand,
-    StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand) {
-
-    draw_pile_size = draw_pile.size();
-    discard_pile = &this->discard_pile;
-    forest = &this->forest;
-    decay_pile = &this->decay_pile;
-    display = &display_p2;
-    hand = &hand_p2;
-    opponent_display = &display_p1;
-    opponent_hand = &hand_p1;
+PlayerView* GameState::get_p2_view() {
+    return new PlayerView(draw_pile.size(), &discard_pile, &forest, &decay_pile,
+    &display_p2, &hand_p2, &display_p1, &hand_p1);
 }
 
 string GameState::str() {

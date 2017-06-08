@@ -14,6 +14,7 @@ public:
     virtual void add_cards(uint8_t id, uint8_t count);
     virtual void remove_card(uint8_t id);
     virtual void remove_cards(uint8_t id, uint8_t count);
+    void set_cards(uint8_t id, uint8_t new_count);
 
     bool remove_shrooms_maximizing_space(uint8_t id, uint8_t count);
 

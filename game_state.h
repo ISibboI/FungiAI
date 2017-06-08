@@ -5,6 +5,7 @@
 #include "pile.h"
 #include "structured_pile.h"
 #include "hand_structured_pile.h"
+#include "player_view.h"
 
 #include <algorithm>
 #include <random>
@@ -63,14 +64,8 @@ public:
 
     bool finalize_turn(bool p1);
 
-    void get_p1_view(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
-        Pile*& forest, Pile*& decay_pile,
-        StructuredPile*& display, HandStructuredPile*& hand,
-        StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand);
-    void get_p2_view(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
-        Pile*& forest, Pile*& decay_pile,
-        StructuredPile*& display, HandStructuredPile*& hand,
-        StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand);
+    PlayerView* get_p1_view();
+    PlayerView* get_p2_view();
 
     std::string str();
 

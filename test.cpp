@@ -37,14 +37,11 @@ void event_illegal_turn(action_descriptor& action) {
     #endif // DEBUG
 }
 
-action_descriptor get_random_turn(uint8_t& draw_pile_size, StructuredPile*& discard_pile,
-    Pile*& forest, Pile*& decay_pile,
-    StructuredPile*& display, HandStructuredPile*& hand,
-    StructuredPile*& opponent_display, HandStructuredPile*& opponent_hand) {
+action_descriptor get_random_turn(PlayerView& player_view) {
 
     uniform_int_distribution<uint8_t> d6(1, 6);
     uniform_int_distribution<uint8_t> d8(0, 7);
-    uniform_int_distribution<uint8_t> d19(0, 18);
+    uniform_int_distribution<uint8_t> d9(0, 8);
     action_descriptor action;
     action.action = d6(r);
 
@@ -55,8 +52,8 @@ action_descriptor get_random_turn(uint8_t& draw_pile_size, StructuredPile*& disc
         break;
     case 3:
     case 4:
-        action.target = d19(r);
-        action.count = (*hand)[action.target];
+        action.target = d9(r);
+        action.count = (*player_view.hand)[action.target];
         break;
     case 5:
     case 6:

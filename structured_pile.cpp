@@ -9,6 +9,7 @@ using namespace std;
 StructuredPile::StructuredPile(string name) : name(name) {
     memset(pile, 0, cards_size);
     sum = 0;
+    size_sum = 0;
 }
 
 StructuredPile::~StructuredPile() {}
@@ -51,6 +52,16 @@ void StructuredPile::remove_cards(uint8_t id, uint8_t count) {
     sum -= count;
     size_sum -= cards[id].size * count;
     pile[id] -= count;
+}
+
+void StructuredPile::set_cards(uint8_t id, uint8_t count) {
+    uint8_t current = (*this)[id];
+
+    if (count > current) {
+        add_cards(id, count - current);
+    } else {
+        remove_cards(id, current - count);
+    }
 }
 
 bool StructuredPile::remove_shrooms_maximizing_space(uint8_t id, uint8_t count) {

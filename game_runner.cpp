@@ -24,21 +24,12 @@ string action_descriptor::str() {
     return ss.str();
 }
 
-void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_t&, StructuredPile*&,
-    Pile*&, Pile*&, StructuredPile*&, HandStructuredPile*&, StructuredPile*&, HandStructuredPile*&),
-    action_descriptor (&p2)(uint8_t&, StructuredPile*&,  Pile*&, Pile*&, StructuredPile*&,
-    HandStructuredPile*&, StructuredPile*&, HandStructuredPile*&), void (&event_illegal_turn)(action_descriptor&)) {
+void run_game(GameState& game_state, int& result, action_descriptor (&p1)(PlayerView&),
+    action_descriptor (&p2)(PlayerView&), void (&event_illegal_turn)(action_descriptor&)) {
 
     bool game_running = true;
     bool turn_p1 = true;
-    uint8_t draw_pile_size;
-    StructuredPile* discard_pile;
-    Pile* forest;
-    Pile* decay_pile;
-    StructuredPile* display;
-    HandStructuredPile* hand;
-    StructuredPile* opponent_display;
-    HandStructuredPile* opponent_hand;
+    PlayerView* player_view = 0;
 
     action_descriptor action;
 
@@ -50,43 +41,39 @@ void run_game(GameState& game_state, int& result, action_descriptor (&p1)(uint8_
             // print("Getting player turn");
 
             if (turn_p1) {
-                game_state.get_p1_view(draw_pile_size, discard_pile, forest,
-                    decay_pile, display, hand, opponent_display,
-                    opponent_hand);
-                action = p1(draw_pile_size, discard_pile, forest, decay_pile,
-                    display, hand, opponent_display, opponent_hand);
+                player_view = game_state.get_p1_view();
+                action = p1(*player_view);
             } else {
-                game_state.get_p2_view(draw_pile_size, discard_pile, forest,
-                    decay_pile, display, hand, opponent_display,
-                    opponent_hand);
-                action = p2(draw_pile_size, discard_pile, forest, decay_pile,
-                    display, hand, opponent_display, opponent_hand);
+                player_view = game_state.get_p2_view();
+                action = p2(*player_view);
             }
 
             print("Executing action: " + action.str());
 
             switch (action.action) {
             case 1:
-                successful_turn = game_state.action_pick(action.target, &action.drop_ids, display, hand);
+                successful_turn = game_state.action_pick(action.target, &action.drop_ids, player_view->display, player_view->hand);
                 break;
             case 2:
-                successful_turn = game_state.action_decay(&action.drop_ids, display, hand);
+                successful_turn = game_state.action_decay(&action.drop_ids, player_view->display, player_view->hand);
                 break;
             case 3:
-                successful_turn = game_state.action_cook(action.target, action.count, display, hand);
+                successful_turn = game_state.action_cook(action.target, action.count, player_view->display, player_view->hand);
                 break;
             case 4:
-                successful_turn = game_state.action_sell(action.target, action.count, display, hand);
+                successful_turn = game_state.action_sell(action.target, action.count, player_view->display, player_view->hand);
                 break;
             case 5:
-                successful_turn = game_state.action_pan(display, hand);
+                successful_turn = game_state.action_pan(player_view->display, player_view->hand);
                 break;
             case 6:
-                successful_turn = game_state.action_pass(display, hand);
+                successful_turn = game_state.action_pass(player_view->display, player_view->hand);
                 break;
             default:
                 throw runtime_error("Unknown action: " + (unsigned) action.action);
             }
+
+            delete player_view;
 
             if (!successful_turn) {
                 event_illegal_turn(action);

@@ -7,12 +7,14 @@
 #ifdef DEBUG
 
 #define print_var(a) cout << #a << ": " << (unsigned) a << endl;
+#define print_svar(a) cout << #a << ": " << (int) a << endl;
 #define print_sizeof(a) cout << #a << sizeof(a) << endl;
 #define print(a) cout << (a) << endl;
 
 #else
 
 #define print_var(a)
+#define print_svar(a)
 #define print_sizeof(a)
 #define print(a)
 
