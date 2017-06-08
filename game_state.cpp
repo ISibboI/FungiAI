@@ -301,6 +301,102 @@ bool GameState::action(Action* action) {
     }
 }
 
+vector<Action*> GameState::generate_actions_pick(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> result;
+    uint8_t max_affordable = (uint8_t) max(0, display->get_count(stick) - 1) + 2;
+
+    for (unsigned i = 0; i < max_affordable && i < forest.size(); i++) {
+        StructuredPile* drop_ids = new StructuredPile("Drop ids");
+
+        if (check_action_pick(i, drop_ids, display, hand)) {
+            result.push_back(new Action(1, i, drop_ids, display, hand));
+        } else {
+            delete drop_ids;
+        }
+    }
+
+    return result;
+}
+
+vector<Action*> GameState::generate_actions_decay(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> result;
+    StructuredPile* drop_ids = new StructuredPile("Drop ids");
+
+    if (check_action_decay(drop_ids, display, hand)) {
+        result.push_back(new Action(2, drop_ids, display, hand));
+    } else {
+        delete drop_ids;
+    }
+
+    return result;
+}
+
+vector<Action*> GameState::generate_actions_cook(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> result;
+
+    for (unsigned i = 0; i < night_min_id; i++) {
+        uint8_t count = hand->get_effective_shroom_count(i);
+
+        if (count >= 3) {
+            result.push_back(new Action(3, i, count, display, hand));
+        }
+    }
+
+    return result;
+}
+
+vector<Action*> GameState::generate_actions_sell(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> result;
+
+    for (unsigned i = 0; i < night_min_id; i++) {
+        uint8_t count = hand->get_effective_shroom_count(i);
+
+        if (count >= 2) {
+            result.push_back(new Action(4, i, count, display, hand));
+        }
+    }
+
+    return result;
+}
+
+vector<Action*> GameState::generate_actions_pan(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> result;
+
+    if (check_action_pan(display, hand)) {
+        result.push_back(new Action(5, display, hand));
+    }
+
+    return result;
+}
+
+vector<Action*> GameState::generate_actions_pass(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> result;
+
+    if (check_action_pass(display, hand)) {
+        result.push_back(new Action(6, display, hand));
+    }
+
+    return result;
+}
+
+vector<Action*> GameState::generate_actions(StructuredPile* display, HandStructuredPile* hand) {
+    vector<Action*> pick = generate_actions_pick(display, hand);
+    vector<Action*> decay = generate_actions_decay(display, hand);
+    vector<Action*> cook = generate_actions_cook(display, hand);
+    vector<Action*> sell = generate_actions_sell(display, hand);
+    vector<Action*> pan = generate_actions_pan(display, hand);
+    vector<Action*> pass = generate_actions_pass(display, hand);
+    vector<Action*> result;
+    result.reserve(pick.size() + decay.size() + cook.size() + sell.size() + pan.size() + pass.size());
+    result.insert(result.end(), pick.begin(), pick.end());
+    result.insert(result.end(), decay.begin(), decay.end());
+    result.insert(result.end(), cook.begin(), cook.end());
+    result.insert(result.end(), sell.begin(), sell.end());
+    result.insert(result.end(), pan.begin(), pan.end());
+    result.insert(result.end(), pass.begin(), pass.end());
+    return result;
+}
+
 bool GameState::finalize_turn(bool p1) {
     print("Entering finalize turn");
 

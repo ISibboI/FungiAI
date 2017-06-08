@@ -10,7 +10,7 @@
 
 #include <algorithm>
 #include <random>
-// #include <vector>
+#include <vector>
 
 const uint8_t n1 = (uint8_t) -1;
 
@@ -66,7 +66,13 @@ public:
     bool action_pass(StructuredPile* display, HandStructuredPile* hand);
     bool action(Action* action);
 
-    // vector<Action*> generate_actions_pick(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions_pick(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions_decay(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions_cook(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions_pan(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions_sell(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions_pass(StructuredPile* display, HandStructuredPile* hand);
+    std::vector<Action*> generate_actions(StructuredPile* display, HandStructuredPile* hand);
 
     bool finalize_turn(bool p1);
 
