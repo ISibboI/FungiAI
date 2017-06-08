@@ -38,31 +38,20 @@ void event_illegal_turn(Action* action) {
     #endif // DEBUG
 }
 
-Action* get_random_turn(PlayerView& player_view) {
-    uniform_int_distribution<uint8_t> d6(1, 6);
-    uniform_int_distribution<uint8_t> d8(0, 7);
-    uniform_int_distribution<uint8_t> d9(0, 8);
-    Action* action = new Action(d6(r), player_view.display, player_view.hand);
+Action* get_random_turn(PlayerView* player_view, GameState* game_state) {
+    vector<Action*> actions = game_state->generate_actions(player_view->display, player_view->hand);
+    uniform_int_distribution<> choice(0, actions.size() - 1);
+    size_t chosen_index = choice(r);
 
-    switch (action->id) {
-    case 1:
-        action->target = d8(r);
-    case 2:
-        action->drop_ids = new StructuredPile("Drop ids");
-        break;
-    case 3:
-    case 4:
-        action->target = d9(r);
-        action->count = (*action->hand)[action->target];
-        break;
-    case 5:
-    case 6:
-        break;
-    default:
-        throw runtime_error("Illegal action");
+    for (size_t i = 0; i < chosen_index; i++) {
+        delete actions[i];
     }
 
-    return action;
+    for (size_t i = chosen_index + 1; i < actions.size(); i++) {
+        delete actions[i];
+    }
+
+    return actions[chosen_index];
 }
 
 void test_stupid_game() {

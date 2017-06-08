@@ -7,8 +7,8 @@
 
 using namespace std;
 
-void run_game(GameState& game_state, int& result, Action* (&p1)(PlayerView&),
-    Action* (&p2)(PlayerView&), void (&event_illegal_turn)(Action*)) {
+void run_game(GameState& game_state, int& result, Action* (&p1)(PlayerView*, GameState*),
+    Action* (&p2)(PlayerView*, GameState*), void (&event_illegal_turn)(Action*)) {
 
     bool game_running = true;
     bool turn_p1 = true;
@@ -24,10 +24,10 @@ void run_game(GameState& game_state, int& result, Action* (&p1)(PlayerView&),
 
             if (turn_p1) {
                 player_view = game_state.get_p1_view();
-                action = p1(*player_view);
+                action = p1(player_view, &game_state);
             } else {
                 player_view = game_state.get_p2_view();
-                action = p2(*player_view);
+                action = p2(player_view, &game_state);
             }
 
             print("Trying action: " + action->str());
