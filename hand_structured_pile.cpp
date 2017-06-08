@@ -65,5 +65,5 @@ uint8_t HandStructuredPile::get_effective_shroom_count(uint8_t id) {
         throw runtime_error("Id is not a basic shroom");
     }
 
-    return get_count(id) + (id != 8 ? get_count(id + 9) : 0);
+    return get_count(id) + (id != 8 ? get_count(id + 9) * 2 : 0);
 }
