@@ -145,8 +145,14 @@ bool GameState::action_sell(uint8_t id, uint8_t count, StructuredPile* display, 
 }
 
 bool GameState::action_pan(StructuredPile* display, HandStructuredPile* hand) {
-    // TODO
-    return false;
+    if (!check_action_pan(display, hand)) {
+        return false;
+    }
+
+    hand->remove_card(pan);
+    display->add_card(pan);
+
+    return true;
 }
 
 bool GameState::action_pass(StructuredPile* display, HandStructuredPile* hand) {

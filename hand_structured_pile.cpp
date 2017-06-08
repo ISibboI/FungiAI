@@ -13,15 +13,15 @@ HandStructuredPile::~HandStructuredPile() {}
 
 void HandStructuredPile::add_card(uint8_t id) {
     StructuredPile::add_card(id);
-    
+
     if (id >= night_min_id && id <= night_max_id) {
         night_card_sum++;
     }
 }
 
 void HandStructuredPile::remove_card(uint8_t id) {
-    StructuredPile::add_card(id);
-    
+    StructuredPile::remove_card(id);
+
     if (id >= night_min_id && id <= night_max_id) {
         night_card_sum--;
     }
@@ -34,9 +34,9 @@ uint8_t HandStructuredPile::get_night_card_count() {
 string HandStructuredPile::str() {
     string core = StructuredPile::str();
     stringstream ss;
-    
-    ss << "Hand" << core << ", night_card_count: " << (unsigned) night_card_sum;
-    
+
+    ss << core << ", night_card_count: " << (unsigned) night_card_sum;
+
     return ss.str();
 }
 
@@ -48,6 +48,6 @@ uint8_t HandStructuredPile::get_effective_shroom_count(uint8_t id) {
     if (id >= night_min_id) {
         throw runtime_error("Id is not a basic shroom");
     }
-    
+
     return get_count(id) + (id != 8 ? get_count(id + 9) : 0);
 }
