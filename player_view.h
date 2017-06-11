@@ -22,6 +22,7 @@ public:
     HandStructuredPile* const opponent_hand;
 
     float* encode_for_nn();
+    void encode_for_nn(float* params);
     static size_t get_nn_encoding_size();
 };
 

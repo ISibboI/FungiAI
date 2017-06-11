@@ -2,7 +2,8 @@ TARGET_FILE=fungi_ai
 PROD_OBJ=main.o
 TEST_OBJ=test.o
 BOTH_OBJ=cards.o game_state.o debug.o game_runner.o pile.o structured_pile.o\
-         hand_structured_pile.o player_view.o action.o nn_encoding.o
+         hand_structured_pile.o player_view.o action.o nn_encoding.o\
+		 nn_game_simulator.o
 
 ##########################################
 
@@ -12,7 +13,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 CC=g++
 CFLAGS=-Wall -Werror -Wno-unused-function -Wno-ignored-attributes -Wno-deprecated-declarations -Wno-misleading-indentation -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp -IOpenNN/opennn
-LDFLAGS=-fopenmp -lubsan
+LDFLAGS=-fopenmp -lubsan -lfann
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
 ifeq ($(DEBUG), 1)

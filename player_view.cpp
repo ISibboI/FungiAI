@@ -9,27 +9,28 @@ PlayerView::PlayerView(uint8_t draw_pile_size, StructuredPile* discard_pile,
     opponent_display(opponent_display), opponent_hand(opponent_hand) {}
 
 float* PlayerView::encode_for_nn() {
-    float* encoded = new float[get_nn_encoding_size()];
-    float* current = encoded;
+    float* params = new float[get_nn_encoding_size()];
+    encode_for_nn(params);
+    return params;
+}
 
-    *current = draw_pile_size;
-    current++;
-    discard_pile->encode_for_nn_open(current);
-    current += StructuredPile::get_nn_open_encoding_size();
-    forest->encode_for_nn(current);
-    current += forest->get_nn_encoding_size();
-    decay_pile->encode_for_nn(current);
-    current += decay_pile->get_nn_encoding_size();
-    display->encode_for_nn_open(current);
-    current += StructuredPile::get_nn_open_encoding_size();
-    hand->encode_for_nn_open(current, display);
-    current += HandStructuredPile::get_nn_open_encoding_size();
-    opponent_display->encode_for_nn_open(current);
-    current += StructuredPile::get_nn_open_encoding_size();
-    opponent_hand->encode_for_nn_closed(current, display);
-    // current += opponent_hand->get_nn_closed_encoding_size();
-
-    return encoded;
+void PlayerView::encode_for_nn(float* params) {
+    *params = draw_pile_size;
+    params++;
+    discard_pile->encode_for_nn_open(params);
+    params += StructuredPile::get_nn_open_encoding_size();
+    forest->encode_for_nn(params);
+    params += forest->get_nn_encoding_size();
+    decay_pile->encode_for_nn(params);
+    params += decay_pile->get_nn_encoding_size();
+    display->encode_for_nn_open(params);
+    params += StructuredPile::get_nn_open_encoding_size();
+    hand->encode_for_nn_open(params, display);
+    params += HandStructuredPile::get_nn_open_encoding_size();
+    opponent_display->encode_for_nn_open(params);
+    params += StructuredPile::get_nn_open_encoding_size();
+    opponent_hand->encode_for_nn_closed(params, display);
+    // params += opponent_hand->get_nn_closed_encoding_size();
 }
 
 size_t PlayerView::get_nn_encoding_size() {
