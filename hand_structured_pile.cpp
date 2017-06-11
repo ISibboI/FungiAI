@@ -72,10 +72,10 @@ uint8_t HandStructuredPile::get_effective_shroom_count(uint8_t id) {
 void HandStructuredPile::encode_for_nn_open(float* params, StructuredPile* display) {
     for (unsigned card = 0; card < special_min_id; card++) {
         uint8_t count = get_count(card);
-        params = nn_encode_int_unary(params, count, cards_max[card]);
+        nn_encode_int_unary(&params, count, cards_max[card]);
     }
 
-    params = nn_encode_int_unary(params, get_remaining_capacity(display), 18);
+    nn_encode_int_unary(&params, get_remaining_capacity(display), 18);
 }
 
 void HandStructuredPile::encode_for_nn_open(float* params) {
@@ -93,11 +93,11 @@ void HandStructuredPile::encode_for_nn_closed(float* params, StructuredPile* dis
             continue;
         }
 
-        params = nn_encode_int_unary(params, get_count(card), cards_max[card]);
+        nn_encode_int_unary(&params, get_count(card), cards_max[card]);
     }
 
-    params = nn_encode_int_unary(params, get_night_card_count(), cards_max[moon]);
-    params = nn_encode_int_unary(params, get_remaining_capacity(display), 18);
+    nn_encode_int_unary(&params, get_night_card_count(), cards_max[moon]);
+    nn_encode_int_unary(&params, get_remaining_capacity(display), 18);
 }
 
 size_t HandStructuredPile::get_nn_closed_encoding_size() {

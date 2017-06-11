@@ -1,4 +1,5 @@
 #include "action.h"
+#include "nn_encoding.h"
 
 #include <sstream>
 #include <stdexcept>
@@ -79,4 +80,17 @@ string Action::str() {
     }
 
     return ss.str();
+}
+
+Action::Action(float* params, StructuredPile* display, HandStructuredPile* hand) :
+    display(display), hand(hand) {
+
+    id = nn_decode_int_one_of_n(&params, 6);
+    target = nn_decode_int_one_of_n(&params, special_min_id);
+    count = nn_decode_int_one_of_n(&params, 12);
+    drop_ids = nn_decode_drop_ids(&params);
+}
+
+size_t Action::get_nn_decoding_size() {
+    return cards_size + 6 /*id*/ + special_min_id /*target*/ + 12 /*count*/ + 4 * (special_min_id + 1) /*drop_ids*/;
 }

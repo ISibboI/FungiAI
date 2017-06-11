@@ -15,17 +15,17 @@ float* PlayerView::encode_for_nn() {
     *current = draw_pile_size;
     current++;
     discard_pile->encode_for_nn_open(current);
-    current += discard_pile->get_nn_open_encoding_size();
+    current += StructuredPile::get_nn_open_encoding_size();
     forest->encode_for_nn(current);
     current += forest->get_nn_encoding_size();
     decay_pile->encode_for_nn(current);
     current += decay_pile->get_nn_encoding_size();
     display->encode_for_nn_open(current);
-    current += display->get_nn_open_encoding_size();
+    current += StructuredPile::get_nn_open_encoding_size();
     hand->encode_for_nn_open(current, display);
-    current += hand->get_nn_open_encoding_size();
+    current += HandStructuredPile::get_nn_open_encoding_size();
     opponent_display->encode_for_nn_open(current);
-    current += opponent_display->get_nn_open_encoding_size();
+    current += StructuredPile::get_nn_open_encoding_size();
     opponent_hand->encode_for_nn_closed(current, display);
     // current += opponent_hand->get_nn_closed_encoding_size();
 

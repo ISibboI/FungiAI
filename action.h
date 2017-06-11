@@ -28,6 +28,9 @@ public:
     HandStructuredPile* hand;
 
     std::string str();
+
+    Action(float* params, StructuredPile* display, HandStructuredPile* hand);
+    static size_t get_nn_decoding_size();
 };
 
 #endif // ACTION_H

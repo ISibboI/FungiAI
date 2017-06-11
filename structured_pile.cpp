@@ -130,7 +130,7 @@ void StructuredPile::encode_for_nn_open(float* params) {
             }
         }
 
-        params = nn_encode_int_unary(params, count, cards_max[card]);
+        nn_encode_int_unary(&params, count, cards_max[card]);
     }
 }
 
