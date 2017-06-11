@@ -32,9 +32,9 @@ void test_set_up() {
     cout << gs->str() << endl;
 }
 
-void event_illegal_turn(Action* action) {
+void event_illegal_turn(GameState& game_state, Action& action) {
     #ifdef DEBUG
-    // cout << "Illegal turn: " << (unsigned) action.action << endl;
+    cout << "\nIllegal turn!\n" << endl;
     #endif // DEBUG
 }
 
