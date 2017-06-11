@@ -25,6 +25,9 @@ public:
 
     virtual std::string str();
 
+    virtual void encode_for_nn_open(float* params);
+    virtual size_t get_nn_open_encoding_size();
+
 private:
     static const uint8_t LIMIT = 255;
     std::string name;

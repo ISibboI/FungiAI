@@ -31,7 +31,7 @@ GameState::~GameState() {}
 bool GameState::check_general_pickup(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand, StructuredPile* picked_cards) {
     uint8_t drop_size = 0;
     int8_t pick_all_size = picked_cards->pick_all_size();
-    int8_t remaining_capacity = hand->get_remaining_capacity(*display);
+    int8_t remaining_capacity = hand->get_remaining_capacity(display);
 
     if (pick_all_size > remaining_capacity) {
         return false;
@@ -90,7 +90,7 @@ bool GameState::check_action_pan(StructuredPile* display, HandStructuredPile* ha
 }
 
 bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* hand) {
-    int8_t capacity = hand->get_remaining_capacity(*display);
+    int8_t capacity = hand->get_remaining_capacity(display);
     uint8_t forest_limit = min(forest.size(), (uint8_t) (2 + display->get_count(stick)));
 
     // Pick

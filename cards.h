@@ -44,6 +44,12 @@ const Card cards[cards_size]= {
    Card("Stick", -1, -1, 0)
 };
 
+const uint8_t cards_max[cards_size] {
+    10, 8, 6, 5, 5, 4, 4, 4, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 11, 10, 8, 5, 30
+};
+
+const uint8_t cards_max_sum = 10 + 8 + 6 + 5 + 5 + 4 + 4 + 4 + 3 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 3 + 3 + 11 + 10 + 8 + 5 + 30;
+
 const uint8_t lower_pair_shroom_max_id = 7;
 const uint8_t night_min_id = 9;
 const uint8_t night_max_id = 16;

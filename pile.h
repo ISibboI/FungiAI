@@ -32,6 +32,9 @@ public:
 
     std::string str();
 
+    void encode_for_nn(float* params);
+    size_t get_nn_encoding_size();
+
 protected:
     std::string name;
     uint8_t* pile;

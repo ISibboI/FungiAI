@@ -1,4 +1,6 @@
 #include "structured_pile.h"
+#include "debug.h"
+#include "nn_encoding.h"
 
 #include <cstring>
 #include <stdexcept>
@@ -109,4 +111,29 @@ string StructuredPile::str() {
     ss << "size: " << (unsigned) sum;
 
     return ss.str();
+}
+
+void StructuredPile::encode_for_nn_open(float* params) {
+    for (unsigned card = 0; card < cards_size; card++) {
+        if (card == moon) {
+            continue;
+        }
+
+        uint8_t count = get_count(card);
+
+        if (count > cards_max[card]) {
+            if (card == stick) {
+                print("Too many sticks!");
+                count = cards_max[stick];
+            } else {
+                throw runtime_error("Too many cards");
+            }
+        }
+
+        params = nn_encode_int_unary(params, count, cards_max[card]);
+    }
+}
+
+size_t StructuredPile::get_nn_open_encoding_size() {
+    return cards_max_sum - cards_max[moon];
 }

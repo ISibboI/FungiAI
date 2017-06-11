@@ -20,6 +20,9 @@ public:
     HandStructuredPile* const hand;
     StructuredPile* const opponent_display;
     HandStructuredPile* const opponent_hand;
+
+    float* encode_for_nn();
+    size_t get_nn_encoding_size();
 };
 
 #endif // PLAYER_VIEW_H

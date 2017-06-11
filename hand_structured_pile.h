@@ -17,8 +17,14 @@ public:
 
     std::string str();
 
-    int8_t get_remaining_capacity(StructuredPile& display);
+    int8_t get_remaining_capacity(StructuredPile* display);
     uint8_t get_effective_shroom_count(uint8_t id);
+
+    void encode_for_nn_open(float* params, StructuredPile* display);
+    void encode_for_nn_open(float* params);
+    size_t get_nn_open_encoding_size();
+    void encode_for_nn_closed(float* params, StructuredPile* display);
+    size_t get_nn_closed_encoding_size();
 
 private:
     uint8_t night_card_sum;

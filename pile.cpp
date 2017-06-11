@@ -1,5 +1,6 @@
 #include "pile.h"
 #include "cards.h"
+#include "nn_encoding.h"
 
 #include <stdexcept>
 #include <sstream>
@@ -147,4 +148,20 @@ string Pile::str() {
     }
 
     return ss.str();
+}
+
+void Pile::encode_for_nn(float* params) {
+    memset(params, 0, get_nn_encoding_size() * sizeof(float));
+
+    for (unsigned i = 0; i < limit; i++) {
+        params[i * (cards_size + 1) + pile[i] + 1] = 1;
+    }
+
+    for (unsigned i = limit; i < max_limit; i++) {
+        params[i * (cards_size + 1)] = 1;
+    }
+}
+
+size_t Pile::get_nn_encoding_size() {
+    return (cards_size + 1) * (size_t) max_limit;
 }
