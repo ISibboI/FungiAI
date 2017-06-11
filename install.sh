@@ -1,9 +1,7 @@
 #!/bin/bash
 
-git clone https://github.com/Artelnics/OpenNN
+git clone https://github.com/libfann/fann
 
-cd OpenNN
-mkdir build
-cd build
-cmake -D__OPENNN_OMP__=1 ..
-make
+cd fann
+cmake .
+sudo make install
