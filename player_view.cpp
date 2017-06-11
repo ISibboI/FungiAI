@@ -33,8 +33,8 @@ float* PlayerView::encode_for_nn() {
 }
 
 size_t PlayerView::get_nn_encoding_size() {
-    return 1 + discard_pile->get_nn_open_encoding_size()
-        + forest->get_nn_encoding_size() + decay_pile->get_nn_encoding_size()
-        + display->get_nn_open_encoding_size() + hand->get_nn_open_encoding_size()
-        + opponent_display->get_nn_open_encoding_size() + opponent_hand->get_nn_closed_encoding_size();
+    return 1 + StructuredPile::get_nn_open_encoding_size()
+        + Pile::get_nn_encoding_size(8) + Pile::get_nn_encoding_size(4)
+        + StructuredPile::get_nn_open_encoding_size() + HandStructuredPile::get_nn_open_encoding_size()
+        + StructuredPile::get_nn_open_encoding_size() + HandStructuredPile::get_nn_closed_encoding_size();
 }

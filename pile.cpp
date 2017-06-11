@@ -165,3 +165,7 @@ void Pile::encode_for_nn(float* params) {
 size_t Pile::get_nn_encoding_size() {
     return (cards_size + 1) * (size_t) max_limit;
 }
+
+size_t Pile::get_nn_encoding_size(uint8_t pile_size) {
+    return (cards_size + 1) * (size_t) pile_size;
+}

@@ -34,6 +34,7 @@ public:
 
     void encode_for_nn(float* params);
     size_t get_nn_encoding_size();
+    static size_t get_nn_encoding_size(uint8_t pile_size);
 
 protected:
     std::string name;
