@@ -12,7 +12,6 @@ GameState::GameState(mt19937& r) : draw_pile("Draw pile", sizeof(initial_draw_pi
 
     draw_pile.add_cards(initial_draw_pile, sizeof(initial_draw_pile));
     shuffle(draw_pile.get_offset(), draw_pile.get_limit(), r);
-    print_array("draw_pile", draw_pile.get_offset(), draw_pile.size());
 
     forest.make_space(8);
     draw_pile.remove_cards(draw_pile.size() - 8, 8, forest.get_offset());
@@ -78,10 +77,18 @@ bool GameState::check_action_decay(StructuredPile* drop_ids, StructuredPile* dis
 }
 
 bool GameState::check_action_cook(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
+    if (id >= night_min_id) {
+        return false;
+    }
+
     return display->get_count(pan) > 0 && count >= 3 && hand->get_effective_shroom_count(id) >= count;
 }
 
 bool GameState::check_action_sell(uint8_t id, uint8_t count, StructuredPile* display, HandStructuredPile* hand) {
+    if (id >= night_min_id) {
+        return false;
+    }
+
     return count >= 2 && hand->get_effective_shroom_count(id) >= count;
 }
 

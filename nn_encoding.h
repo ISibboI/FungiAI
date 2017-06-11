@@ -48,7 +48,7 @@ inline StructuredPile* nn_decode_drop_ids(float** params) {
         uint8_t max_index = 0;
         float max = *(p_current++);
 
-        for (unsigned mi = 1; mi < special_min_id + 1; i++) {
+        for (unsigned mi = 1; mi < special_min_id + 1; mi++) {
             if (*p_current > max) {
                 max = *p_current;
                 max_index = mi;

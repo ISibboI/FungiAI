@@ -85,7 +85,7 @@ string Action::str() {
 Action::Action(float* params, StructuredPile* display, HandStructuredPile* hand) :
     display(display), hand(hand) {
 
-    id = nn_decode_int_one_of_n(&params, 6);
+    id = nn_decode_int_one_of_n(&params, 6) + 1;
     target = nn_decode_int_one_of_n(&params, special_min_id);
     count = nn_decode_int_one_of_n(&params, 12);
     drop_ids = nn_decode_drop_ids(&params);

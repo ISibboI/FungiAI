@@ -1,20 +1,34 @@
 #include "nn_game_simulator.h"
+#include "debug.h"
+
+#include <iostream>
 
 using namespace std;
 
 NNGameSimulator::NNGameSimulator(mt19937& r, struct fann* p1, struct fann* p2) : p1(p1), p2(p2) {
     game_state = new GameState(r);
     inputs = new float[PlayerView::get_nn_encoding_size()];
+    action = 0;
+    player_view = 0;
 }
 
 NNGameSimulator::~NNGameSimulator() {
     delete game_state;
-    delete inputs;
+    delete[] inputs;
+
+    if (action != 0) {
+        delete action;
+    }
+
+    if (player_view != 0) {
+        delete player_view;
+    }
 }
 
 int NNGameSimulator::simulate_game() {
     bool game_running = true;
     bool turn_p1 = true;
+    rules_obeyed = true;
 
     while (game_running) {
         struct fann* current_player;
@@ -32,11 +46,17 @@ int NNGameSimulator::simulate_game() {
         action = new Action(outputs, player_view->display, player_view->hand);
 
         if (!game_state->action(action)) {
-            return turn_p1 ? -1 : 1;
+            rules_obeyed = false;
+            return turn_p1 ? 2 : 1;
         }
 
         delete action;
         delete player_view;
+        action = 0;
+        player_view = 0;
+
+        game_running = game_state->finalize_turn(turn_p1);
+        turn_p1 = !turn_p1;
     }
 
     int points_p1 = 0;

@@ -15,13 +15,13 @@ public:
 
     int simulate_game();
 
-private:
     struct fann* p1;
     struct fann* p2;
 
     GameState* game_state;
     Action* action;
     PlayerView* player_view;
+    bool rules_obeyed;
 
     float* inputs;
     float* outputs;
