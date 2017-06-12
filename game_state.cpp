@@ -463,12 +463,12 @@ PlayerView* GameState::get_p2_view() {
 string GameState::str() {
     stringstream ss;
 
-    ss << hand_p1.str() << "\n";
-    ss << display_p1.str() << "\n";
-    ss << forest.str() << "\n";
-    ss << decay_pile.str() << "\n";
-    ss << display_p2.str() << "\n";
-    ss << hand_p2.str() << "\n";
+    ss << "     " << hand_p1.str() << "\n";
+    ss << "  " << display_p1.str() << "\n";
+    ss << "      " << forest.str() << "\n";
+    ss << "  " << decay_pile.str() << "\n";
+    ss << "  " << display_p2.str() << "\n";
+    ss << "     " << hand_p2.str() << "\n";
     ss << discard_pile.str();
 
     return ss.str();

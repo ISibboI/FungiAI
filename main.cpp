@@ -24,13 +24,26 @@ int main() {
 
     cout << "Initialized NN" << endl;
 
-    mt19937 r(7356L);
-    NNGameSimulator simulator(r, player, player);
-    int winner = simulator.simulate_game();
+    mt19937 r();
+    bool rules_learned = false;
+
+    while (!rules_learned) {
+        NNGameSimulator simulator(r, player, player);
+        int winner = simulator.simulate_game();
+
+        if (!simulator.rules_obeyed) {
+            int looser = 3 - winner;
+            cout << "Player " << looser << " didn't obey the rules." << endl;
+            cout << "He tried to do\n" << simulator.action->str() << "\nin state\n";
+            cout << simulator.game_state->str() << endl;
+        } else {
+            rules_learned = true;
+        }
+
+        cout << "Player " << winner << " has won!" << endl;
+    }
 
     fann_destroy(player);
-
-    cout << "Player " << winner << " has won!" << endl;
 
     return 0;
 }
