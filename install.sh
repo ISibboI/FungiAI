@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git clone https://github.com/libfann/fann
+git clone https://github.com/ISibboI/fann
 
 cd fann
 cmake .
