@@ -1,6 +1,7 @@
 #include "nn_game_simulator.h"
 #include "debug.h"
 #include "nn_train.h"
+#include "number_logger.h"
 
 #include <iostream>
 #include <floatfann.h>
@@ -26,6 +27,7 @@ int main() {
     cout << "Initialized NN" << endl;
 
     mt19937 r;
+    NumberLogger logger("completed_turns.csv");
     bool rules_learned = false;
     float* desired_output = new float[output_layer_size];
     char* output_mask = new char[output_layer_size];
@@ -46,6 +48,7 @@ int main() {
             rules_learned = true;
         }
 
+        logger.log_number(simulator.completed_turns);
         cout << "Player " << winner << " has won!" << endl;
     }
     

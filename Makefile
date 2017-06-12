@@ -3,7 +3,7 @@ PROD_OBJ=main.o
 TEST_OBJ=test.o
 BOTH_OBJ=cards.o game_state.o debug.o game_runner.o pile.o structured_pile.o\
          hand_structured_pile.o player_view.o action.o nn_encoding.o\
-		 nn_game_simulator.o nn_train.o
+		 nn_game_simulator.o nn_train.o number_logger.o
 
 ##########################################
 

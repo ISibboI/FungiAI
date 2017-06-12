@@ -36,3 +36,6 @@ fungi_ai_test
 
 OpenNN
 fann
+
+.~lock.*
+*.csv
