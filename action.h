@@ -6,6 +6,8 @@
 
 #include <string>
 
+const uint8_t target_size[6] = {8, 1, night_min_id, night_min_id, 1, 1};
+
 class Action {
 public:
     Action(uint8_t id, uint8_t target, uint8_t count, StructuredPile* drop_ids,

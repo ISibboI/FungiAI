@@ -21,7 +21,9 @@ public:
     GameState* game_state;
     Action* action;
     PlayerView* player_view;
+    
     bool rules_obeyed;
+    unsigned completed_turns;
 
     float* inputs;
     float* outputs;

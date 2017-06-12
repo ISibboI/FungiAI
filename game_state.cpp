@@ -52,7 +52,7 @@ bool GameState::check_general_pickup(StructuredPile* drop_ids, StructuredPile* d
         }
     }
 
-    return drop_ids->size() == drop_size;
+    return drop_ids->size() >= drop_size;
 }
 
 bool GameState::check_action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
@@ -93,7 +93,7 @@ bool GameState::check_action_sell(uint8_t id, uint8_t count, StructuredPile* dis
 }
 
 bool GameState::check_action_pan(StructuredPile* display, HandStructuredPile* hand) {
-    return hand->get_count(pan) > 0;
+    return hand->get_count(pan) >= 1;
 }
 
 bool GameState::check_action_pass(StructuredPile* display, HandStructuredPile* hand) {
@@ -150,6 +150,74 @@ bool GameState::check_action(Action* action) {
     }
 }
 
+bool GameState::check_any_action_pick(StructuredPile* display, HandStructuredPile* hand) {
+    uint8_t max_index = min(forest.size(), (uint8_t) (2 + display->get_count(stick)));
+    uint8_t hand_capacity = hand->get_remaining_capacity(display);
+    
+    for (unsigned i = 0; i < max_index; i++) {
+        if (cards[forest[i]].size <= hand_capacity) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool GameState::check_any_action_decay(StructuredPile* display, HandStructuredPile* hand) {
+    return decay_pile.pick_all_size() <= hand->get_remaining_capacity(display);
+}
+
+bool GameState::check_any_action_cook(StructuredPile* display, HandStructuredPile* hand) {
+    if (!display->get_count(pan)) {
+        return false;
+    }
+    
+    for (unsigned i = 0; i < night_min_id; i++) {
+        if (hand->get_effective_shroom_count(i) >= 3) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool GameState::check_any_action_sell(StructuredPile* display, HandStructuredPile* hand) {
+    for (unsigned i = 0; i < night_min_id; i++) {
+        if (hand->get_effective_shroom_count(i) >= 2) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool GameState::check_any_action_pan(StructuredPile* display, HandStructuredPile* hand) {
+    return hand->get_count(pan) >= 1;
+}
+
+bool GameState::check_any_action_pass(StructuredPile* display, HandStructuredPile* hand) {
+    return check_action_pass(display, hand);
+}
+
+bool GameState::check_any_action(Action* action) {
+    switch (action->id) {
+    case 1:
+        return check_any_action_pick(action->display, action->hand);
+    case 2:
+        return check_any_action_decay(action->display, action->hand);
+    case 3:
+        return check_any_action_cook(action->display, action->hand);
+    case 4:
+        return check_any_action_sell(action->display, action->hand);
+    case 5:
+        return check_any_action_pan(action->display, action->hand);
+    case 6:
+        return check_any_action_pass(action->display, action->hand);
+    default:
+        throw runtime_error("Unknown action id");
+    }
+}
+
 bool GameState::action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand) {
     if (!check_action_pick(index, drop_ids, display, hand)) {
         return false;
@@ -175,8 +243,8 @@ bool GameState::action_pick(uint8_t index, StructuredPile* drop_ids, StructuredP
         hand->add_card(card);
     }
 
-    for (unsigned i = 0; i < special_min_id; i++) {
-        hand->remove_cards(i, (*drop_ids)[i]);
+    for (unsigned i = 0; i < special_min_id && hand->get_remaining_capacity(display) < 0; i++) {
+        hand->remove_cards(i, min((*drop_ids)[i], hand->get_count(i)));
     }
 
     uint8_t price = (uint8_t) max(0, index - 1);
@@ -212,8 +280,8 @@ bool GameState::action_decay(StructuredPile* drop_ids, StructuredPile* display, 
         }
     }
 
-    for (unsigned i = 0; i < special_min_id; i++) {
-        hand->remove_cards(i, (*drop_ids)[i]);
+    for (unsigned i = 0; i < special_min_id && hand->get_remaining_capacity(display) < 0; i++) {
+        hand->remove_cards(i, min((*drop_ids)[i], hand->get_count(i)));
     }
 
     return true;
@@ -251,6 +319,7 @@ bool GameState::action_cook(uint8_t id, uint8_t count, StructuredPile* display, 
     }
 
     display->add_cards(id, count);
+    display->remove_card(pan);
 
     return true;
 }
@@ -405,16 +474,12 @@ vector<Action*> GameState::generate_actions(StructuredPile* display, HandStructu
 }
 
 bool GameState::finalize_turn(bool p1) {
-    print("Entering finalize turn");
-
     if (forest.size() <= 1) {
         print("Game end detected");
         return false;
     }
 
     if (decay_pile.is_full()) {
-        print("Decay pile is full");
-
         while (decay_pile.size() > 0) {
             discard_pile.add_card(decay_pile.remove_last_card());
         }
@@ -446,7 +511,6 @@ bool GameState::finalize_turn(bool p1) {
         }
     }
 
-    print("Exiting finalize turn without ending game");
     return true;
 }
 
@@ -479,7 +543,7 @@ inline void GameState::draw_initial_card(StructuredPile& display, HandStructured
 
     // Baskets directly go into the display
     if (card == basket) {
-        display_p1.add_card(basket);
+        display_p1.add_cards(basket, 2);
     } else if (card == fly_agaric) {
         // Fly agarics go directly into the discard_pile
         discard_pile.add_card(fly_agaric);

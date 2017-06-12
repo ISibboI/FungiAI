@@ -29,7 +29,7 @@ void PlayerView::encode_for_nn(float* params) {
     params += HandStructuredPile::get_nn_open_encoding_size();
     opponent_display->encode_for_nn_open(params);
     params += StructuredPile::get_nn_open_encoding_size();
-    opponent_hand->encode_for_nn_closed(params, display);
+    opponent_hand->encode_for_nn_closed(params, opponent_display);
     // params += opponent_hand->get_nn_closed_encoding_size();
 }
 

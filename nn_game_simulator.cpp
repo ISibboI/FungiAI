@@ -29,8 +29,10 @@ int NNGameSimulator::simulate_game() {
     bool game_running = true;
     bool turn_p1 = true;
     rules_obeyed = true;
+    completed_turns = 0;
 
     while (game_running) {
+        // cout << "Starting turn of player " << (turn_p1 ? 1 : 2) << endl;
         struct fann* current_player;
 
         if (turn_p1) {
@@ -45,8 +47,14 @@ int NNGameSimulator::simulate_game() {
         outputs = fann_run(current_player, inputs);
         action = new Action(outputs, player_view->display, player_view->hand);
 
+        // cout << "Game state is:\n" << game_state->str() << endl;
+        // cout << "Player " << (turn_p1 ? 1 : 2) << " does " << action->str() << endl;
+
         if (!game_state->action(action)) {
             rules_obeyed = false;
+            #ifdef DEBUG
+            cout << "Game ended early after " << completed_turns << " completed turns" << endl;
+            #endif // DEBUG
             return turn_p1 ? 2 : 1;
         }
 
@@ -57,6 +65,7 @@ int NNGameSimulator::simulate_game() {
 
         game_running = game_state->finalize_turn(turn_p1);
         turn_p1 = !turn_p1;
+        completed_turns++;
     }
 
     int points_p1 = 0;

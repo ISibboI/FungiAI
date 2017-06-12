@@ -66,10 +66,10 @@ string Action::str() {
         ss << "PickDecay(" << drop_ids->str() << ")";
         break;
     case 3:
-        ss << "Cook(" << (unsigned) target << ", " << (unsigned) count << ")";
+        ss << "Cook(" << cards[target].str() << ", " << (unsigned) count << ")";
         break;
     case 4:
-        ss << "Sell(" << (unsigned) target << ", " << (unsigned) count << ")";
+        ss << "Sell(" << cards[target].str() << ", " << (unsigned) count << ")";
         break;
     case 5:
         return "PlayPan";
@@ -86,11 +86,12 @@ Action::Action(float* params, StructuredPile* display, HandStructuredPile* hand)
     display(display), hand(hand) {
 
     id = nn_decode_int_one_of_n(&params, 6) + 1;
-    target = nn_decode_int_one_of_n(&params, special_min_id);
-    count = nn_decode_int_one_of_n(&params, 12);
+    target = nn_decode_int_one_of_n(&params, target_size[id - 1]);
+    params += night_min_id - target_size[id - 1];
+    count = nn_decode_int_one_of_n(&params, 10) + 2;
     drop_ids = nn_decode_drop_ids(&params);
 }
 
 size_t Action::get_nn_decoding_size() {
-    return cards_size + 6 /*id*/ + special_min_id /*target*/ + 12 /*count*/ + 4 * (special_min_id + 1) /*drop_ids*/;
+    return cards_size + 6 /*id*/ + night_min_id /*target*/ + 10 /*count*/ + 4 * (special_min_id + 1) /*drop_ids*/;
 }

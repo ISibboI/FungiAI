@@ -2,14 +2,18 @@
 #define NN_ENCODING_H
 
 #include "structured_pile.h"
+#include "debug.h"
 
 #include <cstdint>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
 inline void nn_encode_int_unary(float** params, uint8_t n, uint8_t max_n) {
     if (n > max_n) {
+        print_var(n);
+        print_var(max_n);
         throw runtime_error("n exceeds max");
     }
 

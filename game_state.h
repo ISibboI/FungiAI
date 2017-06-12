@@ -57,6 +57,14 @@ public:
     bool check_action_pan(StructuredPile* display, HandStructuredPile* hand);
     bool check_action_pass(StructuredPile* display, HandStructuredPile* hand);
     bool check_action(Action* action);
+    
+    bool check_any_action_pick(StructuredPile* display, HandStructuredPile* hand);
+    bool check_any_action_decay(StructuredPile* display, HandStructuredPile* hand);
+    bool check_any_action_cook(StructuredPile* display, HandStructuredPile* hand);
+    bool check_any_action_sell(StructuredPile* display, HandStructuredPile* hand);
+    bool check_any_action_pan(StructuredPile* display, HandStructuredPile* hand);
+    bool check_any_action_pass(StructuredPile* display, HandStructuredPile* hand);
+    bool check_any_action(Action* action);
 
     bool action_pick(uint8_t index, StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
     bool action_decay(StructuredPile* drop_ids, StructuredPile* display, HandStructuredPile* hand);
