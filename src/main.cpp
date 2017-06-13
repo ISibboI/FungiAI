@@ -27,7 +27,7 @@ int main() {
     cout << "Initialized NN" << endl;
 
     mt19937 r;
-    NumberLogger logger("completed_turns.csv");
+    NumberLogger logger("data/completed_turns.csv");
     bool rules_learned = false;
     float* desired_output = new float[output_layer_size];
     char* output_mask = new char[output_layer_size];
