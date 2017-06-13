@@ -22,4 +22,19 @@
 
 void print_array(const std::string& name, uint8_t* array, size_t size);
 
+template<typename T>
+void print_array(const std::string& name, T* array, size_t size) {
+    std::cout << name << " = [";
+
+    if (size > 0) {
+        for (size_t i = 0; i < size - 1; i++) {
+            std::cout << array[i] << ", ";
+        }
+
+        std::cout << array[size - 1];
+    }
+
+    std::cout << "]\n" << std::flush;
+}
+
 #endif // DEBUG_H

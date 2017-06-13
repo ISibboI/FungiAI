@@ -1,18 +1,21 @@
 #include "nn_train.h"
+#include "debug.h"
 
 #include <cstring>
 #include <stdexcept>
+#include <floatfann.h>
+#include <iostream>
 
 using namespace std;
 
 void nn_punish_output(size_t i, float* outputs, float* desired_output, char* output_mask) {
-    desired_output[i] = outputs[i] - 1;
+    desired_output[i] = -1;
     output_mask[i] = 1;
 }
 
 void nn_punish_output_range(const size_t offset, const size_t length, float* outputs, float* desired_output, char* output_mask) {
     for (size_t i = offset; i < offset + length; i++) {
-        desired_output[i] = outputs[i] - 1;
+        desired_output[i] = -1;
         output_mask[i] = 1;
     }
 }
@@ -89,7 +92,8 @@ void nn_generate_action_correction(GameState* game_state, PlayerView* player_vie
 void nn_generate_correction(GameState* game_state, PlayerView* player_view, Action* action,
     float* outputs, float* desired_output, char* output_mask) {
     
-    memset(desired_output, 0, Action::get_nn_decoding_size() * sizeof(float));
+    // memset(desired_output, 0, Action::get_nn_decoding_size() * sizeof(float));
+    memcpy(desired_output, outputs, Action::get_nn_decoding_size() * sizeof(float));
     memset(output_mask, 0, Action::get_nn_decoding_size() * sizeof(char));
     
     if (game_state->check_any_action(action)) {
@@ -98,5 +102,33 @@ void nn_generate_correction(GameState* game_state, PlayerView* player_view, Acti
         // Action is not possible at all.
         // The first six neurons are the action indicators and actions start from 1.
         nn_punish_output(action->id - 1, outputs, desired_output, output_mask);
+    }
+}
+
+void nn_train_to_correctness(GameState* game_state, PlayerView* player_view, Action* action, struct fann* player, float* inputs, float* outputs, float* desired_output, char* output_mask) {
+    bool correct_output = false;
+    unsigned tries = 0;
+    
+    while (!correct_output && tries++ < 100) {
+        nn_generate_correction(game_state, player_view, action, outputs, desired_output, output_mask);
+        
+        cout << "Correction:" << endl;
+        print_array("Action", desired_output, 6);
+        print_array("Target", desired_output + 6, 9);
+        print_array("Count", desired_output + 6 + 9, 10);
+        
+        fann_train(player, inputs, desired_output);
+        outputs = fann_run(player, inputs);
+        action->decode_from_nn(outputs);
+        
+        cout << "New action: " << action->str() << endl;
+        
+        if (game_state->check_action(action)) {
+            correct_output = true;
+        }
+    }
+    
+    if (!correct_output) {
+        cout << " === Could not correct output ===" << endl;
     }
 }

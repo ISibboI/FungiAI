@@ -23,6 +23,7 @@ int main() {
     fann_set_activation_function_hidden(player, FANN_SIGMOID_SYMMETRIC);
     fann_set_activation_function_output(player, FANN_SIGMOID_SYMMETRIC);
     fann_randomize_weights(player, -0.3, 0.3);
+    fann_save(player, "data/initial_network.fann");
 
     cout << "Initialized NN" << endl;
 
@@ -31,8 +32,10 @@ int main() {
     bool rules_learned = false;
     float* desired_output = new float[output_layer_size];
     char* output_mask = new char[output_layer_size];
+    const unsigned MAX_TRIES = 1000000000;
+    unsigned tries = 0;
 
-    while (!rules_learned) {
+    while (!rules_learned && tries++ < MAX_TRIES) {
         NNGameSimulator simulator(r, player, player);
         int winner = simulator.simulate_game();
 
@@ -42,8 +45,10 @@ int main() {
             cout << "He tried to do\n" << simulator.action->str() << "\nin state\n";
             cout << simulator.game_state->str() << endl;
             
-            nn_generate_correction(simulator.game_state, simulator.player_view, simulator.action, simulator.outputs, desired_output, output_mask);
-            fann_train_masked(player, simulator.inputs, desired_output, output_mask);
+            cout << "Training NN..." << endl;
+            nn_train_to_correctness(simulator.game_state, simulator.player_view, simulator.action, player, simulator.inputs, simulator.outputs, desired_output, output_mask);
+            
+            cout << "Player would now do " << simulator.action->str() << endl;
         } else {
             rules_learned = true;
         }
@@ -54,6 +59,8 @@ int main() {
     
     delete[] output_mask;
     delete[] desired_output;
+    
+    fann_save(player, "data/trained_network.fann");
     fann_destroy(player);
 
     return 0;

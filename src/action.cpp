@@ -40,6 +40,13 @@ Action::Action(uint8_t id, StructuredPile* display, HandStructuredPile* hand) : 
     drop_ids = 0;
 }
 
+Action::Action(float* params, StructuredPile* display, HandStructuredPile* hand) :
+    display(display), hand(hand) {
+
+    drop_ids = 0;
+    decode_from_nn(params);
+}
+
 Action::Action() {
     id = 0;
     target = 0;
@@ -82,9 +89,11 @@ string Action::str() {
     return ss.str();
 }
 
-Action::Action(float* params, StructuredPile* display, HandStructuredPile* hand) :
-    display(display), hand(hand) {
-
+void Action::decode_from_nn(float* params) {
+    if (drop_ids != 0) {
+        delete drop_ids;
+    }
+    
     id = nn_decode_int_one_of_n(&params, 6) + 1;
     target = nn_decode_int_one_of_n(&params, target_size[id - 1]);
     params += night_min_id - target_size[id - 1];

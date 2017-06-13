@@ -9,6 +9,11 @@ BUILD_DIR=build/
 
 ##########################################
 
+ifeq ($(DEBUG), 1)
+DEBUGFLAGS=-fsanitize=address -fsanitize=undefined -g -DDEBUG
+BUILD_DIR:=$(BUILD_DIR)debug/
+endif
+
 DEPDIR := $(BUILD_DIR).d/
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)$*.Td
@@ -17,10 +22,6 @@ CC=g++
 CFLAGS=-Wall -Werror -Wstrict-aliasing=0 -std=c++14 -O3 -fopenmp
 LDFLAGS=-fopenmp -lubsan -lfloatfann
 POSTCOMPILE = mv -f $(DEPDIR)$*.Td $(DEPDIR)$*.d
-
-ifeq ($(DEBUG), 1)
-DEBUGFLAGS=-fsanitize=address -fsanitize=undefined -g -DDEBUG
-endif
 
 OBJ=$(PROD_OBJ) $(TEST_OBJ) $(BOTH_OBJ)
 PROD_OBJ += $(BOTH_OBJ)

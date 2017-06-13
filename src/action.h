@@ -19,6 +19,7 @@ public:
     Action(uint8_t id, uint8_t target, uint8_t count,
         StructuredPile* display, HandStructuredPile* hand);
     Action(uint8_t id, StructuredPile* display, HandStructuredPile* hand);
+    Action(float* params, StructuredPile* display, HandStructuredPile* hand);
     Action();
     ~Action();
 
@@ -31,7 +32,7 @@ public:
 
     std::string str();
 
-    Action(float* params, StructuredPile* display, HandStructuredPile* hand);
+    void decode_from_nn(float* params);
     static size_t get_nn_decoding_size();
 };
 
