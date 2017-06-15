@@ -7,6 +7,8 @@
 
 #include <floatfann.h>
 
+void nn_decay_range(size_t offset, size_t length, float* desired_output, char* output_mask);
+
 void nn_punish_output(size_t i, float* outputs, float* desired_output, char* output_mask);
 
 void nn_punish_output_range(size_t offset, size_t length, float* outputs, float* desired_output, char* output_mask);

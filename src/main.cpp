@@ -12,16 +12,24 @@ int main() {
     cout << "Starting..." << endl;
 
     size_t input_layer_size = PlayerView::get_nn_encoding_size();
-    size_t hidden_layer_size = (PlayerView::get_nn_encoding_size() + Action::get_nn_decoding_size()) / 2;
     size_t output_layer_size = Action::get_nn_decoding_size();
 
     print_var(input_layer_size);
-    print_var(hidden_layer_size);
     print_var(output_layer_size);
+    
+    const unsigned NUM_LAYERS = 10;
+    unsigned layer_sizes[NUM_LAYERS];
+    layer_sizes[0] = input_layer_size;
+    layer_sizes[NUM_LAYERS - 1] = output_layer_size;
+    
+    for (unsigned i = 1; i < NUM_LAYERS - 1; i++) {
+        layer_sizes[i] = (input_layer_size * (NUM_LAYERS - i) + output_layer_size * i) / NUM_LAYERS;
+    }
 
-    struct fann* player = fann_create_standard(3, input_layer_size, hidden_layer_size, output_layer_size);
+    struct fann* player = fann_create_standard_array(NUM_LAYERS, layer_sizes);
     fann_set_activation_function_hidden(player, FANN_SIGMOID_SYMMETRIC);
     fann_set_activation_function_output(player, FANN_SIGMOID_SYMMETRIC);
+    fann_set_learning_rate(player, 0.1);
     fann_randomize_weights(player, -0.3, 0.3);
     fann_save(player, "data/initial_network.fann");
 
