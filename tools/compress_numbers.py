@@ -4,11 +4,16 @@ import sys
 
 if len(sys.argv) != 3:
     print("Need two arguments! Filename and target size.")
+    exit(1)
 
 lines = []
 
 with open(sys.argv[1]) as f:
     lines = f.read().splitlines()
+
+if len(lines) < int(sys.argv[2]):
+    print("Cannot compress to larger size")
+    exit(1)
     
 target_length = int(sys.argv[2])
 splitters = [int(x / target_length * len(lines)) for x in range(target_length)] + [len(lines)]
