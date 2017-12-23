@@ -7,7 +7,7 @@
 using namespace std;
 
 PickDecayAction::PickDecayAction(DiscardAction* discard_action) :
-	Action("PickDecayAction", 1),
+	Action("PickDecayAction", 2),
 	discard_action(discard_action),
 	logger(spdlog::get("PickDecayAction")) {}
 
