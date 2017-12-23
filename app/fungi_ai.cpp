@@ -1,6 +1,8 @@
 #include "game/game.hpp"
 #include "game/actions/pick_action.hpp"
 #include "game/actions/pick_decay_action.hpp"
+#include "game/actions/cook_mushrooms_action.hpp"
+#include "game/actions/sell_mushrooms_action.hpp"
 
 #include "spdlog.h"
 
@@ -15,6 +17,8 @@ int main() {
     spdlog::stdout_logger_st("DiscardAction");
     spdlog::stdout_logger_st("PickAction");
     spdlog::stdout_logger_st("PickDecayAction");
+    spdlog::stdout_logger_st("CookMushroomsAction");
+    spdlog::stdout_logger_st("SellMushroomsAction");
 
     spdlog::set_level(spdlog::level::trace);
     shared_ptr<spdlog::logger> logger = spdlog::stdout_logger_st("Main");
@@ -35,13 +39,30 @@ int main() {
 
     PickDecayAction pick_decay_action(&discard_action);
 
-    uniform_int_distribution<> actions(1, 2);
+    vector<uint8_t> cook_order(9, 0);
+    iota(cook_order.begin(), cook_order.end(), 0);
+    CookMushroomsAction cook_mushrooms_action(move(cook_order));
+
+    vector<uint8_t> sell_order(9, 0);
+    iota(sell_order.begin(), sell_order.end(), 0);
+    SellMushroomsAction sell_mushrooms_action(move(sell_order));
+
+    uniform_int_distribution<> actions(1, 4);
 
     for (unsigned i = 0; i < 30; i++) {
-        if (actions(random_engine) == 1) {
-            pick_action.execute(game.get_p1(), game.get_forest());
-        } else {
-            pick_decay_action.execute(game.get_p1(), game.get_forest());
+        switch (actions(random_engine)) {
+        case 1: 
+            logger->trace("Trying 1");
+            pick_action.execute(game.get_p1(), game.get_forest()); break;
+        case 2:
+            logger->trace("Trying 2");
+            pick_decay_action.execute(game.get_p1(), game.get_forest()); break;
+        case 3:
+            logger->trace("Trying 3");
+            cook_mushrooms_action.execute(game.get_p1(), game.get_forest()); break;
+        case 4:
+            logger->trace("Trying 4");
+            sell_mushrooms_action.execute(game.get_p1(), game.get_forest()); break;
         }
 
         game.post_turn_actions();

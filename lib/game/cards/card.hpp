@@ -25,7 +25,8 @@ public:
     bool operator<(const Card& other) const;
     bool operator==(const Card& other) const;
 
-    const Card& get_night_card();
+    const Card& get_night_card() const;
+    bool has_night_card() const;
 };
 
 #endif

@@ -37,6 +37,21 @@ unsigned Hand::card_count(uint8_t id) const {
     return card_count(CardInformation::get_card(id));
 }
 
+unsigned Hand::effective_card_count(const Card& card) const {
+    unsigned night_card_count = 0;
+
+    if (card.has_night_card()) {
+        const Card& night_card = card.get_night_card();
+        night_card_count += card_count(night_card) * 2;
+    }
+
+    return card_count(card) + night_card_count;
+}
+
+unsigned Hand::effective_card_count(uint8_t id) const {
+    return effective_card_count(CardInformation::get_card(id));
+}
+
 void Hand::ensure_valid_hand_card(const Card& card) const {
     if (!card.is_valid_hand_card()) {
         throw runtime_error("Not a valid hand card");

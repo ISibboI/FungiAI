@@ -38,10 +38,14 @@ bool Card::operator==(const Card& other) const {
     return id == other.id;
 }
 
-const Card& Card::get_night_card() {
-	if (!is_normal_mushroom() || id == CardInformation::morels().id) {
+const Card& Card::get_night_card() const {
+	if (!has_night_card()) {
 		throw runtime_error("Does not have a night card");
 	}
 
 	return CardInformation::get_all_cards()[id + 9];
+}
+
+bool Card::has_night_card() const {
+    return is_normal_mushroom() && id != CardInformation::morels().id;
 }

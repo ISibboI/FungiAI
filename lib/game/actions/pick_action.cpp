@@ -45,6 +45,7 @@ bool PickAction::execute(Player& player, Forest& forest) const {
 		}
 
 		forest.get_forest().erase(forest.get_forest().begin() + index);
+		player.get_display().remove_cards(CardInformation::stick(), costs);
 		logger->debug("Picked {}", card.name);
 		return true;
 	}
