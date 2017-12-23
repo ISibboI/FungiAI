@@ -1,7 +1,4 @@
-#include "nn_game_simulator.h"
-#include "debug.h"
-#include "nn_train.h"
-#include "number_logger.h"
+#include "game/game.hpp"
 
 #include <iostream>
 #include <floatfann.h>
@@ -9,7 +6,9 @@
 using namespace std;
 
 int main() {
-    cout << "Starting..." << endl;
+    Game game;
+
+    /*cout << "Starting..." << endl;
 
     size_t input_layer_size = PlayerView::get_nn_encoding_size();
     size_t output_layer_size = Action::get_nn_decoding_size();
@@ -71,5 +70,5 @@ int main() {
     fann_save(player, "data/trained_network.fann");
     fann_destroy(player);
 
-    return 0;
+    return 0; */
 }

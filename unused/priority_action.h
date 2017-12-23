@@ -18,6 +18,12 @@ private:
 
 public:
 	PriorityAction(float* params, StructuredPile* display, HandStructuredPile* hand);
+
+	const vector<uint8_t>& get_ids() const;
+	const vector<uint8_t>& get_targets() const;
+
+	StructuredPile* get_display() const;
+	HandStructuredPile* get_hand() const;
 }
 
 #endif // PRIORITY_ACTION_H
