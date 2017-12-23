@@ -1,4 +1,5 @@
 #include "hand.hpp"
+#include "game/cards/card_information.hpp"
 
 #include <sstream>
 #include <stdexcept>
@@ -22,6 +23,18 @@ void Hand::remove_cards(const Card& card, unsigned count) {
 unsigned Hand::card_count(const Card& card) {
     ensure_valid_hand_card(card);
     return StructuredPile::card_count(card);
+}
+
+void Hand::add_cards(uint8_t id, unsigned count) {
+    add_cards(CardInformation::get_card(id), count);
+}
+
+void Hand::remove_cards(uint8_t id, unsigned count) {
+    remove_cards(CardInformation::get_card(id), count);
+}
+
+unsigned Hand::card_count(uint8_t id) {
+    return card_count(CardInformation::get_card(id));
 }
 
 void Hand::ensure_valid_hand_card(const Card& card) {

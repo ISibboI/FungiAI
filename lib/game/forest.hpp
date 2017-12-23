@@ -22,6 +22,8 @@ public:
 	void initialize(mt19937_64& random_engine);
 
 	vector<uint8_t>& get_draw_pile();
+	vector<uint8_t>& get_forest();
+	vector<uint8_t>& get_decay_pile();
 	StructuredPile& get_discard_pile();
 
 	string str() const;

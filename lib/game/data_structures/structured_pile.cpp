@@ -55,6 +55,26 @@ unsigned StructuredPile::card_count(const Card& card) {
     return cards[card.id];
 }
 
+void StructuredPile::add_card(uint8_t id) {
+    add_card(CardInformation::get_card(id));
+}
+
+void StructuredPile::add_cards(uint8_t id, unsigned count) {
+    add_cards(CardInformation::get_card(id), count);
+}
+
+void StructuredPile::remove_card(uint8_t id) {
+    remove_card(CardInformation::get_card(id));
+}
+
+void StructuredPile::remove_cards(uint8_t id, unsigned count) {
+    remove_cards(CardInformation::get_card(id), count);
+}
+
+unsigned StructuredPile::card_count(uint8_t id) {
+    return card_count(CardInformation::get_card(id));
+}
+
 void StructuredPile::check_size() {
     #ifdef DEBUG
     #ifndef NDEBUG

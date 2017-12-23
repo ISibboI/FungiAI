@@ -8,11 +8,13 @@ using namespace std;
 Player::Player(const string& name) :
 	name(name),
 	hand(name + "'s hand"),
-	display(name + "'s display") {}
+	display(name + "'s display"),
+	fly_agaric_timer(0) {}
 
 void Player::initialize(Forest& forest) {
 	display.clear();
 	hand.clear();
+	fly_agaric_timer = 0;
 
 	display.add_card(CardInformation::pan());
 
@@ -33,6 +35,28 @@ void Player::draw_initial_card(Forest& forest) {
 	} else if (card == CardInformation::fly_agaric()) {
 		// Just for initialization, so no need to discard anything
 		forest.get_discard_pile().add_card(card);
+	}
+}
+
+unsigned Player::get_hand_capacity() {
+	return 8 + display.card_count(CardInformation::basket()) * 2 - fly_agaric_timer > 0 ? 4 : 0;
+}
+
+Hand& Player::get_hand() {
+	return hand;
+}
+
+Display& Player::get_display() {
+	return display;
+}
+
+void Player::set_fly_agaric_timer() {
+	fly_agaric_timer = 2;
+}
+
+void Player::update() {
+	if (fly_agaric_timer > 0) {
+		fly_agaric_timer--;
 	}
 }
 

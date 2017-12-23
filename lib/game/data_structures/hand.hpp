@@ -14,6 +14,10 @@ public:
     virtual void remove_cards(const Card& card, unsigned count) override;
     virtual unsigned card_count(const Card& card) override;
 
+    virtual void add_cards(uint8_t id, unsigned count) override;
+    virtual void remove_cards(uint8_t id, unsigned count) override;
+    virtual unsigned card_count(uint8_t id) override;
+
 private:
     void ensure_valid_hand_card(const Card& card);
 };

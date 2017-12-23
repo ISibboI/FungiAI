@@ -1,0 +1,41 @@
+#include "discard_action.hpp"
+#include "game/cards/card_information.hpp"
+#include "io/strings.hpp"
+
+#include <sstream>
+
+using namespace std;
+
+DiscardAction::DiscardAction() : Action("DiscardAction", 0) {}
+
+DiscardAction::DiscardAction(vector<uint8_t>&& discard_order) :
+	Action("DiscardAction", 0),
+	discard_order(discard_order) {}
+
+DiscardAction::DiscardAction(DiscardAction&& discard_action) :
+	Action("DiscardAction", 0),
+	discard_order(move(discard_action.discard_order)) {}
+
+DiscardAction::~DiscardAction() {}
+
+bool DiscardAction::execute(Player& player, Forest& forest) const {
+	unsigned current_index = 0;
+	Hand& hand = player.get_hand();
+
+	while (player.get_hand_capacity() > hand.size()) {
+		while (hand.card_count(discard_order[current_index]) == 0) {
+			current_index++;
+		}
+
+		hand.remove_card(discard_order[current_index]);
+	}
+
+	return true;
+}
+
+string DiscardAction::str(const string& prefix) const {
+	stringstream ss;
+	ss << prefix << get_name() << ":\n";
+	ss << prefix << "  Discard order: " << Strings::str(discard_order);
+	return ss.str();
+}

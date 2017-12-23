@@ -23,6 +23,14 @@ vector<uint8_t>& Forest::get_draw_pile() {
 	return draw_pile;
 }
 
+vector<uint8_t>& Forest::get_forest() {
+	return forest;
+}
+
+vector<uint8_t>& Forest::get_decay_pile() {
+	return decay_pile;
+}
+
 StructuredPile& Forest::get_discard_pile() {
 	return discard_pile;
 }
