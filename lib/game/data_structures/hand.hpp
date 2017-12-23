@@ -15,7 +15,7 @@ public:
     virtual unsigned card_count(const Card& card) override;
 
 private:
-    bool ensure_valid_hand_card(const Card& card);
+    void ensure_valid_hand_card(const Card& card);
 };
 
 #endif

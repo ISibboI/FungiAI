@@ -6,6 +6,6 @@ Pile::Pile(const string& name) : name(name) {}
 
 Pile::~Pile() {}
 
-const string& Pile::get_name() {
+const string& Pile::get_name() const {
     return name;
 }

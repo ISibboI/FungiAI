@@ -43,6 +43,10 @@ public:
 		return all_cards;
 	}
 
+	static const Card& get_card(uint8_t id) {
+		return all_cards[id];
+	}
+
 	static vector<uint8_t> create_initial_draw_pile() {
 		vector<uint8_t> initial_draw_pile;
 

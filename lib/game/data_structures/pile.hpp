@@ -13,9 +13,9 @@ public:
     Pile(const string& name);
     virtual ~Pile();
 
-    const string& get_name();
+    const string& get_name() const;
 
-    virtual unsigned size() = 0;
+    virtual unsigned size() const = 0;
 };
 
 #endif

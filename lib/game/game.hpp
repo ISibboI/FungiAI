@@ -12,6 +12,10 @@ private:
 
 public:
 	Game();
+
+	void initialize(mt19937_64& random_engine);
+
+	string str() const;
 };
 
 #endif

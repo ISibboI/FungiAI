@@ -14,7 +14,7 @@ public:
     StructuredPile(const string& name);
     virtual ~StructuredPile() override;
 
-    virtual unsigned size();
+    virtual unsigned size() const;
     void add_card(const Card& card);
     virtual void add_cards(const Card& card, unsigned count);
     void remove_card(const Card& card);
@@ -26,6 +26,9 @@ public:
     virtual void check_size();
 
     virtual void clear();
+
+    virtual string str() const;
+    virtual string str(const string& prefix) const;
 
 private:
     vector<uint8_t> cards;

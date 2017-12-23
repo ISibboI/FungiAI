@@ -5,6 +5,7 @@
 #include "data_structures/structured_pile.hpp"
 
 #include <vector>
+#include <random>
 
 using namespace std;
 
@@ -18,7 +19,13 @@ private:
 public:
 	Forest();
 
-	void initialize();
+	void initialize(mt19937_64& random_engine);
+
+	vector<uint8_t>& get_draw_pile();
+	StructuredPile& get_discard_pile();
+
+	string str() const;
+	string str(const string& prefix) const;
 };
 
 #endif

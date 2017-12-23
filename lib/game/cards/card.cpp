@@ -22,12 +22,20 @@ string Card::str() const {
     return ss.str();
 }
 
-bool Card::is_normal_mushroom() {
+bool Card::is_normal_mushroom() const {
 	return id < 9;
 }
 
-bool Card::operator<(const Card& other) {
+bool Card::is_valid_hand_card() const {
+    return id < 20;
+}
+
+bool Card::operator<(const Card& other) const {
 	return id < other.id;
+}
+
+bool Card::operator==(const Card& other) const {
+    return id == other.id;
 }
 
 const Card& Card::get_night_card() {

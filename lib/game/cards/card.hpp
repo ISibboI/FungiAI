@@ -19,9 +19,12 @@ public:
     ~Card();
     string str() const;
 
-    bool is_normal_mushroom();
+    bool is_normal_mushroom() const;
+    bool is_valid_hand_card() const;
 
-    bool operator<(const Card& other);
+    bool operator<(const Card& other) const;
+    bool operator==(const Card& other) const;
+
     const Card& get_night_card();
 };
 

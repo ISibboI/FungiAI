@@ -24,8 +24,8 @@ unsigned Hand::card_count(const Card& card) {
     return StructuredPile::card_count(card);
 }
 
-bool Hand::ensure_valid_hand_card(const Card& card) {
-    if (card.id < 20) {
+void Hand::ensure_valid_hand_card(const Card& card) {
+    if (!card.is_valid_hand_card()) {
         throw runtime_error("Not a valid hand card");
     }
 }

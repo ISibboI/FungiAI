@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ StructuredPile::StructuredPile(const string& name) :
 
 StructuredPile::~StructuredPile() {}
 
-unsigned StructuredPile::size() {
+unsigned StructuredPile::size() const {
     return all_cards_count;
 }
 
@@ -72,4 +73,21 @@ void StructuredPile::clear() {
     all_cards_count = 0;
     cards.clear();
     cards.insert(cards.begin(), CardInformation::get_all_cards().size(), 0);
+}
+
+string StructuredPile::str() const {
+    return str("");
+}
+
+string StructuredPile::str(const string& prefix) const {
+    stringstream ss;
+    ss << prefix << get_name() << ":";
+
+    for (const Card& card : CardInformation::get_all_cards()) {
+        if (cards[card.id] > 0) {
+            ss << "\n" << prefix << "  " << card.name << ": " << (int) cards[card.id];
+        }
+    }
+
+    return ss.str();
 }

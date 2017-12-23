@@ -2,11 +2,16 @@
 
 #include <iostream>
 #include <floatfann.h>
+#include <random>
 
 using namespace std;
 
 int main() {
     Game game;
+    mt19937_64 random_engine;
+
+    game.initialize(random_engine);
+    cout << game.str() << endl;
 
     /*cout << "Starting..." << endl;
 
