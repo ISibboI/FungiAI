@@ -28,8 +28,6 @@ endif()
 file(GLOB_RECURSE LIB_SRC lib/*.cpp)
 file(GLOB_RECURSE LIB_HEADER lib/*.hpp)
 
-message(${LIB_SRC})
-
 add_library(fungilib ${LIB_SRC} ${LIB_HEADER})
 
 include_directories("lib/")

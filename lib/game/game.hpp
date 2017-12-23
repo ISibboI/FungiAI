@@ -1,8 +1,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "data/player.hpp"
-#include "data/forest.hpp"
+#include "player.hpp"
+#include "forest.hpp"
 
 class Game {
 private:
