@@ -2,6 +2,7 @@
 #define DISCARD_ACTION_HPP
 
 #include "action.hpp"
+#include "spdlog.h"
 
 #include <vector>
 
@@ -10,6 +11,7 @@ using namespace std;
 class DiscardAction : public Action {
 private:
 	vector<uint8_t> discard_order;
+	shared_ptr<spdlog::logger> logger;
 
 	DiscardAction();
 

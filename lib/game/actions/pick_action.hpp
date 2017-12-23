@@ -3,6 +3,7 @@
 
 #include "action.hpp"
 #include "discard_action.hpp"
+#include "spdlog.h"
 
 #include <vector>
 
@@ -12,6 +13,7 @@ class PickAction : Action {
 private:
 	vector<uint8_t> pick_order;
 	DiscardAction discard_action;
+	shared_ptr<spdlog::logger> logger;
 
 public:
 	PickAction(vector<uint8_t>&& pick_order, DiscardAction&& discard_action);

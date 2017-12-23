@@ -11,6 +11,9 @@
 using namespace std;
 
 int main() {
+    spdlog::stdout_logger_st("DiscardAction");
+    spdlog::stdout_logger_st("PickAction");
+
     spdlog::set_level(spdlog::level::trace);
     shared_ptr<spdlog::logger> logger = spdlog::stdout_logger_st("Main");
 
@@ -28,7 +31,7 @@ int main() {
     iota(pick_order.begin(), pick_order.end(), 0);
     PickAction pick_action(move(pick_order), move(discard_action));
 
-    for (unsigned i = 0; i < 10; i++) {
+    for (unsigned i = 0; i < 30; i++) {
         pick_action.execute(game.get_p1(), game.get_forest());
         game.post_turn_actions();
         logger->trace("Current state\n{}", game.str());

@@ -50,7 +50,7 @@ public:
 	static vector<uint8_t> create_initial_draw_pile() {
 		vector<uint8_t> initial_draw_pile;
 
-		for (uint8_t id = 0; id < 21; id++) {
+		for (uint8_t id = 0; id < 22; id++) {
 			initial_draw_pile.insert(initial_draw_pile.end(), all_cards[id].ingame_amount, id);
 		}
 
