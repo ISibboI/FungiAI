@@ -1,5 +1,5 @@
-#ifndef PICK_ACTION_HPP
-#define PICK_ACTION_HPP
+#ifndef PICK_DECAY_ACTION_HPP
+#define PICK_DECAY_ACTION_HPP
 
 #include "action.hpp"
 #include "discard_action.hpp"
@@ -9,15 +9,14 @@
 
 using namespace std;
 
-class PickAction : public Action {
+class PickDecayAction : public Action {
 private:
-	vector<uint8_t> pick_order;
 	DiscardAction* discard_action;
 	shared_ptr<spdlog::logger> logger;
 
 public:
-	PickAction(vector<uint8_t>&& pick_order, DiscardAction* discard_action);
-	~PickAction();
+	PickDecayAction(DiscardAction* discard_action);
+	~PickDecayAction();
 
 	virtual bool execute(Player& player, Forest& forest) const override;
 

@@ -1,5 +1,6 @@
 #include "game/game.hpp"
 #include "game/actions/pick_action.hpp"
+#include "game/actions/pick_decay_action.hpp"
 
 #include "spdlog.h"
 
@@ -13,6 +14,7 @@ using namespace std;
 int main() {
     spdlog::stdout_logger_st("DiscardAction");
     spdlog::stdout_logger_st("PickAction");
+    spdlog::stdout_logger_st("PickDecayAction");
 
     spdlog::set_level(spdlog::level::trace);
     shared_ptr<spdlog::logger> logger = spdlog::stdout_logger_st("Main");
@@ -29,10 +31,19 @@ int main() {
 
     vector<uint8_t> pick_order(8, 0);
     iota(pick_order.begin(), pick_order.end(), 0);
-    PickAction pick_action(move(pick_order), move(discard_action));
+    PickAction pick_action(move(pick_order), &discard_action);
+
+    PickDecayAction pick_decay_action(&discard_action);
+
+    uniform_int_distribution<> actions(1, 2);
 
     for (unsigned i = 0; i < 30; i++) {
-        pick_action.execute(game.get_p1(), game.get_forest());
+        if (actions(random_engine) == 1) {
+            pick_action.execute(game.get_p1(), game.get_forest());
+        } else {
+            pick_decay_action.execute(game.get_p1(), game.get_forest());
+        }
+
         game.post_turn_actions();
         logger->trace("Current state\n{}", game.str());
     }

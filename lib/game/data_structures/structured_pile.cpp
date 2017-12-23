@@ -10,7 +10,8 @@ using namespace std;
 StructuredPile::StructuredPile(const string& name) :
     Pile(name),
     all_cards_count(0),
-    cards(CardInformation::get_all_cards().size(), 0) {}
+    cards(CardInformation::get_all_cards().size(), 0),
+    logger(spdlog::stdout_logger_st("StructuredPile " + name)) {}
 
 StructuredPile::~StructuredPile() {}
 
@@ -28,6 +29,7 @@ void StructuredPile::add_cards(const Card& card, unsigned count) {
     unsigned new_count = count + cards[card.id];
 
     if (new_count < count || new_count > card.ingame_amount) {
+        logger->error("Illegal {} count: new_count ({:d}) > card.ingame_amount ({:d})", card.name, new_count, card.ingame_amount);
         throw runtime_error("Illegal card count");
     }
 
@@ -45,6 +47,7 @@ void StructuredPile::remove_cards(const Card& card, unsigned count) {
     unsigned new_count = cards[card.id] - count;
 
     if (new_count > cards[card.id]) {
+        logger->error("Illegal {} count: new_count ({:d}) > cards[card.id] ({:d})", card.name, new_count, cards[card.id]);
         throw runtime_error("Illegal card count");
     }
 

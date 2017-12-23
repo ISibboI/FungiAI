@@ -6,10 +6,10 @@
 
 using namespace std;
 
-PickAction::PickAction(vector<uint8_t>&& pick_order, DiscardAction&& discard_action) :
+PickAction::PickAction(vector<uint8_t>&& pick_order, DiscardAction* discard_action) :
 	Action("PickAction", 1),
 	pick_order(pick_order),
-	discard_action(move(discard_action)),
+	discard_action(discard_action),
 	logger(spdlog::get("PickAction")) {}
 
 PickAction::~PickAction() {}
@@ -41,7 +41,7 @@ bool PickAction::execute(Player& player, Forest& forest) const {
 		} else if (card == CardInformation::fly_agaric()) {
 			forest.get_discard_pile().add_card(card);
 			player.set_fly_agaric_timer();
-			discard_action.execute(player, forest);
+			discard_action->execute(player, forest);
 		}
 
 		forest.get_forest().erase(forest.get_forest().begin() + index);

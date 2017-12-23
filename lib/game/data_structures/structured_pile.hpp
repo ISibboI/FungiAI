@@ -3,6 +3,7 @@
 
 #include "game/cards/card.hpp"
 #include "pile.hpp"
+#include "spdlog.h"
 
 #include <string>
 #include <vector>
@@ -10,6 +11,11 @@
 using namespace std;
 
 class StructuredPile : public Pile {
+private:
+    vector<uint8_t> cards;
+    unsigned all_cards_count;
+    shared_ptr<spdlog::logger> logger;
+
 public:
     StructuredPile(const string& name);
     virtual ~StructuredPile() override;
@@ -35,10 +41,6 @@ public:
 
     virtual string str() const;
     virtual string str(const string& prefix) const;
-
-private:
-    vector<uint8_t> cards;
-    unsigned all_cards_count;
 };
 
 #endif // STRUCTURED_PILE_H
