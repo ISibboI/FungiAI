@@ -31,7 +31,7 @@ const vector<Card> all_cards{
 		Card("Pan", -1, -1, 1, 11, 19),
 		Card("Basket", -1, -1, -2, 5, 20),
 		Card("Fly agaric", -1, -1, 0, 5, 21),
-		Card("Moon", -1, -1, 0, 8, 22),
+		Card("Moon", -1, -1, 0, 0, 22),
 		Card("Stick", -1, 1, 0, 100, 23)
 	};
 
@@ -55,6 +55,16 @@ public:
 		}
 
 		return initial_draw_pile;
+	}
+
+	static const unsigned initial_draw_pile_size() {
+		unsigned count = 0;
+
+		for (const Card& card : all_cards) {
+			count += card.ingame_amount;
+		}
+
+		return count;
 	}
 
 	static const Card& honey_fungus() {

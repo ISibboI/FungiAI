@@ -21,6 +21,7 @@ public:
 
     bool is_normal_mushroom() const;
     bool is_valid_hand_card() const;
+    bool is_night_card() const;
 
     bool operator<(const Card& other) const;
     bool operator==(const Card& other) const;

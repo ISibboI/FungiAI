@@ -30,6 +30,10 @@ bool Card::is_valid_hand_card() const {
     return id < 20;
 }
 
+bool Card::is_night_card() const {
+    return id >= 9 && id < 17;
+}
+
 bool Card::operator<(const Card& other) const {
 	return id < other.id;
 }
