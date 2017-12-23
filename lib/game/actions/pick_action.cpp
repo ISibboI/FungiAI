@@ -28,7 +28,6 @@ bool PickAction::execute(Player& player, Forest& forest) const {
 		}
 
 		const Card& card = CardInformation::get_card(forest.get_forest()[index]);
-		forest.get_forest().erase(forest.get_forest().begin() + index);
 
 		if (card.is_valid_hand_card()) {
 			if (player.get_hand().size() >= player.get_hand_capacity()) {
@@ -43,6 +42,7 @@ bool PickAction::execute(Player& player, Forest& forest) const {
 			discard_action.execute(player, forest);
 		}
 
+		forest.get_forest().erase(forest.get_forest().begin() + index);
 		return true;
 	}
 

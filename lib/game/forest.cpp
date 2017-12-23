@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Forest::Forest() : discard_pile("Discard Pile") {}
+Forest::Forest() : discard_pile("Discard Pile"), logger(spdlog::stdout_logger_st("Forest")) {}
 
 void Forest::initialize(mt19937_64& random_engine) {
 	draw_pile = CardInformation::create_initial_draw_pile();
@@ -17,6 +17,9 @@ void Forest::initialize(mt19937_64& random_engine) {
 	forest.clear();
 	decay_pile.clear();
 	discard_pile.clear();
+
+	fill_forest();
+	logger->trace("Initialized forest");
 }
 
 vector<uint8_t>& Forest::get_draw_pile() {
@@ -35,6 +38,33 @@ StructuredPile& Forest::get_discard_pile() {
 	return discard_pile;
 }
 
+void Forest::post_turn_actions() {
+	if (decay_pile.size() == 4) {
+		for (uint8_t id : decay_pile) {
+			discard_pile.add_card(id);
+		}
+
+		decay_pile.clear();
+		logger->trace("Cleared decay pile");
+	}
+
+	decay_pile.push_back(forest.front());
+	forest.erase(forest.begin());
+	fill_forest();
+}
+
+void Forest::fill_forest() {
+	unsigned count = 0;
+
+	while (forest.size() < 8 && draw_pile.size() > 0) {
+		forest.push_back(draw_pile.back());
+		draw_pile.pop_back();
+		count++;
+	}
+
+	logger->trace("Filled forest with {d} cards", count);
+}
+
 string Forest::str() const {
 	return str("");
 }
@@ -45,6 +75,6 @@ string Forest::str(const string& prefix) const {
 	ss << prefix << "  Draw pile: " << Strings::str(draw_pile) << "\n";
 	ss << prefix << "  Forest: " << Strings::str(forest) << "\n";
 	ss << prefix << "  Decay pile: " << Strings::str(decay_pile) << "\n";
-	ss << prefix << "  " << discard_pile.str(prefix + "  ");
+	ss << discard_pile.str(prefix + "  ");
 	return ss.str();
 }

@@ -32,6 +32,7 @@ void StructuredPile::add_cards(const Card& card, unsigned count) {
     }
 
     cards[card.id] = new_count;
+    all_cards_count += count;
 }
 
 void StructuredPile::remove_card(const Card& card) {
@@ -48,9 +49,10 @@ void StructuredPile::remove_cards(const Card& card, unsigned count) {
     }
 
     cards[card.id] = new_count;
+    all_cards_count -= count;
 }
 
-unsigned StructuredPile::card_count(const Card& card) {
+unsigned StructuredPile::card_count(const Card& card) const {
     check_size();
     return cards[card.id];
 }
@@ -71,11 +73,11 @@ void StructuredPile::remove_cards(uint8_t id, unsigned count) {
     remove_cards(CardInformation::get_card(id), count);
 }
 
-unsigned StructuredPile::card_count(uint8_t id) {
+unsigned StructuredPile::card_count(uint8_t id) const {
     return card_count(CardInformation::get_card(id));
 }
 
-void StructuredPile::check_size() {
+void StructuredPile::check_size() const {
     #ifdef DEBUG
     #ifndef NDEBUG
     if (accumulate(cards.begin(), cards.end(), 0) != size) {

@@ -23,13 +23,13 @@ public:
 
 	void draw_initial_card(Forest& forest);
 
-	unsigned get_hand_capacity();
+	unsigned get_hand_capacity() const;
 
 	Hand& get_hand();
 	Display& get_display();
 
 	void set_fly_agaric_timer();
-	void update();
+	void post_turn_actions();
 
 	string str() const;
 	string str(const string& prefix) const;

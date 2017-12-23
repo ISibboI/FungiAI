@@ -38,8 +38,8 @@ void Player::draw_initial_card(Forest& forest) {
 	}
 }
 
-unsigned Player::get_hand_capacity() {
-	return 8 + display.card_count(CardInformation::basket()) * 2 - fly_agaric_timer > 0 ? 4 : 0;
+unsigned Player::get_hand_capacity() const {
+	return 8 + display.card_count(CardInformation::basket()) * 2 - (fly_agaric_timer > 0 ? 4 : 0);
 }
 
 Hand& Player::get_hand() {
@@ -54,7 +54,7 @@ void Player::set_fly_agaric_timer() {
 	fly_agaric_timer = 2;
 }
 
-void Player::update() {
+void Player::post_turn_actions() {
 	if (fly_agaric_timer > 0) {
 		fly_agaric_timer--;
 	}
@@ -66,7 +66,7 @@ string Player::str() const {
 	
 string Player::str(const string& prefix) const {
 	stringstream ss;
-	ss << prefix << "Player " << name << ":\n";
+	ss << prefix << "Player " << name << " (" << hand.size() << "/" << get_hand_capacity() << "):\n";
 	ss << hand.str(prefix + "  ") << "\n";
 	ss << display.str(prefix + "  ");
 	return ss.str();

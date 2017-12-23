@@ -1,16 +1,39 @@
 #include "game/game.hpp"
+#include "game/actions/pick_action.hpp"
+
+#include "spdlog.h"
 
 #include <iostream>
 #include <floatfann.h>
 #include <random>
+#include <numeric>
 
 using namespace std;
 
 int main() {
+    spdlog::set_level(spdlog::level::trace);
+    shared_ptr<spdlog::logger> logger = spdlog::stdout_logger_st("Main");
+
     Game game;
     mt19937_64 random_engine;
 
     game.initialize(random_engine);
+    cout << game.str() << endl;
+
+    vector<uint8_t> discard_order(24, 0);
+    iota(discard_order.begin(), discard_order.end(), 0);
+    DiscardAction discard_action(move(discard_order));
+
+    vector<uint8_t> pick_order(8, 0);
+    iota(pick_order.begin(), pick_order.end(), 0);
+    PickAction pick_action(move(pick_order), move(discard_action));
+
+    for (unsigned i = 0; i < 10; i++) {
+        pick_action.execute(game.get_p1(), game.get_forest());
+        game.post_turn_actions();
+        logger->trace("Current state\n{}", game.str());
+    }
+
     cout << game.str() << endl;
 
     /*cout << "Starting..." << endl;

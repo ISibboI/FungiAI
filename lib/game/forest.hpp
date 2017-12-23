@@ -3,6 +3,7 @@
 
 #include "cards/card.hpp"
 #include "data_structures/structured_pile.hpp"
+#include "spdlog.h"
 
 #include <vector>
 #include <random>
@@ -15,6 +16,7 @@ private:
 	vector<uint8_t> forest;
 	vector<uint8_t> decay_pile;
 	StructuredPile discard_pile;
+	shared_ptr<spdlog::logger> logger;
 
 public:
 	Forest();
@@ -25,6 +27,9 @@ public:
 	vector<uint8_t>& get_forest();
 	vector<uint8_t>& get_decay_pile();
 	StructuredPile& get_discard_pile();
+
+	void post_turn_actions();
+	void fill_forest();
 
 	string str() const;
 	string str(const string& prefix) const;

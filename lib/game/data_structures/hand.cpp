@@ -20,7 +20,7 @@ void Hand::remove_cards(const Card& card, unsigned count) {
     StructuredPile::remove_cards(card, count);
 }
 
-unsigned Hand::card_count(const Card& card) {
+unsigned Hand::card_count(const Card& card) const {
     ensure_valid_hand_card(card);
     return StructuredPile::card_count(card);
 }
@@ -33,11 +33,11 @@ void Hand::remove_cards(uint8_t id, unsigned count) {
     remove_cards(CardInformation::get_card(id), count);
 }
 
-unsigned Hand::card_count(uint8_t id) {
+unsigned Hand::card_count(uint8_t id) const {
     return card_count(CardInformation::get_card(id));
 }
 
-void Hand::ensure_valid_hand_card(const Card& card) {
+void Hand::ensure_valid_hand_card(const Card& card) const {
     if (!card.is_valid_hand_card()) {
         throw runtime_error("Not a valid hand card");
     }
