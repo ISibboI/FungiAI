@@ -3,6 +3,7 @@
 #include "game/actions/pick_decay_action.hpp"
 #include "game/actions/cook_mushrooms_action.hpp"
 #include "game/actions/sell_mushrooms_action.hpp"
+#include "game/actions/place_pan_action.hpp"
 
 #include "spdlog.h"
 
@@ -19,6 +20,7 @@ int main() {
     spdlog::stdout_logger_st("PickDecayAction");
     spdlog::stdout_logger_st("CookMushroomsAction");
     spdlog::stdout_logger_st("SellMushroomsAction");
+    spdlog::stdout_logger_st("PlacePanAction");
 
     spdlog::set_level(spdlog::level::trace);
     shared_ptr<spdlog::logger> logger = spdlog::stdout_logger_st("Main");
@@ -47,7 +49,9 @@ int main() {
     iota(sell_order.begin(), sell_order.end(), 0);
     SellMushroomsAction sell_mushrooms_action(move(sell_order));
 
-    uniform_int_distribution<> actions(1, 4);
+    PlacePanAction place_pan_action;
+
+    uniform_int_distribution<> actions(1, 5);
 
     for (unsigned i = 0; i < 30; i++) {
         switch (actions(random_engine)) {
@@ -63,6 +67,9 @@ int main() {
         case 4:
             logger->trace("Trying 4");
             sell_mushrooms_action.execute(game.get_p1(), game.get_forest()); break;
+        case 5:
+            logger->trace("Trying 5");
+            place_pan_action.execute(game.get_p1(), game.get_forest()); break;
         }
 
         game.post_turn_actions();

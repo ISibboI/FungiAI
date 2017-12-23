@@ -7,7 +7,7 @@
 using namespace std;
 
 SellMushroomsAction::SellMushroomsAction(vector<uint8_t>&& sell_order) :
-	Action("SellMushroomsAction", 3),
+	Action("SellMushroomsAction", 4),
 	sell_order(move(sell_order)),
 	logger(spdlog::get("SellMushroomsAction")) {}
 
