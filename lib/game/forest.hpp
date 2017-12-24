@@ -25,6 +25,7 @@ public:
 
 	vector<uint8_t>& get_draw_pile();
 	vector<uint8_t>& get_forest();
+	const vector<uint8_t>& get_forest() const;
 	vector<uint8_t>& get_decay_pile();
 	StructuredPile& get_discard_pile();
 

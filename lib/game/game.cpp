@@ -37,6 +37,23 @@ Player& Game::get_player(bool p1) {
 	return p1 ? this->p1 : p2;
 }
 
+bool Game::is_finished() const {
+	return forest.get_forest().empty();
+}
+
+bool Game::winner() const {
+	unsigned p1_points = p1.get_display().count_points();
+	unsigned p2_points = p2.get_display().count_points();
+
+	if (p1_points > p2_points) {
+		return true;
+	} else if (p1_points < p2_points) {
+		return false;
+	} else {
+		return p1.get_display().effective_mushroom_count() > p2.get_display().effective_mushroom_count();
+	}
+}
+
 string Game::str() const {
 	stringstream ss;
 	ss << "Game:\n" << forest.str("  ") << "\n" << p1.str("  ") << "\n" << p2.str("  ");

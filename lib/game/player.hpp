@@ -27,6 +27,7 @@ public:
 
 	Hand& get_hand();
 	Display& get_display();
+	const Display& get_display() const;
 
 	void set_fly_agaric_timer();
 	void post_turn_actions();

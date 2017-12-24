@@ -30,6 +30,10 @@ vector<uint8_t>& Forest::get_forest() {
 	return forest;
 }
 
+const vector<uint8_t>& Forest::get_forest() const {
+	return forest;
+}
+
 vector<uint8_t>& Forest::get_decay_pile() {
 	return decay_pile;
 }

@@ -26,6 +26,9 @@ public:
 	Forest& get_forest();
 	Player& get_player(bool p1);
 
+	bool is_finished() const;
+	bool winner() const;
+
 	string str() const;
 };
 

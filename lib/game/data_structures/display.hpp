@@ -6,6 +6,9 @@
 class Display : public StructuredPile {
 public:
 	Display(const string& name);
+
+	unsigned count_points() const;
+	unsigned effective_mushroom_count() const;
 };
 
 #endif
