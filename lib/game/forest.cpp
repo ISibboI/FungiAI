@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Forest::Forest() : discard_pile("Discard Pile"), logger(spdlog::stdout_logger_st("Forest")) {}
+Forest::Forest() : discard_pile("Discard Pile"), logger(spdlog::get("Forest")) {}
 
 void Forest::initialize(mt19937_64& random_engine) {
 	draw_pile = CardInformation::create_initial_draw_pile();
@@ -66,7 +66,7 @@ void Forest::fill_forest() {
 		count++;
 	}
 
-	logger->trace("Filled forest with {d} cards", count);
+	logger->trace("Filled forest with {:d} cards", count);
 }
 
 string Forest::str() const {

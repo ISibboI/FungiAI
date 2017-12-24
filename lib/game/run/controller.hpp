@@ -13,9 +13,12 @@ private:
 
 public:
 	Controller(const string& name);
-	~Controller();
+	virtual ~Controller();
 
-	virtual void do_turn(Game& game, bool p1) = 0;
+	virtual void do_turn(Player& me, Player& enemy, Forest& forest) = 0;
+	void do_turn(Game& game, bool p1);
+
+	const string& get_name() const;
 };
 
 #endif

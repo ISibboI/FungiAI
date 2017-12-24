@@ -1,16 +1,14 @@
-#include "game/game.hpp"
-#include "game/actions/pick_action.hpp"
-#include "game/actions/pick_decay_action.hpp"
-#include "game/actions/cook_mushrooms_action.hpp"
-#include "game/actions/sell_mushrooms_action.hpp"
-#include "game/actions/place_pan_action.hpp"
-
+#include "evolutional/evolutional_optimization.hpp"
+#include "evolutional/random_controller.hpp"
+#include "evolutional/ranking/complete_ranking_algorithm.hpp"
+#include "evolutional/reproduction/percentile_reproduction_strategy.hpp"
 #include "spdlog.h"
 
 #include <iostream>
 #include <floatfann.h>
 #include <random>
 #include <numeric>
+#include <sstream>
 
 using namespace std;
 
@@ -21,62 +19,31 @@ int main() {
     spdlog::stdout_logger_st("CookMushroomsAction");
     spdlog::stdout_logger_st("SellMushroomsAction");
     spdlog::stdout_logger_st("PlacePanAction");
+    spdlog::stdout_logger_st("RandomController");
+    spdlog::stdout_logger_st("EvolutionalOptimization");
+    spdlog::stdout_logger_st("PercentileReproductionStrategy");
+    spdlog::stdout_logger_st("CompleteRankingAlgorithm");
+    spdlog::stdout_logger_st("Forest");
+    spdlog::stdout_logger_st("ReproductionStrategy");
 
     spdlog::set_level(spdlog::level::trace);
     shared_ptr<spdlog::logger> logger = spdlog::stdout_logger_st("Main");
 
-    Game game;
-    mt19937_64 random_engine;
+    CompleteRankingAlgorithm ranking_algorithm;
+    PercentileReproductionStrategy reproduction_strategy(0.5);
+    EvolutionalOptimization evolutional_optimization(&ranking_algorithm, &reproduction_strategy, 656737);
 
-    game.initialize(random_engine);
-    cout << game.str() << endl;
+    vector<EvolutionalController*> initial_population;
 
-    vector<uint8_t> discard_order(24, 0);
-    iota(discard_order.begin(), discard_order.end(), 0);
-    DiscardAction discard_action(move(discard_order));
+    for (unsigned i = 0; i < 10; i++) {
+        stringstream ss;
+        ss << "Number " << i << " loves random";
 
-    vector<uint8_t> pick_order(8, 0);
-    iota(pick_order.begin(), pick_order.end(), 0);
-    PickAction pick_action(move(pick_order), &discard_action);
-
-    PickDecayAction pick_decay_action(&discard_action);
-
-    vector<uint8_t> cook_order(9, 0);
-    iota(cook_order.begin(), cook_order.end(), 0);
-    CookMushroomsAction cook_mushrooms_action(move(cook_order));
-
-    vector<uint8_t> sell_order(9, 0);
-    iota(sell_order.begin(), sell_order.end(), 0);
-    SellMushroomsAction sell_mushrooms_action(move(sell_order));
-
-    PlacePanAction place_pan_action;
-
-    uniform_int_distribution<> actions(1, 5);
-
-    for (unsigned i = 0; i < 30; i++) {
-        switch (actions(random_engine)) {
-        case 1: 
-            logger->trace("Trying 1");
-            pick_action.execute(game.get_p1(), game.get_forest()); break;
-        case 2:
-            logger->trace("Trying 2");
-            pick_decay_action.execute(game.get_p1(), game.get_forest()); break;
-        case 3:
-            logger->trace("Trying 3");
-            cook_mushrooms_action.execute(game.get_p1(), game.get_forest()); break;
-        case 4:
-            logger->trace("Trying 4");
-            sell_mushrooms_action.execute(game.get_p1(), game.get_forest()); break;
-        case 5:
-            logger->trace("Trying 5");
-            place_pan_action.execute(game.get_p1(), game.get_forest()); break;
-        }
-
-        game.post_turn_actions();
-        logger->trace("Current state\n{}", game.str());
+        initial_population.push_back(new RandomController(ss.str(), i));
     }
 
-    cout << game.str() << endl;
+    evolutional_optimization.set_initial_population(initial_population);
+    evolutional_optimization.advance_n_generations(10);
 
     /*cout << "Starting..." << endl;
 
@@ -141,4 +108,7 @@ int main() {
     fann_destroy(player);
 
     return 0; */
+
+    logger->info("Success!");
+    return 0;
 }

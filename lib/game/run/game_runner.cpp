@@ -1,18 +1,18 @@
 #include "game_runner.hpp"
 
-GameRunner::GameRunner(Controller* p1, Controller* p2) :
-	p1(p1), p2(p2) {}
+GameRunner::GameRunner() {}
 
 GameRunner::~GameRunner() {}
 
-bool GameRunner::run_game() {
+bool GameRunner::run_game(Controller* p1, Controller* p2, mt19937_64& random_engine) {
 	game.initialize(random_engine);
-	bool p1 = true;
+	bool turn_p1 = true;
 
 	while (!game.is_finished()) {
-		Controller* player = p1 ? this->p1 : p2;
+		Controller* player = turn_p1 ? p1 : p2;
 
-		player->do_turn(game, p1);
+		player->do_turn(game, turn_p1);
+		turn_p1 = !turn_p1;
 	}
 
 	return game.winner();

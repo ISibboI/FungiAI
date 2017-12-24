@@ -10,16 +10,13 @@ using namespace std;
 
 class GameRunner {
 private:
-	mt19937_64 random_engine;
 	Game game;
-	Controller* p1;
-	Controller* p2;
 
 public:
-	GameRunner(Controller* p1, Controller* p2);
+	GameRunner();
 	~GameRunner();
 
-	bool run_game();
+	bool run_game(Controller* p1, Controller* p2, mt19937_64& random_engine);
 };
 
 #endif
