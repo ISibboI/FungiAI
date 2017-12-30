@@ -1,0 +1,9 @@
+[submodule "fann"]
+	path = fann
+	url = https://github.com/ISibboI/fann
+[submodule "spdlog"]
+	path = spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "nana"]
+	path = nana
+	url = https://github.com/cnjinhao/nana
