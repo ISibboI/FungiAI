@@ -54,6 +54,10 @@ const Display& Player::get_display() const {
 	return display;
 }
 
+const string& Player::get_name() const {
+	return name;
+}
+
 void Player::set_fly_agaric_timer() {
 	fly_agaric_timer = 2;
 }

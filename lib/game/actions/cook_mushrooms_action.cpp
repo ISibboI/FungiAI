@@ -1,6 +1,6 @@
 #include "cook_mushrooms_action.hpp"
 #include "game/cards/card_information.hpp"
-#include "io/strings.hpp"
+#include "game/io/strings.hpp"
 
 #include <sstream>
 

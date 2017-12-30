@@ -2,14 +2,17 @@
 #define CONTROLLER_HPP
 
 #include "game/game.hpp"
+//#include "action_listener.hpp"
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class Controller {
 private:
 	string name;
+	//vector<ActionListener*> actionListeners;
 
 public:
 	Controller(const string& name);
