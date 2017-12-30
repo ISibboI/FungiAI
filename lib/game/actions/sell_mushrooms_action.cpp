@@ -13,7 +13,7 @@ SellMushroomsAction::SellMushroomsAction(vector<uint8_t>&& sell_order) :
 
 SellMushroomsAction::~SellMushroomsAction() {}
 
-bool SellMushroomsAction::execute(Player& player, Forest& forest) const {
+bool SellMushroomsAction::execute(Player& player, Forest& forest) {
 	for (uint8_t id : sell_order) {
 		unsigned effective_card_count = player.get_hand().effective_card_count(id);
 

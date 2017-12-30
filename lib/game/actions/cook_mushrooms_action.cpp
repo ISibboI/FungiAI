@@ -13,7 +13,7 @@ CookMushroomsAction::CookMushroomsAction(vector<uint8_t>&& cook_order) :
 
 CookMushroomsAction::~CookMushroomsAction() {}
 
-bool CookMushroomsAction::execute(Player& player, Forest& forest) const {
+bool CookMushroomsAction::execute(Player& player, Forest& forest) {
 	if (!player.get_display().card_count(CardInformation::pan()) > 0) {
 		return false;
 	}

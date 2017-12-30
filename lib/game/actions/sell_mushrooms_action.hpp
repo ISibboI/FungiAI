@@ -17,7 +17,7 @@ public:
 	SellMushroomsAction(vector<uint8_t>&& sell_order);
 	~SellMushroomsAction();
 
-	virtual bool execute(Player& player, Forest& forest) const override;
+	virtual bool execute(Player& player, Forest& forest) override;
 
 	virtual string str(const string& prefix) const override;
 };

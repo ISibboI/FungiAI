@@ -18,7 +18,7 @@ public:
 	PickDecayAction(DiscardAction* discard_action);
 	~PickDecayAction();
 
-	virtual bool execute(Player& player, Forest& forest) const override;
+	virtual bool execute(Player& player, Forest& forest) override;
 
 	virtual string str(const string& prefix) const override;
 };

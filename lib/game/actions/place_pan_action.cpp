@@ -11,7 +11,7 @@ PlacePanAction::PlacePanAction() :
 
 PlacePanAction::~PlacePanAction() {}
 
-bool PlacePanAction::execute(Player& player, Forest& forest) const {
+bool PlacePanAction::execute(Player& player, Forest& forest) {
 	if (player.get_hand().card_count(CardInformation::pan()) > 0) {
 		player.get_hand().remove_card(CardInformation::pan());
 		player.get_display().add_card(CardInformation::pan());

@@ -4,6 +4,7 @@ project(fungi_ai)
 set(CMAKE_CXX_STANDARD 14)
 
 find_path(FANN_INCLUDE_DIR fann/src/include)
+find_path(SPDLOG_INCLUDE_DIR spdlog/include/spdlog)
 
 if ((NOT FANN_INCLUDE_DIR) OR (NOT EXISTS ${FANN_INCLUDE_DIR}))
 	execute_process(COMMAND git submodule update --init -- fann WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
@@ -13,6 +14,12 @@ if ((NOT FANN_INCLUDE_DIR) OR (NOT EXISTS ${FANN_INCLUDE_DIR}))
 	include_directories(PUBLIC fann/lib/googletest/include/)
 
 	add_subdirectory(fann/)
+endif()
+
+if ((NOT SPDLOG_INCLUDE_DIR) OR (NOT EXISTS ${SPDLOG_INCLUDE_DIR}))
+	execute_process(COMMAND git submodule update --init -- spdlog WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+	include_directories(PUBLIC spdlog/include/spdlog/)
 endif()
 
 SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -g" )
@@ -29,7 +36,7 @@ file(GLOB_RECURSE LIB_HEADER lib/*.hpp)
 
 add_library(fungilib ${LIB_SRC} ${LIB_HEADER})
 
-include_directories("lib/" spdlog/include/spdlog)
+include_directories("lib/")
 
 add_executable(fungi_ai app/fungi_ai.cpp)
 target_link_libraries(fungi_ai fungilib fann)

@@ -17,7 +17,8 @@ public:
 	Action(const string& name, unsigned id);
 	~Action();
 
-	virtual bool execute(Player& player, Forest& forest) const = 0;
+	virtual bool execute(Player& player, Forest& forest) = 0;
+	//virtual const ActionResult& get_result() const;
 
 	const string& get_name() const;
 	unsigned get_id() const;

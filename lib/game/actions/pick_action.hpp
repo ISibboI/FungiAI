@@ -19,7 +19,7 @@ public:
 	PickAction(vector<uint8_t>&& pick_order, DiscardAction* discard_action);
 	~PickAction();
 
-	virtual bool execute(Player& player, Forest& forest) const override;
+	virtual bool execute(Player& player, Forest& forest) override;
 
 	virtual string str(const string& prefix) const override;
 };

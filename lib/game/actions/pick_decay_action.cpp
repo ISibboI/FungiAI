@@ -13,7 +13,7 @@ PickDecayAction::PickDecayAction(DiscardAction* discard_action) :
 
 PickDecayAction::~PickDecayAction() {}
 
-bool PickDecayAction::execute(Player& player, Forest& forest) const {
+bool PickDecayAction::execute(Player& player, Forest& forest) {
 	int current_capacity = player.get_hand_capacity() - player.get_hand().size();
 	int decay_size = 0;
 

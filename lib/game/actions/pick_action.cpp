@@ -14,7 +14,7 @@ PickAction::PickAction(vector<uint8_t>&& pick_order, DiscardAction* discard_acti
 
 PickAction::~PickAction() {}
 
-bool PickAction::execute(Player& player, Forest& forest) const {
+bool PickAction::execute(Player& player, Forest& forest) {
 	for (const uint8_t index : pick_order) {
 		const uint8_t costs = index == 0 ? 0 : index - 1;
 

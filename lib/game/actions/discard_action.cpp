@@ -22,7 +22,7 @@ DiscardAction::DiscardAction(DiscardAction&& discard_action) :
 
 DiscardAction::~DiscardAction() {}
 
-bool DiscardAction::execute(Player& player, Forest& forest) const {
+bool DiscardAction::execute(Player& player, Forest& forest) {
 	unsigned current_index = 0;
 	Hand& hand = player.get_hand();
 
