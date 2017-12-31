@@ -1,11 +1,12 @@
 #include "gui/main_window.hpp"
 
-using namespace nana;
+#include <QApplication>
 
-int main() {
+int main(int argc, char *argv[]) {
+	QApplication q_application(argc, argv);
+
 	Game game;
 	MainWindow main_window(&game);
 
-	exec();
-	return 0;
+	return q_application.exec();
 }

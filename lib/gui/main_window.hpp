@@ -3,19 +3,16 @@
 
 #include "game/game.hpp"
 
-#include <nana/gui.hpp>
-#include <nana/gui/widgets/label.hpp>
+#include <QMainWindow>
 
-class MainWindow : public nana::form {
+class MainWindow : public QMainWindow {
+	Q_OBJECT
+
 private:
-	nana::label display_p1;
-	nana::label display_p2;
-	nana::label forest;
-
 	Game* game;
 
 public:
-	MainWindow(Game* game);
+	explicit MainWindow(Game* game);
 	~MainWindow();
 };
 
