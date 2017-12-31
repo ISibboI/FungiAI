@@ -3,6 +3,9 @@ project(fungi_ai)
 
 set(CMAKE_CXX_STANDARD 14)
 
+SET( CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -g" )
+SET( CMAKE_EXE_LINKER_FLAGS_DEBUG  "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address -fsanitize=undefined -g" )
+
 find_path(FANN_INCLUDE_DIR fann/src/include)
 find_path(SPDLOG_INCLUDE_DIR spdlog/include/spdlog)
 find_path(NANA_INCLUDE_DIR nana/include)
@@ -22,9 +25,6 @@ if ((NOT SPDLOG_INCLUDE_DIR) OR (NOT EXISTS ${SPDLOG_INCLUDE_DIR}))
 
 	include_directories(PUBLIC spdlog/include/spdlog/)
 endif()
-
-SET( CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -g" )
-SET( CMAKE_EXE_LINKER_FLAGS_DEBUG  "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address -fsanitize=undefined -g" )
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
