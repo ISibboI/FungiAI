@@ -1,9 +1,15 @@
 #include "main_window.hpp"
 
+#include <QGridLayout>
+
 MainWindow::MainWindow(Game* game) :
-	QMainWindow(0)
+	game_panel(game)
 {
-	game_panel = new GamePanel(this, game);
+	QGridLayout* layout = new QGridLayout;
+
+	layout->addWidget(&game_panel, 0, 0);
+
+	setLayout(layout);
 
 	setWindowTitle("Fungi");
 	show();

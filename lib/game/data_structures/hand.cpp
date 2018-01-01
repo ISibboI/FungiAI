@@ -21,7 +21,6 @@ void Hand::remove_cards(const Card& card, unsigned count) {
 }
 
 unsigned Hand::card_count(const Card& card) const {
-    ensure_valid_hand_card(card);
     return StructuredPile::card_count(card);
 }
 

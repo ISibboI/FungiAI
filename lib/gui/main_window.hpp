@@ -4,13 +4,13 @@
 #include "game/game.hpp"
 #include "gui/panels/game_panel.hpp"
 
-#include <QMainWindow>
+#include <QWidget>
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QWidget {
 	Q_OBJECT
 
 private:
-	GamePanel* game_panel;
+	GamePanel game_panel;
 
 public:
 	explicit MainWindow(Game* game);
