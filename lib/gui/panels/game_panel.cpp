@@ -4,13 +4,15 @@
 
 GamePanel::GamePanel(Game* game) :
 	game(game),
-	p1(&game->get_p1(), true),
-	p2(&game->get_p2(), false)
+	p1_panel(&game->get_p1(), true),
+	p2_panel(&game->get_p2(), false),
+	forest_panel(&game->get_forest())
 {
 	QGridLayout* layout = new QGridLayout;
 
-	layout->addWidget(&p1, 0, 0);
-	layout->addWidget(&p2, 0, 2);
+	layout->addWidget(&p1_panel, 0, 0);
+	layout->addWidget(&forest_panel, 0, 1);
+	layout->addWidget(&p2_panel, 0, 2);
 
 	setLayout(layout);
 }
@@ -18,6 +20,7 @@ GamePanel::GamePanel(Game* game) :
 GamePanel::~GamePanel() {}
 
 void GamePanel::update() {
-	p1.update();
-	p2.update();
+	p1_panel.update();
+	p2_panel.update();
+	forest_panel.update();
 }
