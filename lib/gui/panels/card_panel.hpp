@@ -3,9 +3,9 @@
 
 #include "game/cards/card_information.hpp"
 
-#include <QWidget>
+#include <QLabel>
 
-class CardPanel : public QWidget {
+class CardPanel : public QLabel {
 	Q_OBJECT
 
 private:

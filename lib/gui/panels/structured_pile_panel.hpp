@@ -4,7 +4,6 @@
 #include "game/data_structures/structured_pile.hpp"
 #include "card_panel.hpp"
 
-#include <QWidget>
 #include <QGroupBox>
 #include <QString>
 
@@ -17,7 +16,6 @@ class StructuredPilePanel : public QGroupBox {
 
 private:
 	StructuredPile* structured_pile;
-	vector<CardPanel*> card_panels;
 
 public:
 	StructuredPilePanel(StructuredPile* structured_pile, const QString& title);
