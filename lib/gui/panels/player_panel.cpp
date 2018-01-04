@@ -11,8 +11,8 @@ PlayerPanel::PlayerPanel(Player* player, bool p1) :
 {
 	QGridLayout* layout = new QGridLayout;
 
-	layout->addWidget(&display_panel, 0, p1 ? 1 : 0);
-	layout->addWidget(&hand_panel, 0, p1 ? 0 : 1);
+	layout->addWidget(&display_panel, p1 ? 1 : 0, 0);
+	layout->addWidget(&hand_panel, p1 ? 0 : 1, 0);
 
 	setLayout(layout);
 }

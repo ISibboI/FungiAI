@@ -4,7 +4,7 @@
 
 ForestPanel::ForestPanel(Forest* forest) :
 	QGroupBox(QString::fromStdString("Forest")),
-	draw_pile_label(QString::fromStdString("Draw pile: ")),
+	draw_pile_label(QString::fromStdString("Draw pile: %1").arg(forest->get_draw_pile().size())),
 	forest_panel(&forest->get_forest(), QString::fromStdString("Forest")),
 	decay_pile_panel(&forest->get_decay_pile(), QString::fromStdString("Decay pile")),
 	discard_pile_panel(&forest->get_discard_pile(), QString::fromStdString("Discard pile")),
@@ -26,7 +26,7 @@ ForestPanel::ForestPanel(Forest* forest) :
 ForestPanel::~ForestPanel() {}
 
 void ForestPanel::update() {
-	QString draw_pile_string = QString("Draw pile: ").arg(forest->get_draw_pile().size());
+	QString draw_pile_string = QString("Draw pile: %1").arg(forest->get_draw_pile().size());
 	draw_pile_label.setText(draw_pile_string);
 
 	forest_panel.update();

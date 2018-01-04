@@ -1,4 +1,5 @@
 #include "card_panel.hpp"
+#include "gui/util/gui_util.hpp"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -9,18 +10,26 @@ CardPanel::CardPanel(uint8_t id) :
 	id(id)
 {
 	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	/*QLabel* content = new QLabel(QString::fromStdString(CardInformation::get_card(id).name));
-	content->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+}
 
+CardPanel::~CardPanel() {}
+
+MultiCardPanel::MultiCardPanel(uint8_t id, uint8_t count) :
+	id(id),
+	count(count)
+{
 	QGridLayout* layout = new QGridLayout;
 	layout->setSpacing(0);
 	layout->setMargin(0);
 	layout->setContentsMargins(0, 0, 0, 0);
 
-	layout->addWidget(content, 0, 0, Qt::AlignTop);
+	for (unsigned i = 0; i < count; i++) {
+		layout->addWidget(new CardPanel(id), i, 0);
+	}
 
 	setLayout(layout);
-	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);*/
 }
 
-CardPanel::~CardPanel() {}
+MultiCardPanel::~MultiCardPanel() {
+	GuiUtil::replace_layout(this, 0);
+}

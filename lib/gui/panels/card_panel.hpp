@@ -16,4 +16,16 @@ public:
 	~CardPanel();
 };
 
+class MultiCardPanel : public QWidget {
+	Q_OBJECT
+
+private:
+	uint8_t id;
+	uint8_t count;
+
+public:
+	MultiCardPanel(uint8_t id, uint8_t count);
+	~MultiCardPanel();
+};
+
 #endif

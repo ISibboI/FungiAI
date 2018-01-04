@@ -17,20 +17,26 @@ VectorPanel::~VectorPanel() {}
 void VectorPanel::update() {
 	QGridLayout* layout = new QGridLayout;
 	
-	int currentHeight = 0;
+	unsigned current_col = 0;
 
 	for (uint8_t id : *cards) {
-		if (currentHeight == delimiter) {
-			QLabel* delimiter_label = new QLabel(QString::fromStdString("------------------"));
+		if (current_col == delimiter) {
+			QLabel* delimiter_label = new QLabel(QString::fromStdString("  "));
 
-			layout->setRowStretch(currentHeight, 1);
-			layout->addWidget(delimiter_label, currentHeight++, 0, 1, 1, Qt::AlignTop);
+			layout->setColumnStretch(current_col, 0);
+			delimiter_label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+			layout->addWidget(delimiter_label, 0, current_col++, Qt::AlignLeft | Qt::AlignTop);
 		}
 
 		CardPanel* card_panel = new CardPanel(id);
 
-		layout->setRowStretch(currentHeight, 1);
-		layout->addWidget(card_panel, currentHeight++, 0, 1, 1, Qt::AlignTop);
+		layout->setColumnStretch(current_col, 0);
+		card_panel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+		layout->addWidget(card_panel, 0, current_col++, Qt::AlignLeft | Qt::AlignTop);
+	}
+
+	if (current_col > 0) {
+		layout->setColumnStretch(current_col - 1, 1);
 	}
 
 	GuiUtil::replace_layout(this, layout);

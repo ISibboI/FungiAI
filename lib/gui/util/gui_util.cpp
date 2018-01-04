@@ -12,5 +12,7 @@ void GuiUtil::replace_layout(QWidget* widget, QLayout* new_layout) {
 		delete widget->layout();
 	}
 
-	widget->setLayout(new_layout);
+	if (new_layout != 0) {
+		widget->setLayout(new_layout);
+	}
 }
