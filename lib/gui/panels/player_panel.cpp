@@ -3,10 +3,10 @@
 #include <QGridLayout>
 #include <QString>
 
-PlayerPanel::PlayerPanel(Player* player, bool p1) :
+PlayerPanel::PlayerPanel(Player* player, bool p1, QWidget* receiver) :
 	QGroupBox(QString::fromStdString(player->get_name())),
-	display_panel(&player->get_display(), QString::fromStdString("Display")),
-	hand_panel(&player->get_hand(), QString::fromStdString("Hand")),
+	display_panel(&player->get_display(), QString::fromStdString("Display"), receiver),
+	hand_panel(&player->get_hand(), QString::fromStdString("Hand"), receiver),
 	player(player) 
 {
 	QGridLayout* layout = new QGridLayout;
@@ -21,4 +21,5 @@ PlayerPanel::~PlayerPanel() {}
 
 void PlayerPanel::update() {
 	display_panel.update();
+	hand_panel.update();
 }

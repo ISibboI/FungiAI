@@ -16,9 +16,10 @@ class StructuredPilePanel : public QGroupBox {
 
 private:
 	StructuredPile* structured_pile;
+	QWidget* receiver;
 
 public:
-	StructuredPilePanel(StructuredPile* structured_pile, const QString& title);
+	StructuredPilePanel(StructuredPile* structured_pile, const QString& title, QWidget* receiver);
 	~StructuredPilePanel();
 
 	void update();

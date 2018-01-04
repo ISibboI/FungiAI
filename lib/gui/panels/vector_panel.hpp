@@ -17,9 +17,10 @@ class VectorPanel : public QGroupBox {
 private:
 	vector<uint8_t>* cards;
 	int delimiter;
+	QWidget* receiver;
 
 public:
-	VectorPanel(vector<uint8_t>* cards, const QString& title);
+	VectorPanel(vector<uint8_t>* cards, const QString& title, QWidget* receiver);
 	~VectorPanel();
 
 	void update();

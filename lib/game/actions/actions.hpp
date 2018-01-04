@@ -1,0 +1,7 @@
+#include "pick_action.hpp"
+#include "pick_decay_action.hpp"
+#include "discard_action.hpp"
+#include "ignore_discard_action.hpp"
+#include "cook_mushrooms_action.hpp"
+#include "sell_mushrooms_action.hpp"
+#include "place_pan_action.hpp"

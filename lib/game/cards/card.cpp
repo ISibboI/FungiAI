@@ -26,6 +26,10 @@ bool Card::is_normal_mushroom() const {
 	return id < 9;
 }
 
+bool Card::is_mushroom() const {
+    return id < 17;
+}
+
 bool Card::is_valid_hand_card() const {
     return id < 20;
 }
@@ -47,7 +51,15 @@ const Card& Card::get_night_card() const {
 		throw runtime_error("Does not have a night card");
 	}
 
-	return CardInformation::get_all_cards()[id + 9];
+	return CardInformation::get_card(id + 9);
+}
+
+const Card& Card::get_normal_mushroom() const {
+    if (!is_night_card()) {
+        throw runtime_error("Is not a night card");
+    }
+
+    return CardInformation::get_card(id - 9);
 }
 
 bool Card::has_night_card() const {

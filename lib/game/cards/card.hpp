@@ -20,6 +20,7 @@ public:
     string str() const;
 
     bool is_normal_mushroom() const;
+    bool is_mushroom() const;
     bool is_valid_hand_card() const;
     bool is_night_card() const;
 
@@ -27,6 +28,7 @@ public:
     bool operator==(const Card& other) const;
 
     const Card& get_night_card() const;
+    const Card& get_normal_mushroom() const;
     bool has_night_card() const;
 };
 

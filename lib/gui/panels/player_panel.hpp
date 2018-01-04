@@ -16,7 +16,7 @@ private:
 	Player* player;
 
 public:
-	PlayerPanel(Player* player, bool p1);
+	PlayerPanel(Player* player, bool p1, QWidget* receiver);
 	~PlayerPanel();
 
 	void update();

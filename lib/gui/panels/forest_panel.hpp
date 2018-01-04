@@ -20,7 +20,7 @@ private:
 	Forest* forest;
 
 public:
-	ForestPanel(Forest* forest);
+	ForestPanel(Forest* forest, QWidget* receiver);
 	~ForestPanel();
 
 	void update();

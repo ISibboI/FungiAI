@@ -4,9 +4,10 @@
 
 #include <QGridLayout>
 
-StructuredPilePanel::StructuredPilePanel(StructuredPile* structured_pile, const QString& title) :
+StructuredPilePanel::StructuredPilePanel(StructuredPile* structured_pile, const QString& title, QWidget* receiver) :
 	QGroupBox(title),
-	structured_pile(structured_pile)
+	structured_pile(structured_pile),
+	receiver(receiver)
 {
 	update();
 }
@@ -21,7 +22,7 @@ void StructuredPilePanel::update() {
 		unsigned count = structured_pile->card_count(id);
 
 		if (count > 0) {
-			MultiCardPanel* card_panel = new MultiCardPanel(id, count);
+			MultiCardPanel* card_panel = new MultiCardPanel(id, count, receiver);
 			layout->setColumnStretch(current_col, 0);
 			card_panel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 			layout->addWidget(card_panel, 0, current_col++, 1, 1, Qt::AlignLeft | Qt::AlignTop);

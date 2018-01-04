@@ -15,10 +15,13 @@ private:
 
 	DiscardAction();
 
+protected:
+	DiscardAction(const string& name, unsigned id);
+
 public:
 	DiscardAction(vector<uint8_t>&& discard_order);
 	DiscardAction(DiscardAction&& discard_action);
-	~DiscardAction();
+	virtual ~DiscardAction();
 
 	virtual bool execute(Player& player, Forest& forest) override;
 

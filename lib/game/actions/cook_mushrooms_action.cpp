@@ -19,13 +19,22 @@ bool CookMushroomsAction::execute(Player& player, Forest& forest) {
 	}
 
 	for (uint8_t id : cook_order) {
+		if (id >= 9) {
+			id -= 9;
+		}
+
+		const Card& card = CardInformation::get_card(id);
+
+		if (!card.is_normal_mushroom()) {
+			continue;
+		}
+
 		unsigned effective_card_count = player.get_hand().effective_card_count(id);
 
 		if (effective_card_count < 3) {
 			continue;
 		}
 
-		const Card& card = CardInformation::get_card(id);
 
 		add_optimal_amount_of_ingredients(player, effective_card_count);
 		player.get_display().remove_card(CardInformation::pan());

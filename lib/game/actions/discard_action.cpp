@@ -10,6 +10,9 @@ DiscardAction::DiscardAction() :
 	Action("DiscardAction", 0),
 	logger(spdlog::get("DiscardAction")) {}
 
+DiscardAction::DiscardAction(const string& name, unsigned id) :
+	Action(name, id) {}
+
 DiscardAction::DiscardAction(vector<uint8_t>&& discard_order) :
 	Action("DiscardAction", 0),
 	discard_order(discard_order),
@@ -27,8 +30,12 @@ bool DiscardAction::execute(Player& player, Forest& forest) {
 	Hand& hand = player.get_hand();
 
 	while (hand.size() > player.get_hand_capacity()) {
-		while (hand.card_count(discard_order[current_index]) == 0) {
+		while (current_index < discard_order.size() && hand.card_count(discard_order[current_index]) == 0) {
 			current_index++;
+		}
+
+		if (hand.card_count(discard_order[current_index]) == 0) {
+			return false;
 		}
 
 		hand.remove_card(discard_order[current_index]);

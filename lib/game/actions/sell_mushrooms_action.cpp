@@ -15,13 +15,21 @@ SellMushroomsAction::~SellMushroomsAction() {}
 
 bool SellMushroomsAction::execute(Player& player, Forest& forest) {
 	for (uint8_t id : sell_order) {
+		if (id >= 9) {
+			id -= 9;
+		}
+
+		const Card& card = CardInformation::get_card(id);
+		
+		if (!card.is_normal_mushroom()) {
+			continue;
+		}
+
 		unsigned effective_card_count = player.get_hand().effective_card_count(id);
 
 		if (effective_card_count < 2) {
 			continue;
 		}
-
-		const Card& card = CardInformation::get_card(id);
 		
 		unsigned card_count = player.get_hand().card_count(card);
 		player.get_hand().remove_cards(card, card_count);

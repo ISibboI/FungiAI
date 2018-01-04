@@ -4,12 +4,19 @@
 #include "game/cards/card_information.hpp"
 
 #include <QLabel>
+#include <QFrame>
 
 class CardPanel : public QLabel {
 	Q_OBJECT
 
 private:
 	uint8_t id;
+
+signals:
+	void released(uint8_t id);
+
+protected:
+	void mouseReleaseEvent(QMouseEvent* event);
 
 public:
 	CardPanel(uint8_t id);
@@ -22,9 +29,10 @@ class MultiCardPanel : public QWidget {
 private:
 	uint8_t id;
 	uint8_t count;
+	QFrame q_frame;
 
 public:
-	MultiCardPanel(uint8_t id, uint8_t count);
+	MultiCardPanel(uint8_t id, uint8_t count, QWidget* receiver);
 	~MultiCardPanel();
 };
 
