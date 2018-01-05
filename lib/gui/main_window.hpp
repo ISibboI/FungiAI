@@ -13,8 +13,8 @@ private:
 	GamePanel game_panel;
 
 public:
-	explicit MainWindow(Game* game);
-	~MainWindow();
+	explicit MainWindow(Game* game, Controller* enemy);
+	~MainWindow() override = default;
 };
 
 #endif

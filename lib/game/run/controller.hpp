@@ -14,11 +14,14 @@ private:
 	string name;
 	//vector<ActionListener*> actionListeners;
 
-public:
-	Controller(const string& name);
-	virtual ~Controller();
-
+protected:
 	virtual void do_turn(Player& me, Player& enemy, Forest& forest) = 0;
+
+public:
+	explicit Controller(const string& name);
+    Controller() = default;
+	virtual ~Controller() = default;
+
 	void do_turn(Game& game, bool p1);
 
 	const string& get_name() const;

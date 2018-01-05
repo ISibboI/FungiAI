@@ -3,8 +3,6 @@
 Controller::Controller(const string& name) :
 	name(name) {}
 
-Controller::~Controller() {}
-
 void Controller::do_turn(Game& game, bool p1) {
 	do_turn(game.get_player(p1), game.get_player(!p1), game.get_forest());
 }

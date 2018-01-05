@@ -2,8 +2,6 @@
 #include "cards/card_information.hpp"
 #include "io/strings.hpp"
 
-#include <random>
-#include <algorithm>
 #include <sstream>
 
 using namespace std;
@@ -52,15 +50,18 @@ void Forest::post_turn_actions() {
 		logger->trace("Cleared decay pile");
 	}
 
-	decay_pile.push_back(forest.front());
-	forest.erase(forest.begin());
+	if (!forest.empty()) {
+		decay_pile.push_back(forest.front());
+		forest.erase(forest.begin());
+	}
+
 	fill_forest();
 }
 
 void Forest::fill_forest() {
 	unsigned count = 0;
 
-	while (forest.size() < 8 && draw_pile.size() > 0) {
+	while (forest.size() < 8 && !draw_pile.empty()) {
 		forest.push_back(draw_pile.back());
 		draw_pile.pop_back();
 		count++;

@@ -1,13 +1,8 @@
 #include "evolutional/evolutional_optimization.hpp"
-#include "evolutional/random_controller.hpp"
 #include "evolutional/ranking/complete_ranking_algorithm.hpp"
 #include "evolutional/reproduction/percentile_reproduction_strategy.hpp"
-#include "spdlog.h"
 
 #include <iostream>
-#include <floatfann.h>
-#include <random>
-#include <numeric>
 #include <sstream>
 
 using namespace std;
@@ -19,7 +14,7 @@ int main() {
     spdlog::stdout_logger_st("CookMushroomsAction");
     spdlog::stdout_logger_st("SellMushroomsAction");
     spdlog::stdout_logger_st("PlacePanAction");
-    spdlog::stdout_logger_st("RandomController");
+    spdlog::stdout_logger_st("EvolutionalRandomController");
     spdlog::stdout_logger_st("EvolutionalOptimization");
     spdlog::stdout_logger_st("PercentileReproductionStrategy");
     spdlog::stdout_logger_st("CompleteRankingAlgorithm");
@@ -39,7 +34,7 @@ int main() {
         stringstream ss;
         ss << "Number " << i << " loves random";
 
-        initial_population.push_back(new RandomController(ss.str(), i));
+        //initial_population.push_back(new EvolutionalRandomController(ss.str(), i));
     }
 
     evolutional_optimization.set_initial_population(initial_population);

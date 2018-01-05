@@ -1,8 +1,7 @@
 #include "gui/main_window.hpp"
-#include "spdlog.h"
+#include "game/run/random_controller.hpp"
 
 #include <QApplication>
-#include <random>
 
 int main(int argc, char *argv[]) {
 	QApplication q_application(argc, argv);
@@ -24,7 +23,9 @@ int main(int argc, char *argv[]) {
 	mt19937_64 random_engine;
 	game.initialize(random_engine);
 
-	MainWindow main_window(&game);
+    RandomController controller("Enemy", 55624567);
+
+	MainWindow main_window(&game, &controller);
 
 	return q_application.exec();
 }

@@ -4,6 +4,7 @@
 #include "gui/panels/player_panel.hpp"
 #include "gui/panels/forest_panel.hpp"
 #include "game/game.hpp"
+#include "game/run/controller.hpp"
 #include "game/actions/actions.hpp"
 
 #include <QWidget>
@@ -20,7 +21,8 @@ enum GuiState {
 	ACTION_PICK_DECAY = 12,
 	ACTION_COOK = 13,
 	ACTION_SELL = 14,
-	ACTION_PLACE_PAN = 15
+	ACTION_PLACE_PAN = 15,
+	FINISHED = 100
 };
 
 class GamePanel : public QWidget {
@@ -30,8 +32,8 @@ private:
 	PlayerPanel p1_panel;
 	PlayerPanel p2_panel;
 	ForestPanel forest_panel;
-	QScrollArea game_scroll_area;
-	QWidget game_scroll_widget;
+	QScrollArea* game_scroll_area;
+	QWidget* game_scroll_widget;
 
 	QPushButton action_pick_button;
 	QPushButton action_pick_decay_button;
@@ -48,6 +50,9 @@ private:
 	bool current_player;
 
 	Game* game;
+	Controller* enemy;
+
+	void game_finished_actions();
 
 private slots:
 	void handle_pick_button();
@@ -59,10 +64,10 @@ private slots:
 	void handle_card_id_selected(uint8_t id);
 
 public:
-	GamePanel(Game* game);
-	~GamePanel();
+	GamePanel(Game* game, Controller* enemy);
+	~GamePanel() override = default;
 
-	void update();
+	void update_game_state();
 };
 
 #endif

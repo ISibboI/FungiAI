@@ -9,8 +9,8 @@ using namespace std;
 
 class EvolutionalController : public Controller {
 public:
-	EvolutionalController(const string& name);
-	virtual ~EvolutionalController();
+	explicit EvolutionalController(const string& name);
+	~EvolutionalController() override = default;
 
 	virtual EvolutionalController* make_baby(mt19937_64& random_engine) const = 0;
 };
