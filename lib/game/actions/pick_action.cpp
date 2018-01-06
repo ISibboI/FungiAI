@@ -6,17 +6,20 @@
 
 using namespace std;
 
-PickAction::PickAction(vector<uint8_t>&& pick_order, DiscardAction* discard_action) :
+PickAction::PickAction(DiscardAction* discard_action) :
+		Action("PickAction", 1),
+		discard_action(discard_action),
+		logger(spdlog::get("PickAction")) {}
+
+PickAction::PickAction(vector<uint8_t> pick_order, DiscardAction* discard_action) :
 	Action("PickAction", 1),
-	pick_order(pick_order),
+	pick_order(move(pick_order)),
 	discard_action(discard_action),
 	logger(spdlog::get("PickAction")) {}
 
-PickAction::~PickAction() {}
-
 bool PickAction::execute(Player& player, Forest& forest) {
 	for (const uint8_t index : pick_order) {
-		const uint8_t costs = index == 0 ? 0 : index - 1;
+		const uint8_t costs = index == 0 ? (uint8_t) 0 : index - (uint8_t) 1;
 
 		// Do we have enough money?
 		if (player.get_display().card_count(CardInformation::stick()) < costs) {
@@ -58,4 +61,8 @@ string PickAction::str(const string& prefix) const {
 	ss << prefix << get_name() << ":\n";
 	ss << prefix << "  Pick order: " << Strings::str(pick_order);
 	return ss.str();
+}
+
+vector<uint8_t>& PickAction::get_pick_order() {
+	return pick_order;
 }

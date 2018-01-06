@@ -3,13 +3,11 @@
 ReproductionStrategy::ReproductionStrategy() :
 	logger(spdlog::get("ReproductionStrategy")) {}
 
-ReproductionStrategy::~ReproductionStrategy() {}
-
-vector<EvolutionalController*> ReproductionStrategy::reproduce_population_destructive(
-	vector<EvolutionalController*>& population,
+vector<EvolutionalNNController*> ReproductionStrategy::reproduce_population_destructive(
+	vector<EvolutionalNNController*>& population,
 	mt19937_64& random_engine
 ) const {
-	vector<EvolutionalController*> result = reproduce_population(population, random_engine);
+	vector<EvolutionalNNController*> result = reproduce_population(population, random_engine);
 
 	logger->debug("Deleting old controllers...");
 	for (auto* c : population) {

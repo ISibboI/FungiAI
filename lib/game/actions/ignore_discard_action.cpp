@@ -8,8 +8,6 @@ using namespace std;
 
 IgnoreDiscardAction::IgnoreDiscardAction() : DiscardAction("IgnoreDiscardAction", 0), discard_count(0) {}
 
-IgnoreDiscardAction::~IgnoreDiscardAction() {}
-
 bool IgnoreDiscardAction::execute(Player& player, Forest& forest) {
 	discard_count = (unsigned) max(0, (int) player.get_hand().size() - (int) player.get_hand_capacity());
 }

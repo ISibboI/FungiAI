@@ -13,19 +13,20 @@ private:
 	vector<uint8_t> discard_order;
 	shared_ptr<spdlog::logger> logger;
 
-	DiscardAction();
-
 protected:
 	DiscardAction(const string& name, unsigned id);
 
 public:
-	DiscardAction(vector<uint8_t>&& discard_order);
-	DiscardAction(DiscardAction&& discard_action);
-	virtual ~DiscardAction();
+	DiscardAction();
+	explicit DiscardAction(vector<uint8_t> discard_order);
+	DiscardAction(DiscardAction&& discard_action) noexcept;
+	virtual ~DiscardAction() = default;
 
-	virtual bool execute(Player& player, Forest& forest) override;
+	bool execute(Player& player, Forest& forest) override;
 
-	virtual string str(const string& prefix) const override;
+	string str(const string& prefix) const override;
+
+	vector<uint8_t>& get_discard_order();
 };
 
 #endif

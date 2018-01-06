@@ -14,12 +14,15 @@ private:
 	shared_ptr<spdlog::logger> logger;
 
 public:
-	SellMushroomsAction(vector<uint8_t>&& sell_order);
-	~SellMushroomsAction();
+	SellMushroomsAction();
+	explicit SellMushroomsAction(vector<uint8_t> sell_order);
+	~SellMushroomsAction() override = default;
 
-	virtual bool execute(Player& player, Forest& forest) override;
+	bool execute(Player& player, Forest& forest) override;
 
-	virtual string str(const string& prefix) const override;
+	string str(const string& prefix) const override;
+
+	vector<uint8_t>& get_sell_order();
 };
 
 #endif

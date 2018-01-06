@@ -17,11 +17,11 @@ EvolutionalOptimization::~EvolutionalOptimization() {
 	}
 }
 
-void EvolutionalOptimization::set_initial_population(vector<EvolutionalController*>& population) {
+void EvolutionalOptimization::set_initial_population(vector<EvolutionalNNController*>& population) {
 	set_initial_population(move(population));
 }
 
-void EvolutionalOptimization::set_initial_population(vector<EvolutionalController*>&& population) {
+void EvolutionalOptimization::set_initial_population(vector<EvolutionalNNController*>&& population) {
 	logger->info("Setting inital population...");
 	this->population = population;
 	generation = 0;
@@ -47,6 +47,6 @@ unsigned EvolutionalOptimization::get_generation() const {
 	return generation;
 }
 
-const vector<EvolutionalController*>& EvolutionalOptimization::get_population() const {
+const vector<EvolutionalNNController*>& EvolutionalOptimization::get_population() const {
 	return population;
 }

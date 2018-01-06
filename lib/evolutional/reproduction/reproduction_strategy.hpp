@@ -1,7 +1,7 @@
 #ifndef REPRODUCTION_STRATEGY_HPP
 #define REPRODUCTION_STRATEGY_HPP
 
-#include "evolutional/evolutional_controller.hpp"
+#include "evolutional/EvolutionalNNController.hpp"
 #include "spdlog.h"
 
 #include <random>
@@ -14,13 +14,13 @@ private:
 
 public:
 	ReproductionStrategy();
-	~ReproductionStrategy();
+	virtual ~ReproductionStrategy() = default;
 
-	virtual vector<EvolutionalController*> reproduce_population(
-		vector<EvolutionalController*>& population,
+	virtual vector<EvolutionalNNController*> reproduce_population(
+		vector<EvolutionalNNController*>& population,
 		mt19937_64& random_engine) const = 0;
-	virtual vector<EvolutionalController*> reproduce_population_destructive(
-		vector<EvolutionalController*>& population,
+	virtual vector<EvolutionalNNController*> reproduce_population_destructive(
+		vector<EvolutionalNNController*>& population,
 		mt19937_64& random_engine) const;
 };
 

@@ -22,7 +22,7 @@ public:
     Controller() = default;
 	virtual ~Controller() = default;
 
-	void do_turn(Game& game, bool p1);
+	virtual void do_turn(Game& game, bool p1);
 
 	const string& get_name() const;
 };

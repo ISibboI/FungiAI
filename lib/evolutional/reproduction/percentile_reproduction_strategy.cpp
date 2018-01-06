@@ -4,15 +4,13 @@ PercentileReproductionStrategy::PercentileReproductionStrategy(double percentile
 	percentile(percentile),
 	logger(spdlog::get("PercentileReproductionStrategy")) {}
 
-PercentileReproductionStrategy::~PercentileReproductionStrategy() {}
-
-vector<EvolutionalController*> PercentileReproductionStrategy::reproduce_population(
-	vector<EvolutionalController*>& population,
+vector<EvolutionalNNController*> PercentileReproductionStrategy::reproduce_population(
+	vector<EvolutionalNNController*>& population,
 	mt19937_64& random_engine
 ) const {
 	logger->info("Reproducing population...");
 
-	vector<EvolutionalController*> result;
+	vector<EvolutionalNNController*> result;
 	const unsigned limit = (unsigned) (percentile * population.size());
 	unsigned index = 0;
 

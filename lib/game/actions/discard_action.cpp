@@ -13,17 +13,15 @@ DiscardAction::DiscardAction() :
 DiscardAction::DiscardAction(const string& name, unsigned id) :
 	Action(name, id) {}
 
-DiscardAction::DiscardAction(vector<uint8_t>&& discard_order) :
+DiscardAction::DiscardAction(vector<uint8_t> discard_order) :
 	Action("DiscardAction", 0),
-	discard_order(discard_order),
+	discard_order(move(discard_order)),
 	logger(spdlog::get("DiscardAction")) {}
 
-DiscardAction::DiscardAction(DiscardAction&& discard_action) :
+DiscardAction::DiscardAction(DiscardAction&& discard_action) noexcept :
 	Action("DiscardAction", 0),
 	discard_order(move(discard_action.discard_order)),
 	logger(spdlog::get("DiscardAction")) {}
-
-DiscardAction::~DiscardAction() {}
 
 bool DiscardAction::execute(Player& player, Forest& forest) {
 	unsigned current_index = 0;
@@ -51,4 +49,8 @@ string DiscardAction::str(const string& prefix) const {
 	ss << prefix << get_name() << ":\n";
 	ss << prefix << "  Discard order: " << Strings::str(discard_order);
 	return ss.str();
+}
+
+vector<uint8_t> &DiscardAction::get_discard_order() {
+    return discard_order;
 }

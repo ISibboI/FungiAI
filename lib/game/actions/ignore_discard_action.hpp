@@ -9,11 +9,11 @@ private:
 
 public:
 	IgnoreDiscardAction();
-	virtual ~IgnoreDiscardAction();
+	~IgnoreDiscardAction() override = default;
 
-	virtual bool execute(Player& player, Forest& forest) override;
+	bool execute(Player& player, Forest& forest) override;
 
-	virtual string str(const string& prefix) const override;
+	string str(const string& prefix) const override;
 
 	unsigned get_discard_count();
 };

@@ -20,7 +20,7 @@ protected:
 
 public:
 	Action(const string& name, unsigned id);
-	~Action();
+	virtual ~Action();
 
 	virtual bool execute(Player& player, Forest& forest) = 0;
 	const ActionResult* get_result() const;

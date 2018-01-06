@@ -15,12 +15,12 @@ private:
 	shared_ptr<spdlog::logger> logger;
 
 public:
-	PickDecayAction(DiscardAction* discard_action);
-	~PickDecayAction();
+	explicit PickDecayAction(DiscardAction* discard_action);
+	~PickDecayAction() override = default;
 
-	virtual bool execute(Player& player, Forest& forest) override;
+	bool execute(Player& player, Forest& forest) override;
 
-	virtual string str(const string& prefix) const override;
+	string str(const string& prefix) const override;
 };
 
 #endif

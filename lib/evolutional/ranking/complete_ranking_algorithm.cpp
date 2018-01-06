@@ -3,9 +3,7 @@
 CompleteRankingAlgorithm::CompleteRankingAlgorithm() :
 	logger(spdlog::get("CompleteRankingAlgorithm")) {}
 
-CompleteRankingAlgorithm::~CompleteRankingAlgorithm() {}
-
-void CompleteRankingAlgorithm::rank(vector<EvolutionalController*>& population, mt19937_64& random_engine) {
+void CompleteRankingAlgorithm::rank(vector<EvolutionalNNController*>& population, mt19937_64& random_engine) {
 	logger->info("Ranking population...");
 	vector<unsigned> points(population.size(), 0);
 

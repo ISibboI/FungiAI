@@ -9,8 +9,6 @@ PlacePanAction::PlacePanAction() :
 	Action("PlacePanAction", 5),
 	logger(spdlog::get("PlacePanAction")) {}
 
-PlacePanAction::~PlacePanAction() {}
-
 bool PlacePanAction::execute(Player& player, Forest& forest) {
 	if (player.get_hand().card_count(CardInformation::pan()) > 0) {
 		player.get_hand().remove_card(CardInformation::pan());

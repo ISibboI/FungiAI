@@ -10,11 +10,11 @@ private:
 	shared_ptr<spdlog::logger> logger;
 
 public:
-	PercentileReproductionStrategy(double percentile);
-	~PercentileReproductionStrategy();
+	explicit PercentileReproductionStrategy(double percentile);
+	~PercentileReproductionStrategy() override = default;
 
-	virtual vector<EvolutionalController*> reproduce_population(
-		vector<EvolutionalController*>& population,
+	virtual vector<EvolutionalNNController*> reproduce_population(
+		vector<EvolutionalNNController*>& population,
 		mt19937_64& random_engine) const;
 };
 

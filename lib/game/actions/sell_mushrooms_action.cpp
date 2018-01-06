@@ -6,12 +6,14 @@
 
 using namespace std;
 
-SellMushroomsAction::SellMushroomsAction(vector<uint8_t>&& sell_order) :
+SellMushroomsAction::SellMushroomsAction() :
+    Action("SellMushroomsAction", 4),
+	logger(spdlog::get("SellMushroomsAction")) {}
+
+SellMushroomsAction::SellMushroomsAction(vector<uint8_t> sell_order) :
 	Action("SellMushroomsAction", 4),
 	sell_order(move(sell_order)),
 	logger(spdlog::get("SellMushroomsAction")) {}
-
-SellMushroomsAction::~SellMushroomsAction() {}
 
 bool SellMushroomsAction::execute(Player& player, Forest& forest) {
 	for (uint8_t id : sell_order) {
@@ -56,4 +58,8 @@ string SellMushroomsAction::str(const string& prefix) const {
 	ss << prefix << get_name() << ":\n";
 	ss << prefix << "  Sell order: " << Strings::str(sell_order);
 	return ss.str();
+}
+
+vector<uint8_t>& SellMushroomsAction::get_sell_order() {
+    return sell_order;
 }

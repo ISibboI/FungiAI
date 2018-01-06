@@ -12,9 +12,9 @@ private:
 
 public:
 	CompleteRankingAlgorithm();
-	~CompleteRankingAlgorithm();
+	~CompleteRankingAlgorithm() override = default;
 
-	virtual void rank(vector<EvolutionalController*>& population, mt19937_64& random_engine) override;
+	void rank(vector<EvolutionalNNController*>& population, mt19937_64& random_engine) override;
 };
 
 #endif

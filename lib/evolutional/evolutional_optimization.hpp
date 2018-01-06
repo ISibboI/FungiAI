@@ -3,7 +3,6 @@
 
 #include "ranking/ranking_algorithm.hpp"
 #include "reproduction/reproduction_strategy.hpp"
-#include "evolutional_controller.hpp"
 #include "spdlog.h"
 
 #include <vector>
@@ -14,7 +13,7 @@ using namespace std;
 
 class EvolutionalOptimization {
 private:
-	vector<EvolutionalController*> population;
+	vector<EvolutionalNNController*> population;
 	RankingAlgorithm* ranking_algorithm;
 	ReproductionStrategy* reproduction_strategy;
 	mt19937_64 random_engine;
@@ -26,14 +25,14 @@ public:
 	EvolutionalOptimization(RankingAlgorithm* ranking_algorithm, ReproductionStrategy* reproduction_strategy, unsigned seed);
 	~EvolutionalOptimization();
 
-	void set_initial_population(vector<EvolutionalController*>& population);
-	void set_initial_population(vector<EvolutionalController*>&& population);
+	void set_initial_population(vector<EvolutionalNNController*>& population);
+	void set_initial_population(vector<EvolutionalNNController*>&& population);
 
 	void advance_one_generation();
 	void advance_n_generations(unsigned n);
 
 	unsigned get_generation() const;
-	const vector<EvolutionalController*>& get_population() const;
+	const vector<EvolutionalNNController*>& get_population() const;
 };
 
 #endif

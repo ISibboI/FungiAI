@@ -5,3 +5,4 @@
 #include "cook_mushrooms_action.hpp"
 #include "sell_mushrooms_action.hpp"
 #include "place_pan_action.hpp"
+#include "CombinedAction.hpp"

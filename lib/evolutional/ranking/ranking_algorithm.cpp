@@ -5,15 +5,11 @@
 
 using namespace std;
 
-RankingAlgorithm::RankingAlgorithm() {}
-
-RankingAlgorithm::~RankingAlgorithm() {}
-
 GameRunner& RankingAlgorithm::get_game_runner() {
 	return game_runner;
 }
 
-void RankingAlgorithm::sort_by(vector<EvolutionalController*>& population, vector<unsigned>& points) const {
+void RankingAlgorithm::sort_by(vector<EvolutionalNNController*>& population, vector<unsigned>& points) const {
 	vector<unsigned> permutation(points.size(), 0);
 	iota(permutation.begin(), permutation.end(), 0);
 
@@ -21,7 +17,7 @@ void RankingAlgorithm::sort_by(vector<EvolutionalController*>& population, vecto
 		return points[a] < points[b];
 	});
 
-	vector<EvolutionalController*> copy = population;
+	vector<EvolutionalNNController*> copy = population;
 
 	for (unsigned i = 0; i < population.size(); i++) {
 		population[i] = copy[permutation[i]];

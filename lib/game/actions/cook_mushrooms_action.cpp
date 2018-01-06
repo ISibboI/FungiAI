@@ -6,12 +6,14 @@
 
 using namespace std;
 
-CookMushroomsAction::CookMushroomsAction(vector<uint8_t>&& cook_order) :
+CookMushroomsAction::CookMushroomsAction() :
+    Action("CookMushroomsAction", 3),
+    logger(spdlog::get("CookMushroomsAction")) {}
+
+CookMushroomsAction::CookMushroomsAction(vector<uint8_t> cook_order) :
 	Action("CookMushroomsAction", 3),
 	cook_order(move(cook_order)),
 	logger(spdlog::get("CookMushroomsAction")) {}
-
-CookMushroomsAction::~CookMushroomsAction() {}
 
 bool CookMushroomsAction::execute(Player& player, Forest& forest) {
 	if (!player.get_display().card_count(CardInformation::pan()) > 0) {
@@ -82,4 +84,8 @@ string CookMushroomsAction::str(const string& prefix) const {
 	ss << prefix << get_name() << ":\n";
 	ss << prefix << "  Cook order: " << Strings::str(cook_order);
 	return ss.str();
+}
+
+vector<uint8_t>& CookMushroomsAction::get_cook_order() {
+    return cook_order;
 }
