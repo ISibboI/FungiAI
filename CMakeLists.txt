@@ -34,6 +34,9 @@ if (OPENMP_FOUND)
     set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Og")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -O3 -DNDEBUG")
+
 add_subdirectory(lib/game)
 add_subdirectory(lib/nn)
 add_subdirectory(lib/evolutional)
@@ -48,3 +51,9 @@ target_link_libraries(fungi_ai fungi_evolutional)
 
 add_executable(gui app/gui.cpp)
 target_link_libraries(gui fungi_gui)
+
+add_executable(evolutional_training app/evolutional_training.cpp)
+target_link_libraries(evolutional_training fungi_evolutional)
+
+add_executable(evaluate app/evaluate.cpp)
+target_link_libraries(evaluate fungi_nn)

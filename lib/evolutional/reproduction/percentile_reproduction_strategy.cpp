@@ -11,7 +11,8 @@ vector<EvolutionalNNController*> PercentileReproductionStrategy::reproduce_popul
 	logger->info("Reproducing population...");
 
 	vector<EvolutionalNNController*> result;
-	const unsigned limit = (unsigned) (percentile * population.size());
+	result.reserve(population.size());
+	const auto limit = (unsigned) (percentile * population.size());
 	unsigned index = 0;
 
 	while (result.size() < population.size()) {

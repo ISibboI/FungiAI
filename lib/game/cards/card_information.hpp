@@ -28,11 +28,11 @@ const vector<Card> all_cards{
 		Card("Night Chanterelle", 8, 4, 1, 1, 16),
 		Card("Butter", 3, 4, 1, 3, 17),
 		Card("Cidre", 5, 5, 1, 3, 18),
-		Card("Pan", -1, -1, 1, 11, 19),
+		Card("Pan", -1, -1, 1, 13, 11, 19),
 		Card("Basket", -1, -1, -2, 5, 20),
 		Card("Fly agaric", -1, -1, 0, 5, 21),
 		Card("Moon", -1, -1, 0, 0, 22),
-		Card("Stick", -1, 1, 0, 100, 23)
+		Card("Stick", -1, 1, 0, 200, 23)
 	};
 
 class CardInformation {
@@ -51,7 +51,7 @@ public:
 		vector<uint8_t> initial_draw_pile;
 
 		for (uint8_t id = 0; id < 22; id++) {
-			initial_draw_pile.insert(initial_draw_pile.end(), all_cards[id].ingame_amount, id);
+			initial_draw_pile.insert(initial_draw_pile.end(), all_cards[id].draw_pile_amount, id);
 		}
 
 		return initial_draw_pile;
@@ -61,7 +61,7 @@ public:
 		unsigned count = 0;
 
 		for (const Card& card : all_cards) {
-			count += card.ingame_amount;
+			count += card.draw_pile_amount;
 		}
 
 		return count;

@@ -13,8 +13,8 @@ private:
 	Game game;
 
 public:
-	GameRunner();
-	~GameRunner();
+	GameRunner() = default;
+	~GameRunner() = default;
 
 	bool run_game(Controller* p1, Controller* p2, mt19937_64& random_engine);
 };

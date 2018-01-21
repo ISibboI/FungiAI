@@ -1,6 +1,8 @@
 #include "NNController.hpp"
 #include "nn/NNCoder.hpp"
 
+#include <stdexcept>
+
 NNController::NNController(const string &name, struct fann *ann) :
     Controller(name),
     ann(ann),
@@ -12,4 +14,8 @@ void NNController::do_turn(Game &game, bool p1) {
     float* nn_output = fann_run(ann, nn_input.data());
     NNCoder::decode(nn_output, combined_action);
     combined_action.execute(game.get_player(p1), game.get_forest());
+}
+
+void NNController::do_turn(Player &me, Player &enemy, Forest &forest) {
+    throw std::runtime_error("Deleted function");
 }

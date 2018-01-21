@@ -4,8 +4,7 @@
 
 Game::Game() :
 	p1("Player 1"),
-	p2("Player 2"),
-	logger(spdlog::stdout_logger_st("Game")) {}
+	p2("Player 2") {}
 
 void Game::initialize(mt19937_64& random_engine) {
 	forest.initialize(random_engine);
@@ -14,11 +13,9 @@ void Game::initialize(mt19937_64& random_engine) {
 }
 
 void Game::post_turn_actions() {
-	logger->trace("Performing post turn actions");
 	forest.post_turn_actions();
 	p1.post_turn_actions();
 	p2.post_turn_actions();
-	logger->trace("Performed post turn actions");
 }
 
 Player& Game::get_p1() {

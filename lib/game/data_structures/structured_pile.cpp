@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <numeric>
 #include <sstream>
 
 using namespace std;
@@ -10,10 +11,7 @@ using namespace std;
 StructuredPile::StructuredPile(const string& name) :
     Pile(name),
     all_cards_count(0),
-    cards(CardInformation::get_all_cards().size(), 0),
-    logger(spdlog::stdout_logger_st("StructuredPile " + name)) {}
-
-StructuredPile::~StructuredPile() {}
+    cards(CardInformation::get_all_cards().size(), 0) {}
 
 unsigned StructuredPile::size() const {
     return all_cards_count;
@@ -28,12 +26,13 @@ void StructuredPile::add_cards(const Card& card, unsigned count) {
 
     unsigned new_count = count + cards[card.id];
 
+//#ifndef NDEBUG
     if (new_count < count || new_count > card.ingame_amount) {
-        logger->error("Illegal {} count: new_count ({:d}) > card.ingame_amount ({:d})", card.name, new_count, card.ingame_amount);
         throw runtime_error("Illegal card count");
     }
+//#endif
 
-    cards[card.id] = new_count;
+    cards[card.id] = (uint8_t) new_count;
     all_cards_count += count;
 }
 
@@ -46,12 +45,13 @@ void StructuredPile::remove_cards(const Card& card, unsigned count) {
 
     unsigned new_count = cards[card.id] - count;
 
+#ifndef NDEBUG
     if (new_count > cards[card.id]) {
-        logger->error("Illegal {} count: new_count ({:d}) > cards[card.id] ({:d})", card.name, new_count, cards[card.id]);
         throw runtime_error("Illegal card count");
     }
+#endif
 
-    cards[card.id] = new_count;
+    cards[card.id] = (uint8_t) new_count;
     all_cards_count -= count;
 }
 
@@ -81,12 +81,10 @@ unsigned StructuredPile::card_count(uint8_t id) const {
 }
 
 void StructuredPile::check_size() const {
-    #ifdef DEBUG
     #ifndef NDEBUG
-    if (accumulate(cards.begin(), cards.end(), 0) != size) {
+    if (std::accumulate(cards.begin(), cards.end(), 0) != size()) {
         throw runtime_error("Size check failed");
     }
-    #endif
     #endif
 }
 

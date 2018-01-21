@@ -18,8 +18,11 @@ private:
 	ReproductionStrategy* reproduction_strategy;
 	mt19937_64 random_engine;
 	unsigned generation;
+	bool save_generation_winner;
 
 	shared_ptr<spdlog::logger> logger;
+
+	void persist();
 
 public:
 	EvolutionalOptimization(RankingAlgorithm* ranking_algorithm, ReproductionStrategy* reproduction_strategy, unsigned seed);
@@ -30,6 +33,8 @@ public:
 
 	void advance_one_generation();
 	void advance_n_generations(unsigned n);
+
+	void set_save_generation_winner(bool save);
 
 	unsigned get_generation() const;
 	const vector<EvolutionalNNController*>& get_population() const;

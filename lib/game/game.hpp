@@ -12,7 +12,6 @@ private:
 	Player p1;
 	Player p2;
 	Forest forest;
-	shared_ptr<spdlog::logger> logger;
 
 public:
 	Game();

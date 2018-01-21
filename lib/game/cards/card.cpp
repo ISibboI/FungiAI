@@ -5,8 +5,13 @@
 
 using namespace std;
 
-Card::Card(string name, int8_t tastyness, int8_t price, int8_t size, uint8_t ingame_amount, uint8_t id)
-    : name(name), tastyness(tastyness), price(price), size(size), ingame_amount(ingame_amount), id(id) {}
+Card::Card(string name, int8_t tastyness, int8_t price, int8_t size, uint8_t ingame_amount, uint8_t id) :
+        name(name), tastyness(tastyness), price(price), size(size), ingame_amount(ingame_amount),
+        draw_pile_amount(ingame_amount), id(id) {}
+
+Card::Card(string name, int8_t tastyness, int8_t price, int8_t size, uint8_t ingame_amount, uint8_t draw_pile_amount, uint8_t id) :
+        name(name), tastyness(tastyness), price(price), size(size), ingame_amount(ingame_amount),
+        draw_pile_amount(draw_pile_amount), id(id) {}
 
 Card::~Card() {}
 

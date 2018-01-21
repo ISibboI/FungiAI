@@ -11,10 +11,10 @@ using namespace std;
 
 class RankingAlgorithm {
 private:
-	GameRunner game_runner;
+	std::vector<GameRunner> game_runners;
 
 protected:
-	GameRunner& get_game_runner();
+	GameRunner& get_game_runner(size_t index);
 
 public:
 	RankingAlgorithm() = default;

@@ -7,7 +7,12 @@
 class EvolutionalNNController : public NNController, public ReproductionTrait<EvolutionalNNController> {
 public:
     explicit EvolutionalNNController(const string& name, struct fann* ann) : NNController(name, ann) {}
+    EvolutionalNNController(const EvolutionalNNController& con);
     ~EvolutionalNNController() override;
+
+    EvolutionalNNController *make_baby(mt19937_64 &random_engine) const override;
+
+    struct fann* get_ann();
 };
 
 

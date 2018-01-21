@@ -18,6 +18,9 @@ public:
     ~NNController() override = default;
 
     void do_turn(Game &game, bool p1) override;
+
+protected:
+    void do_turn(Player &me, Player &enemy, Forest &forest) override;
 };
 
 

@@ -14,11 +14,10 @@ class StructuredPile : public Pile {
 private:
     vector<uint8_t> cards;
     unsigned all_cards_count;
-    shared_ptr<spdlog::logger> logger;
 
 public:
-    StructuredPile(const string& name);
-    virtual ~StructuredPile() override;
+    explicit StructuredPile(const string& name);
+    ~StructuredPile() override = default;
 
     virtual unsigned size() const;
     void add_card(const Card& card);

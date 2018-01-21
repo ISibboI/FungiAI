@@ -13,9 +13,11 @@ public:
     const int8_t price;
     const int8_t size;
     const uint8_t ingame_amount;
+    const uint8_t draw_pile_amount;
     const uint8_t id;
 
     Card(string name, int8_t tastyness, int8_t price, int8_t size, uint8_t ingame_amount, uint8_t id);
+    Card(string name, int8_t tastyness, int8_t price, int8_t size, uint8_t ingame_amount, uint8_t draw_pile_amount, uint8_t id);
     ~Card();
     string str() const;
 
