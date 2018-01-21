@@ -6,6 +6,7 @@
 #include <game/run/game_runner.hpp>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 int main(int argc, char** argv) {
     spdlog::stdout_logger_st("DiscardAction");
@@ -31,7 +32,10 @@ int main(int argc, char** argv) {
         std::stringstream ss;
         ss << "generation_" << generation << "_winner.fann";
         struct fann* ann = fann_create_from_file(ss.str().c_str());
-
+        if (ann == nullptr) {
+            throw std::runtime_error("Could not load " + ss.str());
+        }
+        
         int wins = 0;
         for (int i = 0; i < tries; i++) {
             NNController nnc("NN", ann);

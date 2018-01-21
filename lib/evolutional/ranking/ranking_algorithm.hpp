@@ -20,6 +20,7 @@ public:
 	RankingAlgorithm() = default;
 	virtual ~RankingAlgorithm() = default;
 
+	/// Ranks the population, from strongest to weakest.
 	virtual void rank(vector<EvolutionalNNController*>& population, mt19937_64& random_engine) = 0;
 
 	void sort_by(vector<EvolutionalNNController*>& population, vector<unsigned>& points) const;
