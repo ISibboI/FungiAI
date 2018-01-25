@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 14)
 SET( CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS} -g" )
 SET( CMAKE_EXE_LINKER_FLAGS_DEBUG  "${CMAKE_EXE_LINKER_FLAGS} -g" )
 
+add_compile_options(-march=native)
+
 find_path(FANN_INCLUDE_DIR fann/src/include)
 find_path(SPDLOG_INCLUDE_DIR spdlog/include/spdlog)
 find_path(NANA_INCLUDE_DIR nana/include)
