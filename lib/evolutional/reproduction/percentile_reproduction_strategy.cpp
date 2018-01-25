@@ -16,7 +16,7 @@ vector<EvolutionalNNController*> PercentileReproductionStrategy::reproduce_popul
 	unsigned index = 0;
 
 	while (result.size() < population.size()) {
-		result.push_back(population[index]->make_baby(random_engine));
+		result.push_back(population[index]->make_baby(random_engine, get_randomness()));
 		index = (index + 1) % limit;
 	}
 

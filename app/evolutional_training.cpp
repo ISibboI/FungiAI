@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
     CompleteRankingAlgorithm ranker;
     PercentileReproductionStrategy reproducer(0.5);
     EvolutionalOptimization optimizer(&ranker, &reproducer, 0);
-    optimizer.set_initial_population(initial_pop);
     optimizer.set_save_generation_winner(true);
+    optimizer.set_initial_population(initial_pop);
     optimizer.advance_n_generations(100);
 
     return 0;

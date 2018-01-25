@@ -10,10 +10,10 @@ using namespace std;
 
 class ReproductionStrategy {
 private:
-	shared_ptr<spdlog::logger> logger;
+	double randomness = 0.1;
 
 public:
-	ReproductionStrategy();
+	ReproductionStrategy() = default;
 	virtual ~ReproductionStrategy() = default;
 
 	virtual vector<EvolutionalNNController*> reproduce_population(
@@ -22,6 +22,8 @@ public:
 	virtual vector<EvolutionalNNController*> reproduce_population_destructive(
 		vector<EvolutionalNNController*>& population,
 		mt19937_64& random_engine) const;
+    void set_randomness(double randomness);
+    double get_randomness() const;
 };
 
 #endif

@@ -10,7 +10,7 @@ public:
     EvolutionalNNController(const EvolutionalNNController& con);
     ~EvolutionalNNController() override;
 
-    EvolutionalNNController *make_baby(mt19937_64 &random_engine) const override;
+    EvolutionalNNController *make_baby(mt19937_64 &random_engine, double randomness) const override;
 
     struct fann* get_ann();
 };

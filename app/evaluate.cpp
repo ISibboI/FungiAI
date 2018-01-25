@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     std::mt19937_64 random_engine;
     std::ofstream result("evaluation.csv");
 
-    for (int generation = 0; generation <= 100; generation++) {
+    for (int generation = 1; generation <= 100; generation++) {
         std::cout << "Evaluating generation " << generation << std::endl;
         std::stringstream ss;
         ss << "generation_" << generation << "_winner.fann";

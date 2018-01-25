@@ -34,6 +34,7 @@ void EvolutionalOptimization::set_initial_population(vector<EvolutionalNNControl
 
 void EvolutionalOptimization::advance_one_generation() {
 	logger->info("Advancing generation {:d} -> {:d}...", generation, generation + 1);
+	reproduction_strategy->set_randomness(sqrt(0.01 / (generation + 1)));
 	population = reproduction_strategy->reproduce_population_destructive(population, random_engine);
 	ranking_algorithm->rank(this->population, random_engine);
 	generation++;

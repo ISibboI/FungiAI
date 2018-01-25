@@ -13,7 +13,7 @@ public:
 	ReproductionTrait() = default;
 	virtual ~ReproductionTrait() = default;
 
-	virtual T* make_baby(mt19937_64& random_engine) const = 0;
+	virtual T* make_baby(mt19937_64& random_engine, double randomness) const = 0;
 };
 
 #endif
