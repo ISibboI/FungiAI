@@ -6,11 +6,9 @@
 
 using namespace std;
 
+RankingAlgorithm::RankingAlgorithm() : game_runners(omp_get_max_threads()) {}
+
 GameRunner& RankingAlgorithm::get_game_runner(size_t index) {
-    //#pragma omp critical
-	if (index >= game_runners.size()) {
-        game_runners.resize(index + 1);
-    }
     return game_runners[index];
 }
 

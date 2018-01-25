@@ -17,7 +17,7 @@ protected:
 	GameRunner& get_game_runner(size_t index);
 
 public:
-	RankingAlgorithm() = default;
+	RankingAlgorithm();
 	virtual ~RankingAlgorithm() = default;
 
 	/// Ranks the population, from strongest to weakest.
