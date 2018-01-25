@@ -39,3 +39,4 @@ data
 build
 .idea/
 cmake-build-*/
+*.png
