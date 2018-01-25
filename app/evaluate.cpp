@@ -8,6 +8,18 @@
 #include <iostream>
 #include <stdexcept>
 
+int count_generations() {
+    int count = 0;
+    std::ifstream probe;
+    do {
+        count++;
+        std::stringstream ss;
+        ss << "generation_" << count << "_winner.fann";
+        probe = std::ifstream(ss.str());
+    } while (probe.is_open());
+    return count - 1;
+}
+
 int main(int argc, char** argv) {
     spdlog::stdout_logger_st("DiscardAction");
     spdlog::stdout_logger_st("PickAction");
@@ -23,28 +35,45 @@ int main(int argc, char** argv) {
     spdlog::stdout_logger_st("ReproductionStrategy");
     spdlog::stdout_logger_st("RandomController");
 
-    constexpr int tries = 1000;
+    constexpr int tries = 100;
     std::mt19937_64 random_engine;
     std::ofstream result("evaluation.csv");
 
-    for (int generation = 1; generation <= 100; generation++) {
-        std::cout << "Evaluating generation " << generation << std::endl;
-        std::stringstream ss;
-        ss << "generation_" << generation << "_winner.fann";
-        struct fann* ann = fann_create_from_file(ss.str().c_str());
-        if (ann == nullptr) {
-            throw std::runtime_error("Could not load " + ss.str());
-        }
-        
-        int wins = 0;
-        for (int i = 0; i < tries; i++) {
-            NNController nnc("NN", ann);
-            RandomController rc("Random", (unsigned) i);
-            GameRunner runner;
-            wins += runner.run_game(&nnc, &rc, random_engine) ? 1 : 0;
-        }
+    const int generation_count = count_generations();
+    result << generation_count << "\n";
 
-        fann_destroy(ann);
-        result << wins / (float) tries << "\n";
+    for (int gen_a = 0; gen_a <= generation_count; gen_a++) {
+        #pragma omp parallel for
+        for (int gen_b = 0; gen_b <= generation_count; gen_b++) {
+            #pragma omp critical
+            { std::cout << "Evaluating generation " << gen_a << " winner against " << gen_b << " winner" << std::endl; }
+
+            std::stringstream ss_a;
+            ss_a << "generation_" << gen_a << "_winner.fann";
+            std::stringstream ss_b;
+            ss_b << "generation_" << gen_b << "_winner.fann";
+            struct fann* ann_a = fann_create_from_file(ss_a.str().c_str());
+            struct fann* ann_b = fann_create_from_file(ss_b.str().c_str());
+            if (ann_a == nullptr) {
+                throw std::runtime_error("Could not load " + ss_a.str());
+            }
+            if (ann_b == nullptr) {
+                throw std::runtime_error("Could not load " + ss_b.str());
+            }
+
+            int wins = 0;
+            GameRunner runner;
+            for (int i = 0; i < tries; i++) {
+                NNController nnc_a("NN_a", ann_a);
+                NNController nnc_b("NN_b", ann_b);
+                wins += runner.run_game(&nnc_a, &nnc_b, random_engine) ? 1 : 0;
+            }
+
+            fann_destroy(ann_a);
+            fann_destroy(ann_b);
+
+            #pragma omp critical
+            { result << wins / (double) tries << "\n"; }
+        }
     }
 }
