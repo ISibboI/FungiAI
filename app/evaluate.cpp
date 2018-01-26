@@ -25,15 +25,18 @@ int main(int argc, char** argv) {
     spdlog::stdout_logger_st("RandomController");
 
     constexpr int tries = 100;
+    constexpr int step = 10;
     std::mt19937_64 random_engine;
 
     std::vector<std::vector<struct fann*>> anns(1);
-    int generation_count = -1;
+    int generation_count = -step;
     do {
+        generation_count += step;
         std::stringstream ss;
-        ss << "generation_" << ++generation_count << "_winner.fann";
+        ss << "generation_" << generation_count << "_winner.fann";
         anns[0].push_back(fann_create_from_file(ss.str().c_str()));
     } while (anns[0].back() != nullptr);
+    generation_count /= step;
     anns[0].pop_back();
     std::cout << "Loaded " << generation_count << " generations" << std::endl;
     for (int i = 1; i < omp_get_max_threads(); i++) {
@@ -53,7 +56,8 @@ int main(int argc, char** argv) {
             #pragma omp critical
             {
                 int percentage = 100 * iterations++ / total_iterations;
-                std::cout << percentage << "% Evaluating generation " << gen_a << " winner against " << gen_b << " winner" << std::endl;
+                std::cout << percentage << "% Evaluating generation " << (gen_a * step);
+                std::cout << " winner against " << (gen_b * step) << " winner" << std::endl;
             }
 
             int thread_num = omp_get_thread_num();
