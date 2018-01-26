@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
         anns[0].push_back(fann_create_from_file(ss.str().c_str()));
     } while (anns[0].back() != nullptr);
     anns[0].pop_back();
+    std::cout << "Loaded " << generation_count << " generations" << std::endl;
     for (int i = 1; i < omp_get_max_threads(); i++) {
         anns.emplace_back();
         for (int gen = 0; gen < generation_count; gen++) {
